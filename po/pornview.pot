@@ -1,0 +1,1538 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2003-01-04 13:52+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/support/charset.c:144 src/prefs_ui/prefs_ui_dirview.c:29
+#: src/prefs_ui/prefs_ui_dirview.c:37 src/prefs_ui/prefs_ui_imageview.c:31
+msgid "None"
+msgstr ""
+
+#: src/support/charset.c:145
+msgid "Japanese"
+msgstr ""
+
+#: src/support/dialogs.c:116 src/fileutil.c:536
+msgid "Yes"
+msgstr ""
+
+#: src/support/dialogs.c:128
+msgid "No"
+msgstr ""
+
+#: src/support/dialogs.c:244 src/support/exif_view.c:127 src/about.c:118
+#: src/imageinfo.c:296
+msgid "Close"
+msgstr ""
+
+#: src/support/dialogs.c:461 src/prefs_ui/prefs_win.c:740
+msgid "OK"
+msgstr ""
+
+#: src/support/dialogs.c:470 src/support/dialogs.c:573
+#: src/support/generic_dialog.c:218 src/prefs_ui/prefs_win.c:760
+msgid "Cancel"
+msgstr ""
+
+#: src/support/exif_view.c:111
+#, c-format
+msgid "%s EXIF data"
+msgstr ""
+
+#: src/support/exif_view.c:151
+msgid "IFD 0"
+msgstr ""
+
+#: src/support/exif_view.c:151
+msgid "IFD 1"
+msgstr ""
+
+#: src/support/exif_view.c:151
+msgid "Exif IFD"
+msgstr ""
+
+#: src/support/exif_view.c:151
+msgid "GPS IFD"
+msgstr ""
+
+#: src/support/exif_view.c:152
+msgid "Interoperability"
+msgstr ""
+
+#: src/support/exif_view.c:157
+msgid "Tag"
+msgstr ""
+
+#: src/support/exif_view.c:157 src/comment_view.c:493
+msgid "Value"
+msgstr ""
+
+#: src/support/exif_view.c:165 src/support/exif_view.c:172 src/dirview.c:411
+#: src/dirview.c:528 src/dirview.c:579 src/dirview.c:640 src/dirview.c:670
+#: src/prefs_ui/prefs_ui_common.c:327 src/prefs_ui/prefs_ui_common.c:334
+#: src/prefs_ui/prefs_ui_common.c:341 src/prefs_ui/prefs_ui_etc.c:59
+#: src/prefs_ui/prefs_ui_etc.c:67 src/prefs_ui/prefs_ui_etc.c:74
+msgid "Error"
+msgstr ""
+
+#: src/support/exif_view.c:165 src/support/exif_view.c:172
+msgid "EXIF data not found."
+msgstr ""
+
+#: src/support/file_utils.c:741
+msgid "Sun"
+msgstr ""
+
+#: src/support/file_utils.c:741
+msgid "Mon"
+msgstr ""
+
+#: src/support/file_utils.c:741
+msgid "Tue"
+msgstr ""
+
+#: src/support/file_utils.c:741
+msgid "Wed"
+msgstr ""
+
+#: src/support/file_utils.c:741
+msgid "Thu"
+msgstr ""
+
+#: src/support/file_utils.c:741
+msgid "Fri"
+msgstr ""
+
+#: src/support/file_utils.c:742
+msgid "Sat"
+msgstr ""
+
+#: src/support/file_utils.c:874 src/support/file_utils.c:876
+#, c-format
+msgid "scandir = %s\n"
+msgstr ""
+
+#: src/support/file_utils.c:921 src/support/file_utils.c:923
+#, c-format
+msgid "filename = %s\n"
+msgstr ""
+
+#: src/support/file_utils.c:940 src/support/file_utils.c:942
+#, c-format
+msgid "dirname = %s\n"
+msgstr ""
+
+#: src/support/path_selection.c:322
+#, c-format
+msgid "File name %s already exists."
+msgstr ""
+
+#: src/support/path_selection.c:328
+#, c-format
+msgid "Failed to rename %s to %s."
+msgstr ""
+
+#: src/support/path_selection.c:593
+msgid "All Files"
+msgstr ""
+
+#: src/support/path_selection.c:656
+msgid "Home"
+msgstr ""
+
+#: src/support/path_selection.c:668
+msgid "Show hidden"
+msgstr ""
+
+#: src/support/path_selection.c:720
+msgid "Filter:"
+msgstr ""
+
+#: src/about.c:58
+msgid "About"
+msgstr ""
+
+#: src/about.c:102
+msgid "version "
+msgstr ""
+
+#: src/browser.c:47
+msgid "/_File"
+msgstr ""
+
+#: src/browser.c:48
+msgid "/File/E_xit"
+msgstr ""
+
+#: src/browser.c:49
+msgid "/_Tools"
+msgstr ""
+
+#: src/browser.c:50
+msgid "/Tools/Delete Old Thumbnails"
+msgstr ""
+
+#: src/browser.c:52
+msgid "/Tools/Delete All Thumbnails"
+msgstr ""
+
+#: src/browser.c:53
+msgid "/Tools/---"
+msgstr ""
+
+#: src/browser.c:54
+msgid "/Tools/Delete Old Comments"
+msgstr ""
+
+#: src/browser.c:56
+msgid "/Tools/Delete All Comments"
+msgstr ""
+
+#: src/browser.c:57
+msgid "/_Help"
+msgstr ""
+
+#: src/browser.c:58
+msgid "/Help/A_bout"
+msgstr ""
+
+#: src/browser.c:195
+msgid "Exit"
+msgstr ""
+
+#: src/browser.c:205 src/prefs_ui/prefs_win.c:678
+msgid "Preference"
+msgstr ""
+
+#: src/browser.c:233 src/browser.c:245
+msgid " Preview "
+msgstr ""
+
+#: src/cache.c:396
+msgid "Clearing thumbnails..."
+msgstr ""
+
+#: src/cache.c:398
+msgid "Clearing comments..."
+msgstr ""
+
+#: src/cache.c:403
+msgid "Purging old thumbnails..."
+msgstr ""
+
+#: src/cache.c:405
+msgid "Purging old comments..."
+msgstr ""
+
+#: src/cache.c:409
+msgid "Purge thumbnails"
+msgstr ""
+
+#: src/cache.c:413
+msgid "Purge comments"
+msgstr ""
+
+#: src/comment.c:55
+msgid "Title"
+msgstr ""
+
+#: src/comment.c:56
+msgid "Date"
+msgstr ""
+
+#: src/comment.c:57
+msgid "Category"
+msgstr ""
+
+#: src/comment.c:58
+msgid "Model"
+msgstr ""
+
+#: src/comment.c:59
+msgid "Comment Time"
+msgstr ""
+
+#: src/comment.c:61
+msgid "URL"
+msgstr ""
+
+#: src/comment.c:63
+msgid "Modification Time"
+msgstr ""
+
+#: src/comment.c:65
+msgid "Image Type"
+msgstr ""
+
+#: src/comment.c:67
+msgid "Image Size"
+msgstr ""
+
+#: src/comment.c:215
+msgid "Can't open comment file for read."
+msgstr ""
+
+#: src/comment.c:627
+msgid "cannot make dir\n"
+msgstr ""
+
+#: src/comment.c:634
+msgid "Can't open comment file for write."
+msgstr ""
+
+#: src/comment_view.c:493
+msgid "Key"
+msgstr ""
+
+#: src/comment_view.c:495
+msgid " Data "
+msgstr ""
+
+#: src/comment_view.c:583
+msgid "Key: "
+msgstr ""
+
+#: src/comment_view.c:596
+msgid "Value: "
+msgstr ""
+
+#: src/comment_view.c:617 src/prefs_ui/prefs_win.c:751
+msgid "Apply"
+msgstr ""
+
+#: src/comment_view.c:624
+msgid "Clear"
+msgstr ""
+
+#: src/comment_view.c:631 src/comment_view.c:1100 src/fileutil.c:1289
+#: src/fileutil.c:1349
+msgid "Delete"
+msgstr ""
+
+#: src/comment_view.c:652
+msgid " Note "
+msgstr ""
+
+#: src/comment_view.c:1086
+msgid "Save"
+msgstr ""
+
+#: src/comment_view.c:1093
+msgid "Reset"
+msgstr ""
+
+#: src/comment_view.c:1127
+#, c-format
+msgid "Edit Comment (%s)"
+msgstr ""
+
+#: src/dirview.c:42
+msgid "/_Refresh"
+msgstr ""
+
+#: src/dirview.c:44
+msgid "/_Make Directory"
+msgstr ""
+
+#: src/dirview.c:45
+msgid "/Re_name Directory"
+msgstr ""
+
+#: src/dirview.c:46
+msgid "/_Delete Directory"
+msgstr ""
+
+#: src/dirview.c:409
+msgid "Permission denied"
+msgstr ""
+
+#: src/dirview.c:417
+msgid "new folder"
+msgstr ""
+
+#: src/dirview.c:526
+msgid "Faild to rename directory"
+msgstr ""
+
+#: src/dirview.c:577 src/dirview.c:638
+msgid "Directory not exist"
+msgstr ""
+
+#: src/dirview.c:650
+msgid "Delete directory"
+msgstr ""
+
+#: src/dirview.c:653
+msgid "Confirm Deleting Directory"
+msgstr ""
+
+#: src/dirview.c:668
+msgid "Faild to delete directory"
+msgstr ""
+
+#: src/dirview.c:756 src/thumbview.c:611
+msgid "Refresh"
+msgstr ""
+
+#: src/dirview.c:768
+msgid "Up"
+msgstr ""
+
+#: src/dirview.c:779
+msgid "Down"
+msgstr ""
+
+#: src/dirview.c:790
+msgid "Collapse"
+msgstr ""
+
+#: src/dirview.c:802
+msgid "Expand"
+msgstr ""
+
+#: src/dirview.c:816
+msgid "Show/Hide dotfile"
+msgstr ""
+
+#: src/dock.c:28
+msgid "/Exit"
+msgstr ""
+
+#: src/dock.c:30
+msgid "/About"
+msgstr ""
+
+#: src/dock.c:32
+msgid "/Show Main Window"
+msgstr ""
+
+#: src/dock.c:33
+msgid "/Hide Main Window"
+msgstr ""
+
+#: src/fileutil.c:260
+msgid "Ok"
+msgstr ""
+
+#: src/fileutil.c:487
+msgid "Source to copy matches destination"
+msgstr ""
+
+#: src/fileutil.c:490
+#, c-format
+msgid ""
+"Unable to copy file:\n"
+"%s\n"
+"to itself."
+msgstr ""
+
+#: src/fileutil.c:495
+msgid "Source to move matches destination"
+msgstr ""
+
+#: src/fileutil.c:498
+#, c-format
+msgid ""
+"Unable to move file:\n"
+"%s\n"
+"to itself."
+msgstr ""
+
+#: src/fileutil.c:506 src/fileutil.c:707 src/fileutil.c:1228
+msgid "Continue"
+msgstr ""
+
+#: src/fileutil.c:529
+#, c-format
+msgid ""
+"Overwrite file:\n"
+" %s\n"
+" with:\n"
+" %s"
+msgstr ""
+
+#: src/fileutil.c:531 src/fileutil.c:855 src/fileutil.c:1450
+#: src/fileutil.c:1922
+msgid "Overwrite file"
+msgstr ""
+
+#: src/fileutil.c:539
+msgid "Yes to all"
+msgstr ""
+
+#: src/fileutil.c:541
+msgid "Skip"
+msgstr ""
+
+#: src/fileutil.c:543
+msgid "Skip all"
+msgstr ""
+
+#: src/fileutil.c:560 src/fileutil.c:876 src/fileutil.c:1558
+#: src/fileutil.c:1618 src/fileutil.c:1816
+msgid "Auto rename"
+msgstr ""
+
+#: src/fileutil.c:572 src/fileutil.c:888 src/fileutil.c:1771
+#: src/fileutil.c:1996
+msgid "Rename"
+msgstr ""
+
+#: src/fileutil.c:623
+msgid "Pornview - copy/move"
+msgstr ""
+
+#: src/fileutil.c:624 src/fileutil.c:636 src/fileutil.c:651
+#: src/fileutil.c:1185 src/fileutil.c:1192
+msgid " "
+msgstr ""
+
+#: src/fileutil.c:634 src/fileutil.c:1046
+msgid "PornView - copy"
+msgstr ""
+
+#: src/fileutil.c:649 src/fileutil.c:1055
+msgid "PornView - move"
+msgstr ""
+
+#: src/fileutil.c:687 src/fileutil.c:927
+msgid "Error copying file"
+msgstr ""
+
+#: src/fileutil.c:690
+#, c-format
+msgid ""
+"Unable to copy file:\n"
+"%sto:\n"
+"%s\n"
+" during multiple file copy."
+msgstr ""
+
+#: src/fileutil.c:695 src/fileutil.c:934
+msgid "Error moving file"
+msgstr ""
+
+#: src/fileutil.c:698
+#, c-format
+msgid ""
+"Unable to move file:\n"
+"%sto:\n"
+"%s\n"
+" during multiple file move."
+msgstr ""
+
+#: src/fileutil.c:841
+msgid "Source matches destination"
+msgstr ""
+
+#: src/fileutil.c:843
+msgid "Source and destination are the same, operation cancelled."
+msgstr ""
+
+#: src/fileutil.c:853
+#, c-format
+msgid ""
+"Overwrite file:\n"
+"%s\n"
+" with:\n"
+"%s"
+msgstr ""
+
+#: src/fileutil.c:860 src/fileutil.c:1455 src/fileutil.c:1927
+msgid "Overwrite"
+msgstr ""
+
+#: src/fileutil.c:929
+#, c-format
+msgid ""
+"Unable to copy file:\n"
+"%s\n"
+"to:\n"
+"%s"
+msgstr ""
+
+#: src/fileutil.c:936
+#, c-format
+msgid ""
+"Unable to move file:\n"
+"%s\n"
+"to:\n"
+"%s"
+msgstr ""
+
+#: src/fileutil.c:987
+msgid "Invalid destination"
+msgstr ""
+
+#: src/fileutil.c:989
+msgid ""
+"When operating with multiple files, please select\n"
+" a directory, not file."
+msgstr ""
+
+#: src/fileutil.c:992
+msgid "Invalid directory"
+msgstr ""
+
+#: src/fileutil.c:994
+msgid "Please select an existing directory"
+msgstr ""
+
+#: src/fileutil.c:1047
+msgid "Copy"
+msgstr ""
+
+#: src/fileutil.c:1049
+#, c-format
+msgid ""
+"Copy file:\n"
+"%s\n"
+"to:"
+msgstr ""
+
+#: src/fileutil.c:1051
+msgid "Copy multiple files to:"
+msgstr ""
+
+#: src/fileutil.c:1056
+msgid "Move"
+msgstr ""
+
+#: src/fileutil.c:1058
+#, c-format
+msgid ""
+"Move file:\n"
+"%s\n"
+"to:"
+msgstr ""
+
+#: src/fileutil.c:1060
+msgid "Move multiple files to:"
+msgstr ""
+
+#: src/fileutil.c:1185
+msgid "Pornview - delete"
+msgstr ""
+
+#: src/fileutil.c:1191
+msgid "PornView - delete"
+msgstr ""
+
+#: src/fileutil.c:1220
+#, c-format
+msgid ""
+"Unable to delete file:\n"
+" %s\n"
+" Continue multiple delete operation?"
+msgstr ""
+
+#: src/fileutil.c:1222 src/fileutil.c:1238
+msgid "Delete failed"
+msgstr ""
+
+#: src/fileutil.c:1237 src/fileutil.c:1308
+#, c-format
+msgid ""
+"Unable to delete file:\n"
+"%s"
+msgstr ""
+
+#: src/fileutil.c:1283
+msgid "Delete files"
+msgstr ""
+
+#: src/fileutil.c:1284
+msgid "About to delete multiple files..."
+msgstr ""
+
+#: src/fileutil.c:1309
+msgid "File deletion failed"
+msgstr ""
+
+#: src/fileutil.c:1343
+#, c-format
+msgid ""
+"About to delete the file:\n"
+" %s"
+msgstr ""
+
+#: src/fileutil.c:1344
+msgid "Delete file"
+msgstr ""
+
+#: src/fileutil.c:1448 src/fileutil.c:1920
+#, c-format
+msgid ""
+"Overwrite file:\n"
+"%s\n"
+"by renaming:\n"
+"%s"
+msgstr ""
+
+#: src/fileutil.c:1469
+#, c-format
+msgid ""
+"Unable to rename file:\n"
+"%s\n"
+" to:\n"
+"%s"
+msgstr ""
+
+#: src/fileutil.c:1472 src/fileutil.c:1943
+msgid "Error renaming file"
+msgstr ""
+
+#: src/fileutil.c:1560
+msgid ""
+"Can not auto rename with the selected\n"
+"number set, one or more files exist that\n"
+"match the resulting name list.\n"
+msgstr ""
+
+#: src/fileutil.c:1616
+#, c-format
+msgid ""
+"Failed to rename\n"
+"%s\n"
+"The number was %d."
+msgstr ""
+
+#: src/fileutil.c:1767 src/fileutil.c:1991
+msgid "PornView - rename"
+msgstr ""
+
+#: src/fileutil.c:1768
+msgid "Rename multiple files:"
+msgstr ""
+
+#: src/fileutil.c:1827
+msgid "Rename:"
+msgstr ""
+
+#: src/fileutil.c:1831
+msgid "to:"
+msgstr ""
+
+#: src/fileutil.c:1852
+msgid "Begin text"
+msgstr ""
+
+#: src/fileutil.c:1859
+msgid "Start #"
+msgstr ""
+
+#: src/fileutil.c:1867
+msgid "End text"
+msgstr ""
+
+#: src/fileutil.c:1878
+msgid "Padding:"
+msgstr ""
+
+#: src/fileutil.c:1940
+#, c-format
+msgid ""
+"Unable to rename file:\n"
+"%s\n"
+"to:\n"
+"%s"
+msgstr ""
+
+#: src/fileutil.c:1990
+#, c-format
+msgid ""
+"Rename file:\n"
+"%s\n"
+"to:"
+msgstr ""
+
+#: src/fileutil.c:2054
+#, c-format
+msgid ""
+"The directory:\n"
+"%s\n"
+"already exists."
+msgstr ""
+
+#: src/fileutil.c:2055
+msgid "Directory exists"
+msgstr ""
+
+#: src/fileutil.c:2061
+#, c-format
+msgid ""
+"The path:\n"
+"%s\n"
+"already exists as a file."
+msgstr ""
+
+#: src/fileutil.c:2063
+msgid "Could not create directory"
+msgstr ""
+
+#: src/fileutil.c:2071
+#, c-format
+msgid ""
+"Unable to create directory:\n"
+"%s"
+msgstr ""
+
+#: src/fileutil.c:2072
+msgid "Error creating directory"
+msgstr ""
+
+#: src/fileutil.c:2131
+#, c-format
+msgid ""
+"Create directory in:\n"
+"%s\n"
+"named:"
+msgstr ""
+
+#: src/fileutil.c:2132
+msgid "PornView - new directory"
+msgstr ""
+
+#: src/fileutil.c:2137
+msgid "Create"
+msgstr ""
+
+#: src/imageinfo.c:76
+msgid "type"
+msgstr ""
+
+#: src/imageinfo.c:76
+msgid "movie"
+msgstr ""
+
+#: src/imageinfo.c:76
+msgid "image"
+msgstr ""
+
+#: src/imageinfo.c:77
+msgid "size"
+msgstr ""
+
+#: src/imageinfo.c:77
+msgid "time"
+msgstr ""
+
+#: src/imageinfo.c:77
+msgid "user"
+msgstr ""
+
+#: src/imageinfo.c:77
+msgid "group"
+msgstr ""
+
+#: src/imageinfo.c:207
+msgid "File Properties"
+msgstr ""
+
+#: src/imageview.c:1134
+msgid "original size"
+msgstr ""
+
+#: src/imageview.c:1137
+msgid "zoom in"
+msgstr ""
+
+#: src/imageview.c:1140
+msgid "zoom out"
+msgstr ""
+
+#: src/imageview.c:1143
+msgid "fit to window"
+msgstr ""
+
+#: src/imageview.c:1146
+msgid "auto zoom"
+msgstr ""
+
+#: src/imageview.c:1153
+msgid "0 deg"
+msgstr ""
+
+#: src/imageview.c:1156
+msgid "90 deg"
+msgstr ""
+
+#: src/imageview.c:1159
+msgid "180 deg"
+msgstr ""
+
+#: src/imageview.c:1162
+msgid "-90 deg"
+msgstr ""
+
+#: src/imageview.c:1167
+#, c-format
+msgid "  %s (%dx%d)"
+msgstr ""
+
+#: src/imageview.c:1175
+#, c-format
+msgid "  [ zoom: %s ] [ rotate: %s ]"
+msgstr ""
+
+#: src/thumbview.c:79
+msgid "/_Fullscreen"
+msgstr ""
+
+#: src/thumbview.c:81
+msgid "/Open in E_xternal Program"
+msgstr ""
+
+#: src/thumbview.c:82
+msgid "/_Scripts"
+msgstr ""
+
+#: src/thumbview.c:84
+msgid "/_Zoom"
+msgstr ""
+
+#: src/thumbview.c:85
+msgid "/Zoom/Zoom In"
+msgstr ""
+
+#: src/thumbview.c:86
+msgid "/Zoom/Zoom Out"
+msgstr ""
+
+#: src/thumbview.c:87
+msgid "/Zoom/Fit to Window"
+msgstr ""
+
+#: src/thumbview.c:88
+msgid "/Zoom/Auto Zoom"
+msgstr ""
+
+#: src/thumbview.c:89
+msgid "/Zoom/Original Size"
+msgstr ""
+
+#: src/thumbview.c:90
+msgid "/_Rotate"
+msgstr ""
+
+#: src/thumbview.c:91
+msgid "/Rotate/Rotate 90deg"
+msgstr ""
+
+#: src/thumbview.c:92
+msgid "/Rotate/Rotate -90deg"
+msgstr ""
+
+#: src/thumbview.c:93
+msgid "/Rotate/Rotate 180deg"
+msgstr ""
+
+#: src/thumbview.c:96
+msgid "/_Movie"
+msgstr ""
+
+#: src/thumbview.c:97
+msgid "/Movie/Play"
+msgstr ""
+
+#: src/thumbview.c:98
+msgid "/Movie/Pause"
+msgstr ""
+
+#: src/thumbview.c:99
+msgid "/Movie/Stop"
+msgstr ""
+
+#: src/thumbview.c:101
+msgid "/Movie/Fast Forward"
+msgstr ""
+
+#: src/thumbview.c:102
+msgid "/Movie/Slow Forward"
+msgstr ""
+
+#: src/thumbview.c:103
+msgid "/Movie/---"
+msgstr ""
+
+#: src/thumbview.c:104
+msgid "/Movie/Create Thumbnail"
+msgstr ""
+
+#: src/thumbview.c:108
+msgid "/_Properties"
+msgstr ""
+
+#: src/thumbview.c:111
+msgid "/_Scan EXIF Data"
+msgstr ""
+
+#: src/thumbview.c:115
+msgid "/Select _All"
+msgstr ""
+
+#: src/thumbview.c:116
+msgid "/Copy..."
+msgstr ""
+
+#: src/thumbview.c:117
+msgid "/Move..."
+msgstr ""
+
+#: src/thumbview.c:118
+msgid "/Rename..."
+msgstr ""
+
+#: src/thumbview.c:119
+msgid "/Delete..."
+msgstr ""
+
+#: src/thumbview.c:619
+msgid "Previous Image/Movie"
+msgstr ""
+
+#: src/thumbview.c:627
+msgid "Next Image/Movie"
+msgstr ""
+
+#: src/thumbview.c:639
+msgid "First Image/Movie"
+msgstr ""
+
+#: src/thumbview.c:648
+msgid "Last Image/Movie"
+msgstr ""
+
+#: src/thumbview.c:663
+msgid "Properties"
+msgstr ""
+
+#: src/thumbview.c:677
+msgid "View Thumbs"
+msgstr ""
+
+#: src/thumbview.c:686
+msgid "View List"
+msgstr ""
+
+#: src/thumbview.c:700
+msgid "Fullscreen"
+msgstr ""
+
+#: src/thumbview.c:712 src/prefs_ui/prefs_win.c:62
+msgid "Slideshow"
+msgstr ""
+
+#: src/thumbview.c:724
+msgid "No Zoom"
+msgstr ""
+
+#: src/thumbview.c:733
+msgid "Auto Zoom"
+msgstr ""
+
+#: src/thumbview.c:743
+msgid "Zoom In"
+msgstr ""
+
+#: src/thumbview.c:752
+msgid "Zoom Out"
+msgstr ""
+
+#: src/thumbview.c:1360
+msgid "Execute command"
+msgstr ""
+
+#: src/thumbview.c:1361 src/thumbview.c:1435
+msgid "Please enter options:"
+msgstr ""
+
+#: src/thumbview.c:1434
+msgid "Execute script"
+msgstr ""
+
+#: src/videoplay_mplayer.c:255 src/videoplay_xine.c:585
+msgid "Play"
+msgstr ""
+
+#: src/videoplay_mplayer.c:260 src/videoplay_xine.c:590
+msgid "Pause"
+msgstr ""
+
+#: src/videoplay_mplayer.c:265 src/videoplay_xine.c:595
+msgid "Stop"
+msgstr ""
+
+#: src/videoplay_mplayer.c:270 src/videoplay_xine.c:610
+msgid "Previous"
+msgstr ""
+
+#: src/videoplay_mplayer.c:275 src/videoplay_xine.c:615
+msgid "Next"
+msgstr ""
+
+#: src/videoplay_xine.c:123
+msgid "stop"
+msgstr ""
+
+#: src/videoplay_xine.c:129
+msgid "play"
+msgstr ""
+
+#: src/videoplay_xine.c:133
+msgid "forward x2"
+msgstr ""
+
+#: src/videoplay_xine.c:137
+msgid "forward x4"
+msgstr ""
+
+#: src/videoplay_xine.c:141
+msgid "pause"
+msgstr ""
+
+#: src/videoplay_xine.c:145
+msgid "forward x0.5"
+msgstr ""
+
+#: src/videoplay_xine.c:149
+msgid "forward x0.25"
+msgstr ""
+
+#: src/videoplay_xine.c:158
+#, c-format
+msgid "  %s"
+msgstr ""
+
+#: src/videoplay_xine.c:168
+#, c-format
+msgid "  [ %s ]"
+msgstr ""
+
+#: src/videoplay_xine.c:600
+msgid "Slow Forward"
+msgstr ""
+
+#: src/videoplay_xine.c:605
+msgid "Fast Forward"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:65
+msgid "Never convert"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:66
+msgid "Locale"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:67
+msgid "Auto detect"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:68
+msgid "Any"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:140
+msgid "Startup Directory"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:203
+msgid " Startup Directory "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:211
+msgid "Home directory"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:217
+msgid "Go to last visited location"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:223
+msgid "Go to this directory:"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:237
+msgid "Browse..."
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:242
+msgid "Current"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:249
+msgid " Main Window "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:257
+msgid "Remember window size"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:260
+msgid "Enable/Disable dock"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:327
+msgid ""
+"String includes invalid character!\n"
+"Only ASCII is available."
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:335 src/prefs_ui/prefs_ui_etc.c:68
+msgid "Sorry, cannot include \",\" character!"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:342 src/prefs_ui/prefs_ui_etc.c:75
+msgid "Sorry, cannot include \";\" character!"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:373 src/prefs_ui/prefs_ui_etc.c:315
+#, c-format
+msgid "\"%s\" is already defined."
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:374 src/prefs_ui/prefs_ui_etc.c:82
+#: src/prefs_ui/prefs_ui_etc.c:89 src/prefs_ui/prefs_ui_etc.c:316
+msgid "Error!!"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:437 src/prefs_ui/prefs_ui_common.c:484
+#: src/prefs_ui/prefs_ui_common.c:788 src/prefs_ui/prefs_ui_etc.c:526
+msgid "Enable"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:437 src/prefs_ui/prefs_ui_common.c:489
+#: src/prefs_ui/prefs_ui_common.c:787 src/prefs_ui/prefs_ui_common.c:788
+msgid "Disable"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:438 src/prefs_ui/prefs_ui_common.c:657
+#: src/prefs_ui/prefs_ui_etc.c:153 src/prefs_ui/prefs_ui_etc.c:346
+msgid "System defined"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:493 src/prefs_ui/prefs_ui_common.c:660
+#: src/prefs_ui/prefs_ui_etc.c:151 src/prefs_ui/prefs_ui_etc.c:349
+msgid "User defined"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:712
+msgid "Extension"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:712
+msgid "Type"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:712 src/prefs_ui/prefs_ui_etc.c:449
+msgid "Status"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:721
+msgid "Image Types"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:750
+msgid "Extension: "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:769
+msgid "Image Type: "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:907
+msgid " Common "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:925
+msgid "Locale character set: "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:944
+msgid "Internal character set: "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:962
+msgid "Language for auto detecting"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:974
+msgid " File name "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_common.c:986
+msgid "Character set of file name"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_dirview.c:30
+msgid "Solid"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_dirview.c:31
+msgid "Dotted"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_dirview.c:32
+msgid "Tabbed"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_dirview.c:38
+msgid "Square"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_dirview.c:39
+msgid "Triangle"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_dirview.c:40
+msgid "Circular"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_dirview.c:132
+msgid " Directory Scan "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_dirview.c:140
+msgid "Check subdirectories"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_dirview.c:151
+msgid "Check number of hard links"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_dirview.c:159
+msgid "Do not check number of hard links"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_dirview.c:164
+msgid "Show dotfile"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_dirview.c:168
+msgid " Style "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_dirview.c:176
+msgid "Tree line style"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_dirview.c:183
+msgid "Tree expander style"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:60
+msgid ""
+"Key string includes invalid character!\n"
+"Only ASCII (except space) is available."
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:81
+msgid "\"Key name\" must be defined."
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:88
+msgid "\"Display name\" must be defined."
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:447
+msgid "Key Name"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:448
+msgid "Displayed Name"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:450 src/prefs_ui/prefs_ui_etc.c:536
+msgid "Auto"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:451 src/prefs_ui/prefs_ui_etc.c:546
+msgid "Display"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:462
+msgid " Key Name Definition "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:490
+msgid "Key Name: "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:508
+msgid "Displayed Name: "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:527 src/prefs_ui/prefs_ui_etc.c:537
+#: src/prefs_ui/prefs_ui_etc.c:547
+msgid "TRUE"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:527 src/prefs_ui/prefs_ui_etc.c:537
+#: src/prefs_ui/prefs_ui_etc.c:547
+msgid "FALSE"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:576
+msgid "Character set"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:586
+msgid "Character set: "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:646
+msgid "second(s)"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:647
+msgid "minute(s)"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:648
+msgid "hour(s)"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:649
+msgid "day(s)"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:661
+msgid "milliseconds, no delay"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:673
+msgid "milliseconds"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_etc.c:707
+msgid " Delay before image change: "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_imageview.c:23 src/prefs_ui/prefs_ui_thumbview.c:20
+msgid "Nearest"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_imageview.c:24 src/prefs_ui/prefs_ui_thumbview.c:21
+msgid "Tiles"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_imageview.c:25 src/prefs_ui/prefs_ui_thumbview.c:22
+msgid "Bilinear"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_imageview.c:26 src/prefs_ui/prefs_ui_thumbview.c:23
+msgid "Hyper"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_imageview.c:32
+msgid "Normal"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_imageview.c:33
+msgid "Best"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_imageview.c:92 src/prefs_ui/prefs_ui_thumbview.c:94
+msgid " Quality "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_imageview.c:100
+msgid "Dithering method:"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_imageview.c:107
+msgid "Zoom (scaling):"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_imageview.c:133
+msgid " Zoom "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_imageview.c:143
+msgid "Zoom to original size"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_imageview.c:150
+msgid "Fit image to window, if image is larger"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_thumbview.c:103
+msgid "Thumbnail quality:"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_thumbview.c:116
+msgid " Cache "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_thumbview.c:124
+msgid "Cache thumbnails"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_thumbview.c:129
+msgid "Cache thumbnails into .thumbnails"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_thumbview.c:133
+msgid " Mode "
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_thumbview.c:142
+msgid "list mode"
+msgstr ""
+
+#: src/prefs_ui/prefs_ui_thumbview.c:147
+msgid "preview mode"
+msgstr ""
+
+#: src/prefs_ui/prefs_win.c:50
+msgid "/Common"
+msgstr ""
+
+#: src/prefs_ui/prefs_win.c:51
+msgid "/Common/Filtering"
+msgstr ""
+
+#: src/prefs_ui/prefs_win.c:53
+msgid "/Common/Character Set"
+msgstr ""
+
+#: src/prefs_ui/prefs_win.c:54
+msgid "Directory View"
+msgstr ""
+
+#: src/prefs_ui/prefs_win.c:56
+msgid "Image View"
+msgstr ""
+
+#: src/prefs_ui/prefs_win.c:58
+msgid "Thumbnail View"
+msgstr ""
+
+#: src/prefs_ui/prefs_win.c:60
+msgid "Comment"
+msgstr ""
+
+#: src/prefs_ui/prefs_win.c:63
+msgid "/External Program"
+msgstr ""
+
+#: src/prefs_ui/prefs_win.c:64
+msgid "/External Program/Scripts"
+msgstr ""
+
+#: src/prefs_ui/prefs_win.c:66
+msgid "/Plugin"
+msgstr ""

@@ -1,0 +1,27 @@
+
+# Source files
+src/support/charset.c
+src/support/dialogs.c
+src/support/exif_view.c
+src/support/generic_dialog.c
+src/support/file_utils.c
+src/support/path_selection.c
+src/about.c
+src/browser.c
+src/cache.c
+src/comment.c
+src/comment_view.c
+src/dirview.c
+src/dock.c
+src/fileutil.c
+src/imageinfo.c
+src/imageview.c
+src/thumbview.c
+src/videoplay_mplayer.c
+src/videoplay_xine.c
+src/prefs_ui/prefs_ui_common.c
+src/prefs_ui/prefs_ui_dirview.c
+src/prefs_ui/prefs_ui_etc.c
+src/prefs_ui/prefs_ui_imageview.c
+src/prefs_ui/prefs_ui_thumbview.c
+src/prefs_ui/prefs_win.c

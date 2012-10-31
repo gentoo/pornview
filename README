@@ -1,0 +1,80 @@
+*----------------------------------------------------------------------------*
+*                                                                 .---.      *
+*                           PornView                             (_,/\ \     *
+*           photo/movie collection viewer and manager           (`a a(  )    *
+*                    trem0r <trem0r@tlen.pl>                    ) \=  ) (    *
+*                        (c) 2002,2003                         (.--' '--.)   *
+*                                                              / (_)^(_) \   *
+*----------------------------------------------------------------------------*
+
+=== Licensing
+
+  This program is released under the terms of the GNU General Public
+ License (GNU GPL).
+  Part of the source code comes from:
+  - GQview - John Ellis
+  - gThumb - The Free Software Foundation, Inc.
+  - gnome-xine - the xine-project
+  - GTK+(gtkcellrenderepixbuf) - Red Hat, Inc., Jonathan Blandford
+  - Another X Image Viewer - David RAMBOZ
+  - GImageView - Takuro Ashie
+
+=== Warning 
+
+ This software is not meant to used for anything else than testing.
+
+=== Requirements
+ 
+  GTK+ 1.2.x: ftp://ftp.gtk.org/pub/gtk
+  gdk-pixbuf >= 0.16.0: ftp://ftp.gnome.org
+  libpng: (by now most systems have this by default)
+  GTK+ 2.x.x: ftp://ftp.gtk.org/pub/gtk (optional)
+  Xine-lib >= 0.9.9: xine.sourfeforge.net (optional)
+
+=== Installation
+
+ Compilation:
+> ./configure 
+ enabling movie support (experimental):
+  ./configure --enable-xine-old <- Xine-lib >=0.9.9 <= 0.9.13
+  ./configure --enable-xine     <- Xine-lib >=1.0.0
+  ./configure --enable-mplayer
+ enabling gtk2 (experimental):
+  ./configure --with-gtk2
+> make
+ General install:
+> make install
+ Removal:
+> make uninstall
+
+=== Description / Features
+
+ PornView is a image/movie file viewer. Basic features:
+  - Browse your hard disk showing you thumbnails of image files.
+  - Slide Show.
+  - View EXIF data attached to JPEG images.
+  - View in fullscreen mode.
+  - Zoom in, out, and fit to window.
+  - Copy, move, delete images and folders.
+  - Rename images in series.
+  - Support movies.
+  - Add comments to images.
+  - Can open a file in an external program (customizable).
+  - File filtering options.
+
+=== Documentation
+
+ ...
+ 
+=== Thanks go to the following:
+
+  Iain Patterson <me@iain.cx>
+    for Xine support patch.
+	
+  Vincent Hanquez <tab@tuxfamily.org>
+    for Xinerama support patch.
+
+  Migrec <migrec@online.fr>
+    for French translation.
+		 
+  All those that not listed here.
