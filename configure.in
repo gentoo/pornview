@@ -196,7 +196,7 @@ dnl Check for Xine library
 dnl ****************************
 if test "$enable_xine" = yes; then
    have_xine=no
-   AM_PATH_XINE($XINE_REQUIRED,
+   PKG_CHECK_MODULES([XINE], [libxine],
       [have_xine=yes], [have_xine=no])
    if test "$have_xine" = yes; then
       MOVIELIB_CFLAGS=${XINE_CFLAGS}
@@ -216,12 +216,10 @@ AC_SUBST(MOVIELIB_LIBS)
 dnl check for Xinerama
 AC_PATH_XTRA
 XINERAMA_LIBS=""
-AC_CHECK_LIB(Xinerama, XineramaQueryScreens,
-	       [XINERAMA_LIBS="-lXinerama"
-		  AC_CHECK_HEADERS(X11/extensions/Xinerama.h)],
-		    [],[$X_LIBS -lX11 -lXext])
-AC_SUBST(XINERAMA_LIBS)
-AC_SUBST(X_LIBS)
+PKG_CHECK_MODULES([XINERAMA], [xinerama], [], [AC_MSG_ERROR(Xinerama library not found!)])
+PKG_CHECK_MODULES([X], [x11 xext], [], [AC_MSG_ERROR([X11 libraries not found!])])
+AC_SUBST([XINERAMA_LIBS])
+AC_SUBST([X_LIBS])
 
 dnl ****************************
 dnl Test for MPlayer
