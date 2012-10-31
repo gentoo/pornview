@@ -302,7 +302,6 @@ AC_DEFINE_UNQUOTED([PACKAGE_SOURCE_DIR], ["${packagesrcdir}"], [package datadir]
 AC_CONFIG_FILES([
 Makefile
 icons/Makefile
-po/Makefile.in
 src/Makefile
 src/pixmaps/Makefile
 src/scripts/Makefile
