@@ -52,7 +52,7 @@ pornview_SOURCES = 		\
 pornview_LDFLAGS = \
 	-export-dynamic
 
-pornview_LDADD = $(GTK_LIBS) $(GDK_PIXBUF_LIBS) $(PNG_LIBS) $(MOVIELIB_LIBS) \
-	$(INTLLIBS) $(LIBICONV) $(LIBCHARSET) $(X_LIBS) $(XINERAMA_LIBS) \
-	prefs_ui/libprefs_ui.la  support/widgets/libsupport_widgets.la \
-	support/libsupport_utils.la $(LIBEXIF)
+pornview_LDADD = prefs_ui/libprefs_ui.la  support/widgets/libsupport_widgets.la \
+	support/libsupport_utils.la $(LIBEXIF) \
+	$(GTK_LIBS) $(GDK_PIXBUF_LIBS) $(PNG_LIBS) $(MOVIELIB_LIBS) \
+	$(INTLLIBS) $(LIBICONV) $(LIBCHARSET) $(X_LIBS) $(XINERAMA_LIBS) -lX11 -lm
