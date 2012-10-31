@@ -66,7 +66,7 @@ AC_SUBST([GDK_PIXBUF2_REQUIRED])
 dnl ******************************
 dnl Haiku does not use libm for the math functions
 dnl ******************************
-AC_SEARCH_LIBS([floor], [m], [], [AC_MSG_EROR([unable to find the floor() function])
+AC_SEARCH_LIBS([floor], [m], [], [AC_MSG_ERROR([unable to find the floor function])])
 
 dnl ******************************
 dnl Check for GTK
