@@ -634,7 +634,8 @@ zlist_draw (GtkWidget * widget, GdkRectangle * area)
 					   CELL_X_FROM_COL (list, j), area->y,
 					   list->cell_x_pad, area->height);
 
-		cell = ZLIST_CELL_FROM_INDEX (list, idx);
+		if (idx < list->cell_count)
+		    cell = ZLIST_CELL_FROM_INDEX (list, idx);
 
 		cell_area.x = CELL_X_FROM_COL (list, j) + list->cell_x_pad;
 		cell_area.y = CELL_Y_FROM_ROW (list, i) + list->cell_y_pad;

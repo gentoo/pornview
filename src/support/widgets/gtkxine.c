@@ -632,7 +632,7 @@ gtk_xine_unrealize (GtkWidget * widget)
      */
     if (this->vo_driver != NULL)
 	xine_close_video_driver (this->xine, this->vo_driver);
-    if (this->vo_driver != NULL)
+    if (this->ao_driver != NULL)
 	xine_close_audio_driver (this->xine, this->ao_driver);
 
     /*
@@ -1920,7 +1920,7 @@ scale_image (struct prvt_image_s *image)
  *  This function was pinched from filter_yuy2tov12.c, part of
  *  transcode, a linux video stream processing tool
  *
- *  Copyright (C) Thomas ŽÖstreich - June 2001
+ *  Copyright (C) Thomas ï¿½ï¿½streich - June 2001
  *
  *  Thanks Thomas
  *      

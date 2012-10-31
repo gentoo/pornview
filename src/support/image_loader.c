@@ -81,7 +81,7 @@ static void
 image_loader_stop (ImageLoader * il)
 {
 #ifdef USE_GTK2
-    GError *err;
+    GError *err = NULL;
 #endif
 
     if (!il)
@@ -174,7 +174,7 @@ cb_image_loader_idle (gpointer data)
     gint    c;
 
 #ifdef USE_GTK2
-    GError *err;
+    GError *err = NULL;
 #endif
 
     if (!il)
@@ -241,7 +241,7 @@ image_loader_begin (ImageLoader * il)
     int     b;
 
 #ifdef USE_GTK2
-    GError *err;
+    GError *err = NULL;
 #endif
 
     if (!il->loader || il->pixbuf)
