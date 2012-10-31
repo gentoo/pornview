@@ -787,7 +787,7 @@ gid2str (gid_t gid)
 gchar  *
 mode2str (mode_t mode)
 {
-    gchar   permission[11] = { "----------" };
+    gchar   permission[12] = { "----------" };
 
     switch (mode & S_IFMT)
     {
