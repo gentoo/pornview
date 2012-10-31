@@ -2,6 +2,7 @@
 Name=PornView
 Comment=Photo/Movie collection manager
 Exec=pornview
-Icon=pornview.png
-Terminal=0
+Icon=pornview
+Terminal=false
 Type=Application
+Categories=GTK;Graphics;Viewer;
