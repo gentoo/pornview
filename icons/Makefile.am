@@ -1,5 +1,5 @@
 
-icondir = $(datadir)/pixmaps
+icondir = $(datadir)/icons/hicolor/48x48
 icon_DATA = pornview.png
 
 EXTRA_DIST = \
