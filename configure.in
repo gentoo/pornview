@@ -236,8 +236,7 @@ dnl ******************************
 dnl for gettext
 dnl ******************************
 ALL_LINGUAS="fr pl"
-AM_GNU_GETTEXT
-AC_CHECK_FUNC(gettext,,AC_CHECK_LIB(intl, gettext))
+AM_GNU_GETTEXT([external])
 localedir="\${datadir}/locale"
 AC_SUBST(localedir)
 
