@@ -333,15 +333,7 @@ comment_set_default_value (Comment * comment)
 	entry->key = g_strdup (template->key);
 	entry->display_name = g_strdup (template->display_name);
 
-	if (comment->info && template->def_val_fn)
-	{
-	    entry->value = entry->def_val_fn (comment->info, NULL);
-	}
-	else
-	{
-	    entry->value = NULL;
-	}
-
+	entry->value = NULL;
 	comment->data_list = g_list_append (comment->data_list, entry);
     }
 }
