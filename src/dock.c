@@ -5,6 +5,7 @@
  *                    trem0r <trem0r@tlen.pl>                    ) \=  ) (    *
  *                           (c) 2002                           (.--' '--.)   *
  *                                                              / (_)^(_) \   *
+ *      Modified to use EggTrayIcon by freelight <evaykher@optonline.net>     *
  *----------------------------------------------------------------------------*/
 
 #include "pornview.h"
@@ -15,7 +16,8 @@
 #include "about.h"
 #include "browser.h"
 #include "prefs.h"
-
+#include "eggtrayicon.h"
+#include "eggtrayicon.c"
 #include "pixmaps/dock.xpm"
 
 #define dock_exit   browser_destroy
@@ -38,7 +40,7 @@ static int dock_popupmenu_factory_count =
 
 static GtkItemFactory *popup_item_factory;
 static GtkWidget *popup_menu;
-static GtkWindow *dock = NULL;;
+static EggTrayIcon *dock = NULL;
 
 /*
  *-------------------------------------------------------------------
@@ -102,18 +104,20 @@ cb_dock_clicked (GtkWidget * widget, GdkEventButton * event, gpointer data)
 }
 
 static void
-dock_build (GtkWindow * dock)
+dock_build ()
 {
     GtkWidget *image;
     GtkWidget *eventbox;
 
+    dock = egg_tray_icon_new ("Pornview");
+    eventbox = gtk_event_box_new ();
     image = pixbuf_create_pixmap_from_xpm_data (dock_xpm);
 
     GTK_WIDGET_SET_FLAGS (image, GTK_NO_WINDOW);
     image->requisition.width = 22;
     image->requisition.height = 22;
 
-    eventbox = gtk_event_box_new ();
+
 
     gtk_widget_set_events (GTK_WIDGET (eventbox),
 			   gtk_widget_get_events (eventbox) |
@@ -130,8 +134,7 @@ dock_build (GtkWindow * dock)
     gtk_object_set_data (GTK_OBJECT (dock), "pixmapg", image);
     gtk_container_add (GTK_CONTAINER (eventbox), image);
     gtk_container_add (GTK_CONTAINER (dock), eventbox);
-
-    gtk_widget_show (image);
+    gtk_widget_show_all (GTK_WIDGET (dock));
 
     /*
      * add the popup menu 
