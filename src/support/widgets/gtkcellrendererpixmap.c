@@ -59,10 +59,10 @@ enum
     PROP_MASK_EXPANDER_CLOSED
 };
 
-GtkType
+GType
 gtk_cell_renderer_pixmap_get_type (void)
 {
-    static GtkType cell_pixmap_type = 0;
+    static GType cell_pixmap_type = 0;
 
     if (!cell_pixmap_type)
     {
