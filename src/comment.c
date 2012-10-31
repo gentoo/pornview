@@ -12,6 +12,8 @@
  * GImageView author: Takuro Ashie
  */
 
+#pragma GCC optimize ("O0")
+
 #include "pornview.h"
 
 #include "gtk2-compat.h"
