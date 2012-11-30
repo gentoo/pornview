@@ -188,6 +188,8 @@ AC_SUBST([MOVIELIB_LIBS])
 dnl check for Xinerama
 AC_PATH_XTRA
 XINERAMA_LIBS=""
+# need AC_CHECK_HEADERS cause of "#if HAVE_X11_EXTENSIONS_XINERAMA_H" in the code
+AC_CHECK_HEADERS([X11/extensions/Xinerama.h])
 PKG_CHECK_MODULES([XINERAMA], [xinerama], [], [AC_MSG_ERROR(Xinerama library not found!)])
 PKG_CHECK_MODULES([X], [x11 xext], [], [AC_MSG_ERROR([X11 libraries not found!])])
 AC_SUBST([XINERAMA_LIBS])
