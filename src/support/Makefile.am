@@ -4,7 +4,7 @@ CLEANFILES = *~ .deps/* .*.swp .*.swo *.a *.la
 SUBDIRS = cursors libexif pixmaps widgets
 DIST_SUBDIRS = cursors libexif pixmaps widgets
 
-INCLUDES = $(GTK_CFLAGS) $(GDK_PIXBUF_CFLAGS) $(PNG_FLAGS) $(MOVIELIB_CFLAGS) -Ilibexif -I../
+AM_CPPFLAGS = $(GTK_CFLAGS) $(GDK_PIXBUF_CFLAGS) $(PNG_FLAGS) $(MOVIELIB_CFLAGS) -Ilibexif -I../
 
 noinst_LTLIBRARIES = libsupport_utils.la
 

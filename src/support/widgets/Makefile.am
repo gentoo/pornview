@@ -4,7 +4,7 @@ CLEANFILES = *~ .deps/* .*.swp .*.swo *.a *.la
 SUBDIRS = pixmaps
 DIST_SUBDIRS = pixmaps
 
-INCLUDES = $(GTK_CFLAGS) $(GDK_PIXBUF_CFLAGS) $(PNG_FLAGS) $(MOVIELIB_CFLAGS) -I../
+AM_CPPFLAGS = $(GTK_CFLAGS) $(GDK_PIXBUF_CFLAGS) $(PNG_FLAGS) $(MOVIELIB_CFLAGS) -I../
 
 noinst_LTLIBRARIES = libsupport_widgets.la
 

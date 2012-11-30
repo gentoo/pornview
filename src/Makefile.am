@@ -4,7 +4,7 @@ CLEANFILES = *~ .deps/* .*.swp .*.swo
 SUBDIRS = pixmaps support prefs_ui scripts 
 DIST_SUBDIRS = pixmaps support prefs_ui scripts 
 
-INCLUDES = -DLOCALEDIR=\""$(localedir)"\" -Iprefs_ui -Isupport \
+AM_CPPFLAGS = -DLOCALEDIR=\""$(localedir)"\" -Iprefs_ui -Isupport \
 	$(GTK_CFLAGS) $(GDK_PIXBUF_CFLAGS) $(PNG_CFLAGS) $(MOVIELIB_CFLAGS) \
 	-Isupport/libexif -Isupport/widgets 
 

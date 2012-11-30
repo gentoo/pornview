@@ -1,7 +1,7 @@
 
 CLEANFILES = *~ .deps/* .*.swp .*.swo *.a
 
-INCLUDES = -I../support -I../ -I../support/widgets \
+AM_CPPFLAGS = -I../support -I../ -I../support/widgets \
 	$(GTK_CFLAGS) $(GDK_PIXBUF_CFLAGS) $(PNG_FLAGS) $(MOVIELIB_CFLAGS)
 
 noinst_LTLIBRARIES = libprefs_ui.la
