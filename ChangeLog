@@ -1,3 +1,6 @@
+0.2.2
+- Xinerama code was ignored due to autotools rework, fixed
+
 0.2.1
 - applied gentoo patchset
 - rework autotools stuff
