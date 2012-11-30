@@ -5,6 +5,7 @@ AC_INIT([pornview], [0.2.1], [])
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([-Wall])
+AM_PROG_AR
 LT_INIT([disable-static])
 PACKAGE=pornview
 
