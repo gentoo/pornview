@@ -27,7 +27,6 @@ dnl Checks for programs.
 dnl ******************************
 AC_ISC_POSIX
 AC_PROG_CC
-AM_PROG_CC_STDC
 AC_HEADER_STDC
 AC_PATH_X
 AC_PROG_INSTALL
