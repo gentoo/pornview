@@ -252,9 +252,11 @@ prefs_load_rc (gchar * filename, PrefsSection * sections)
 
     prefs_load_config_default (sections);
 
+	/* get config filename */
     g_snprintf (rcfile, MAX_PATH_LEN, "%s/%s/%s",
 		getenv ("HOME"), PORNVIEW_RC_DIR, filename);
 
+	/* open config */
     pornviewrc = fopen (rcfile, "r");
 
     if (!pornviewrc)
@@ -262,11 +264,13 @@ prefs_load_rc (gchar * filename, PrefsSection * sections)
 	return;
     }
 
+	/* read the config */
     while (fgets (buf, sizeof (buf), pornviewrc))
     {
 	if (buf[0] == '[' || buf[0] == '\n')
 	    continue;
 
+	/* parse it */
 	g_strstrip (buf);
 
 	pair = g_strsplit (buf, "=", 2);
@@ -275,6 +279,7 @@ prefs_load_rc (gchar * filename, PrefsSection * sections)
 	if (pair[1])
 	    g_strstrip (pair[1]);
 
+	/* load the settings from it */
 	for (j = 0; sections[j].section_name; j++)
 	{
 	    ConfParam *param = sections[j].param;
