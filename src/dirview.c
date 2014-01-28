@@ -304,7 +304,7 @@ cb_dirview_home(GtkWidget * widget, DirView * dv)
     GList  *sel_list;
     GtkCTreeNode *node;
     GtkCTreeNode *child;
-    char   *rp, *tmp, *tmp2;
+    char   *rp, *tmp;
 
     sel_list = GTK_CLIST (dv->dirtree)->selection;
     node = sel_list->data;
@@ -318,8 +318,9 @@ cb_dirview_home(GtkWidget * widget, DirView * dv)
 	node = dirtree_find_file(dv->dirtree, node, tmp);
 	tmp = strtok(NULL, "/");
 	node = dirtree_find_file(dv->dirtree, node, tmp);
-
 	dirview_select_node(dv, node);
+
+	g_free (rp);
 }
 
 static void
