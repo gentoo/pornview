@@ -12,6 +12,8 @@
  *  GQview author: John Ellis
  */
 
+#include "prefs.h"
+
 #ifndef __CACHE_H__
 #define __CACHE_H__
 
@@ -22,8 +24,8 @@ typedef enum
 }
 CacheType;
 
-#define PORNVIEW_RC_DIR_THUMBS     ".pornview/thumbnails"
-#define PORNVIEW_RC_DIR_COMMENTS   ".pornview/comments"
+#define PORNVIEW_RC_DIR_THUMBS     ".cache/pornview/thumbnails"
+#define PORNVIEW_RC_DIR_COMMENTS   PORNVIEW_RC_DIR "/comments"
 #define PORNVIEW_CACHE_DIR         ".thumbnails"
 #define PORNVIEW_CACHE_THUMB_EXT   ".png"
 #define PORNVIEW_CACHE_COMMENT_EXT ".txt"

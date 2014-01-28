@@ -88,7 +88,7 @@ Config;
 
 extern Config   conf;
 
-#define PORNVIEW_RC_DIR ".pornview"
+#define PORNVIEW_RC_DIR ".config/pornview"
 #define PORNVIEW_RC_FILE "pornviewrc"
 
 void            prefs_load_config (void);
