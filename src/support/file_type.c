@@ -224,7 +224,7 @@ file_type_detect_type_by_ext (const gchar * str)
 	if (!sysext)
 	    continue;
 
-	if (!g_strcasecmp (ext, sysext))
+	if (!g_ascii_strcasecmp (ext, sysext))
 	{
 	    gchar  *type = g_hash_table_lookup (img_system_ext_table, sysext);
 	    return type;
@@ -239,7 +239,7 @@ file_type_detect_type_by_ext (const gchar * str)
 	if (!userext)
 	    continue;
 
-	if (!g_strcasecmp (ext, userext))
+	if (!g_ascii_strcasecmp (ext, userext))
 	{
 	    gchar  *type = g_hash_table_lookup (img_user_ext_table, userext);
 	    return type;
@@ -305,7 +305,7 @@ file_type_is_jpeg (gchar * filename)
 
     format = file_type_detect_type_by_ext (filename);
 
-    if (!format || !*format || g_strcasecmp (format, IMG_JPG))
+    if (!format || !*format || g_ascii_strcasecmp (format, IMG_JPG))
 	return FALSE;
 
     return TRUE;

@@ -1317,7 +1317,7 @@ cb_open_image_by_external (GtkWidget * menuitem, ThumbView * tv)
 	{
 	    cmd = g_strdup (pair[1]);
 	}
-	if (pair[2] && !g_strcasecmp (pair[2], "TRUE"))
+	if (pair[2] && !g_ascii_strcasecmp (pair[2], "TRUE"))
 	    show_dialog = TRUE;
 	g_strfreev (pair);
     }
