@@ -17,6 +17,20 @@
 int
 main (int argc, char *argv[])
 {
+	gchar *init_path = NULL;
+	const gchar *helpmsg = "usage: pornview [dir]\0";
+
+	if (argc > 2 ) {
+		printf("%s\n", helpmsg);
+		return 0;
+	} else if (argc == 2) {
+		if (!strcmp(argv[1], "--help") ||
+				!strcmp(argv[1], "-h")) {
+			printf("%s\n", helpmsg);
+			return 0;
+		}
+		init_path = argv[1];
+	}
 
 #ifdef ENABLE_NLS
     setlocale (LC_ALL, "");
@@ -35,7 +49,7 @@ main (int argc, char *argv[])
     prefs_load_config ();
     plugin_init ();
 
-    browser_create ();
+    browser_create (init_path);
 
     dock_init ();
     gtk_main ();

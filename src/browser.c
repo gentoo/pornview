@@ -34,6 +34,8 @@
 #include "pixmaps/exit.xpm"
 #include "pixmaps/options.xpm"
 
+#include "support/file_utils.h"
+
 Browser *browser = NULL;
 
 static void browser_remove_old_thumbs (void);
@@ -115,7 +117,7 @@ browser_prefs ()
  */
 
 void
-browser_create (void)
+browser_create (gchar* path)
 {
     GtkWidget *vbox;
     GdkPixmap *icon_pix;
@@ -131,7 +133,15 @@ browser_create (void)
 
     browser = g_new (Browser, 1);
 
-    browser->current_path = g_string_new (conf.startup_dir);
+	/* check path argument, if any */
+	if (isdir(path)) {
+		browser->current_path = g_string_new(path);
+	} else {
+		if (path)
+			fprintf(stderr, "\"%s\" is not a valid dir!\n", path);
+	    browser->current_path = g_string_new (conf.startup_dir);
+	}
+
     browser->last_path = g_string_new ("");
     browser->filelist = (FileList *) file_list_init ();
 
@@ -217,7 +227,7 @@ browser_create (void)
     /*
      * dirtree 
      */
-    dirview_create (conf.startup_dir, browser->window);
+    dirview_create (browser->current_path->str, browser->window);
 
     gedo_paned_add1 (GEDO_PANED (vpaned), DIRVIEW_CONTAINER);
 

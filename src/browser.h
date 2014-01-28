@@ -44,7 +44,7 @@ extern Browser *browser;
 #define BROWSER_LAST_PATH     browser->last_path->str
 #define BROWSER_FILE_LIST     browser->filelist
 
-void            browser_create (void);
+void            browser_create (gchar* path);
 void            browser_destroy (void);
 void            browser_select_dir (gchar * path);
 
