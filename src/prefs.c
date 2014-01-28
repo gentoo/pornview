@@ -236,9 +236,6 @@ prefs_load_config_default (PrefsSection * sections)
 	    store_config (param[i].data, param[i].default_val,
 			  param[i].data_type);
     }
-
-    if (conf.startup_dir_mode == 0 || isdir (conf.startup_dir) == FALSE)
-	conf.startup_dir = g_strdup (getenv ("HOME"));
 }
 
 static void
@@ -297,12 +294,11 @@ prefs_load_rc (gchar * filename, PrefsSection * sections)
 
     fclose (pornviewrc);
 
-    if (!isdir (conf.startup_dir))
-    {
-	if (conf.startup_dir)
-	    g_free (conf.startup_dir);
+    if (conf.startup_dir_mode == 0 || isdir (conf.startup_dir) == FALSE) {
+		if (conf.startup_dir)
+		    g_free (conf.startup_dir);
 
-	conf.startup_dir = g_strdup (getenv ("HOME"));
+		conf.startup_dir = g_strdup (getenv ("HOME"));
     }
 }
 
