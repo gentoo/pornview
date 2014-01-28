@@ -8,6 +8,7 @@ EXTRA_DIST = \
 	first.xpm	\
 	fs.xpm		\
 	fullscreen.xpm	\
+	home.xpm \
 	info.xpm	\
 	last.xpm	\
 	left.xpm	\

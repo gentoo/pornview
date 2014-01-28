@@ -23,6 +23,7 @@ struct _DirView
     GtkWidget      *toolbar_collapse_btn;
     GtkWidget      *toolbar_expand_btn;
     GtkWidget      *toolbar_show_dotfile_btn;
+    GtkWidget      *toolbar_go_home;
 
     GtkWidget      *scroll_win;
     GtkWidget      *dirtree;
@@ -42,5 +43,7 @@ void            dirview_create (const gchar * start_path,
 				GtkWidget * parent_win);
 void            dirview_destroy (void);
 void            dirview_scroll_center (void);
+static void
+dirview_select_node(DirView * dv, GtkCTreeNode * node);
 
 #endif /* __DIRVIEW_H__ */

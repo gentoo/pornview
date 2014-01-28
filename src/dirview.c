@@ -28,6 +28,7 @@
 #include "pixmaps/left.xpm"
 #include "pixmaps/right.xpm"
 #include "pixmaps/dotfile.xpm"
+#include "pixmaps/home.xpm"
 
 #define min(a, b) (((a)<(b))?(a):(b))
 
@@ -298,6 +299,30 @@ cb_dirview_collapse (GtkWidget * widget, DirView * dv)
 }
 
 static void
+cb_dirview_home(GtkWidget * widget, DirView * dv)
+{
+    GList  *sel_list;
+    GtkCTreeNode *node;
+    GtkCTreeNode *child;
+    char   *rp, *tmp, *tmp2;
+
+    sel_list = GTK_CLIST (dv->dirtree)->selection;
+    node = sel_list->data;
+
+	while (GTK_CTREE_NODE_PREV (node)) {
+		node = GTK_CTREE_NODE_PREV (node);
+	}
+
+    rp = g_strdup (getenv("HOME"));
+    tmp = strtok (rp, "/");
+	node = dirtree_find_file(dv->dirtree, node, tmp);
+	tmp = strtok(NULL, "/");
+	node = dirtree_find_file(dv->dirtree, node, tmp);
+
+	dirview_select_node(dv, node);
+}
+
+static void
 cb_dirview_down (GtkWidget * widget, DirView * dv)
 {
     GtkCTreeNode *node;
@@ -312,19 +337,7 @@ cb_dirview_down (GtkWidget * widget, DirView * dv)
     node = sel_list->data;
     node = GTK_CTREE_NODE_NEXT (node);
 
-    if (node != NULL)
-    {
-	dirtree_freeze (GTK_CTREE (dv->dirtree));
-
-	gtk_ctree_select (GTK_CTREE (dv->dirtree), node);
-	GTK_CLIST (dv->dirtree)->focus_row =
-	    GTK_CLIST (dv->dirtree)->rows - g_list_length ((GList *) node);
-
-	dirtree_thaw (GTK_CTREE (dv->dirtree));
-
-	dirview_scroll_center ();
-	dirview_update_toolbar (dirview);
-    }
+	dirview_select_node(dv, node);
 }
 
 static void
@@ -343,19 +356,7 @@ cb_dirview_up (GtkWidget * widget, DirView * dv)
 
     node = GTK_CTREE_NODE_PREV (node);
 
-    if (node != NULL)
-    {
-	dirtree_freeze (GTK_CTREE (dv->dirtree));
-
-	gtk_ctree_select (GTK_CTREE (dv->dirtree), node);
-	GTK_CLIST (dv->dirtree)->focus_row =
-	    GTK_CLIST (dv->dirtree)->rows - g_list_length ((GList *) node);
-
-	dirtree_thaw (GTK_CTREE (dv->dirtree));
-
-	dirview_scroll_center ();
-	dirview_update_toolbar (dirview);
-    }
+	dirview_select_node(dv, node);
 }
 
 static void
@@ -699,6 +700,23 @@ cb_dirview_delete_dir (void)
  */
 
 static void
+dirview_select_node(DirView * dv, GtkCTreeNode * node)
+{
+    if (node != NULL) {
+		dirtree_freeze (GTK_CTREE (dv->dirtree));
+
+		gtk_ctree_select (GTK_CTREE (dv->dirtree), node);
+		GTK_CLIST (dv->dirtree)->focus_row =
+			GTK_CLIST (dv->dirtree)->rows - g_list_length ((GList *) node);
+
+		dirtree_thaw (GTK_CTREE (dv->dirtree));
+
+		dirview_scroll_center ();
+		dirview_update_toolbar (dirview);
+    }
+}
+
+static void
 dirview_make_visible (DirView * dv, GtkCTreeNode * node)
 {
     GtkCTreeNode *parent;
@@ -817,6 +835,19 @@ dirview_create_toolbar (DirView * dv)
 				 NULL, iconw,
 				 GTK_SIGNAL_FUNC (cb_dirview_show_dotfile),
 				 dv);
+
+	/*
+	 * home button
+	 */
+    iconw = pixbuf_create_pixmap_from_xpm_data (home_xpm);
+    dv->toolbar_go_home = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
+						      NULL,
+						      _("Home"),
+						      NULL,
+						      iconw,
+						      GTK_SIGNAL_FUNC
+						      (cb_dirview_home),
+						      dv);
 
     gtk_widget_show_all (toolbar);
     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
