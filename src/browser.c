@@ -311,7 +311,7 @@ browser_create (gchar* path)
 #endif
 
     dirview_scroll_center ();
-    timer_id = gtk_timeout_add (100, cb_browser_select_dir, conf.startup_dir);
+    timer_id = gtk_timeout_add (100, cb_browser_select_dir, browser->current_path->str);
 }
 
 void
