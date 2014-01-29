@@ -950,7 +950,7 @@ dirview_create (const gchar * start_path, GtkWidget * parent_win)
     gtk_widget_show (dirview->dirtree);
 
     /*
-     * callback singnals
+     * callback signals
      */
     g_signal_connect(G_OBJECT(dirview->dirtree), "button_press_event",
 			G_CALLBACK(cb_dirview_button_press_event),
