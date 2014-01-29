@@ -133,8 +133,8 @@ cb_dirview_button_press_event (GtkWidget * widget, GdkEventButton * event,
 	/*
 	 * popup menu 
 	 */
-	gtk_menu_popup (GTK_MENU (dirview_popup), NULL, NULL, NULL, NULL, 0,
-			0);
+	gtk_menu_popup (GTK_MENU (dirview_popup), NULL, NULL, NULL, NULL,
+			3, 0);
 
 #ifdef USE_GTK2
 	g_object_ref  (GTK_OBJECT (dirview_popup));
