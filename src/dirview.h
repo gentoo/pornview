@@ -17,13 +17,13 @@ struct _DirView
     GtkWidget      *container;
     GtkWidget      *toolbar;
     GtkWidget      *toolbar_eventbox;
-    GtkWidget      *toolbar_refresh_btn;
-    GtkWidget      *toolbar_up_btn;
-    GtkWidget      *toolbar_down_btn;
-    GtkWidget      *toolbar_collapse_btn;
-    GtkWidget      *toolbar_expand_btn;
-    GtkWidget      *toolbar_show_dotfile_btn;
-    GtkWidget      *toolbar_go_home;
+    GtkToolButton      *toolbar_refresh_btn;
+    GtkToolButton      *toolbar_up_btn;
+    GtkToolButton      *toolbar_down_btn;
+    GtkToolButton      *toolbar_collapse_btn;
+    GtkToolButton      *toolbar_expand_btn;
+    GtkToolButton      *toolbar_show_dotfile_btn;
+    GtkToolButton      *toolbar_go_home;
 
     GtkWidget      *scroll_win;
     GtkWidget      *dirtree;

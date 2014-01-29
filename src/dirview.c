@@ -31,10 +31,12 @@
 #include "pixmaps/home.xpm"
 
 #define min(a, b) (((a)<(b))?(a):(b))
+#define TOOLBAR_APPEND -1
+#define TOOLBAR_PREPEND 0
 
 DirView *dirview = NULL;
 
-static void cb_dirview_refresh_dir_tree (GtkWidget * widget, DirView * dv);
+static void cb_dirview_refresh_dir_tree (GtkToolButton *button, DirView *dv);
 static void cb_dirview_mkdir (void);
 static void cb_dirview_rename_dir (void);
 static void cb_dirview_delete_dir (void);
@@ -85,7 +87,7 @@ cb_dirview_button_press_event (GtkWidget * widget, GdkEventButton * event,
 	dirnode = gtk_ctree_node_get_row_data (GTK_CTREE (dv->dirtree), node);
 
 	/*
-	 * create popup menu 
+	 * create popup menu
 	 */
 	n_menu_items = sizeof (dirview_popup_items)
 	    / sizeof (dirview_popup_items[0]) - 1;
@@ -93,7 +95,7 @@ cb_dirview_button_press_event (GtkWidget * widget, GdkEventButton * event,
 					   n_menu_items, "<DirViewPop>", dv);
 
 	/*
-	 * set sensitive 
+	 * set sensitive
 	 */
 	ifactory = gtk_item_factory_from_widget (dirview_popup);
 
@@ -131,7 +133,7 @@ cb_dirview_button_press_event (GtkWidget * widget, GdkEventButton * event,
 	g_free (parent);
 
 	/*
-	 * popup menu 
+	 * popup menu
 	 */
 	gtk_menu_popup (GTK_MENU (dirview_popup), NULL, NULL, NULL, NULL,
 			3, 0);
@@ -151,7 +153,7 @@ static  gint
 cb_dirview_button_release_event (GtkWidget * widget, GdkEventButton * event,
 				 DirView * dv)
 {
-    dirview_update_toolbar (dv);
+	dirview_update_toolbar (dv);
 
     return FALSE;
 }
@@ -210,7 +212,7 @@ cb_dirview_select_file (GtkWidget * widget, gchar * path, DirView * dv)
 }
 
 static void
-cb_dirview_refresh_dir_tree (GtkWidget * widget, DirView * dv)
+cb_dirview_refresh_dir_tree(GtkToolButton *button, DirView *dv)
 {
     GtkCTreeNode *parent;
     gchar  *node_text;
@@ -251,7 +253,7 @@ cb_dirview_refresh_dir_tree (GtkWidget * widget, DirView * dv)
     dirtree_freeze (DIRTREE (dirview->dirtree));
 
     dirtree_refresh_node (DIRTREE (dirview->dirtree), parent);
-    dirtree_refresh_tree ((DirTree *) dirview->dirtree, parent, TRUE);
+    dirtree_refresh_tree (DIRTREE (dirview->dirtree), parent, TRUE);
 
     dirtree_thaw (DIRTREE (dirview->dirtree));
 
@@ -259,7 +261,7 @@ cb_dirview_refresh_dir_tree (GtkWidget * widget, DirView * dv)
 }
 
 static void
-cb_dirview_expand (GtkWidget * widget, DirView * dv)
+cb_dirview_expand(GtkToolButton *button, DirView *dv)
 {
     GList  *sel_list;
     GtkCTreeNode *node;
@@ -279,7 +281,7 @@ cb_dirview_expand (GtkWidget * widget, DirView * dv)
 }
 
 static void
-cb_dirview_collapse (GtkWidget * widget, DirView * dv)
+cb_dirview_collapse(GtkToolButton *button, DirView *dv)
 {
     GList  *sel_list;
     GtkCTreeNode *node;
@@ -299,7 +301,7 @@ cb_dirview_collapse (GtkWidget * widget, DirView * dv)
 }
 
 static void
-cb_dirview_home(GtkWidget * widget, DirView * dv)
+cb_dirview_home(GtkToolButton *button, DirView *dv)
 {
     GList  *sel_list;
     GtkCTreeNode *node;
@@ -324,7 +326,7 @@ cb_dirview_home(GtkWidget * widget, DirView * dv)
 }
 
 static void
-cb_dirview_down (GtkWidget * widget, DirView * dv)
+cb_dirview_down(GtkToolButton *button, DirView *dv)
 {
     GtkCTreeNode *node;
 
@@ -342,7 +344,7 @@ cb_dirview_down (GtkWidget * widget, DirView * dv)
 }
 
 static void
-cb_dirview_up (GtkWidget * widget, DirView * dv)
+cb_dirview_up(GtkToolButton *button, DirView *dv)
 {
     GtkCTreeNode *node;
 
@@ -361,7 +363,7 @@ cb_dirview_up (GtkWidget * widget, DirView * dv)
 }
 
 static void
-cb_dirview_show_dotfile (GtkWidget * widget, DirView * dv)
+cb_dirview_show_dotfile(GtkToolButton *button, DirView *dv)
 {
     dv->lock_select = TRUE;
 
@@ -370,13 +372,13 @@ cb_dirview_show_dotfile (GtkWidget * widget, DirView * dv)
     else
 	DIRTREE (dv->dirtree)->show_dotfile = TRUE;
 
-    cb_dirview_refresh_dir_tree (widget, dv);
+    cb_dirview_refresh_dir_tree(button, dv);
 
     dv->lock_select = FALSE;
 }
 
  /*
-  * make directory 
+  * make directory
   */
 
 static gint cb_dirview_rename_node (ClistEditData * ced, const gchar * old,
@@ -460,7 +462,7 @@ cb_dirview_mkdir (void)
 }
 
  /*
-  * rename directory 
+  * rename directory
   */
 
 static gint timer_refresh;
@@ -522,7 +524,7 @@ cb_dirview_rename_node (ClistEditData * ced, const gchar * old,
     if (src_path[strlen (src_path) - 1] == '/')
 	src_path[strlen (src_path) - 1] = '\0';
 
-    dest_path = g_strconcat (g_dirname (src_path), "/", new, NULL);
+    dest_path = g_strconcat (g_path_get_dirname(src_path), "/", new, NULL);
 
     if (rename (src_path, dest_path) < 0)
     {
@@ -542,7 +544,7 @@ cb_dirview_rename_node (ClistEditData * ced, const gchar * old,
 	refresh_dir = g_strdup (new);
 
 	timer_refresh =
-	    gtk_timeout_add (100, cb_dirview_refresh_timer_proc, node);
+	    g_timeout_add(100, cb_dirview_refresh_timer_proc, node);
     }
 
     g_free (src_path);
@@ -572,7 +574,7 @@ cb_dirview_rename_dir (void)
 	return;
 
     /*
-     * check for direcotry exist 
+     * check for direcotry exist
      */
 
     exist = !lstat (dirnode->path, &st);
@@ -611,7 +613,7 @@ cb_dirview_rename_dir (void)
 }
 
  /*
-  * delete directory 
+  * delete directory
   */
 
 static void
@@ -639,7 +641,7 @@ cb_dirview_delete_dir (void)
 	return;
 
     /*
-     * check direcotry exist or not 
+     * check direcotry exist or not
      */
     exist = !lstat (dirnode->path, &st);
 
@@ -658,7 +660,7 @@ cb_dirview_delete_dir (void)
     }
 
     /*
-     * confirm 
+     * confirm
      */
 	basename = g_path_get_basename(dirnode->path);
     message =
@@ -696,7 +698,7 @@ cb_dirview_delete_dir (void)
     g_free (path);
 
     /*
-     * refresh dir tree 
+     * refresh dir tree
      */
     parent = (GTK_CTREE_ROW (node))->parent;
 
@@ -752,7 +754,7 @@ dirview_make_visible (DirView * dv, GtkCTreeNode * node)
     }
 
     /*
-     * the realized test is a hack, otherwise the scrollbar is incorrect at start up 
+     * the realized test is a hack, otherwise the scrollbar is incorrect at start up
      */
     if (GTK_WIDGET_REALIZED (dv->dirtree)
 	&& gtk_ctree_node_is_visible (GTK_CTREE (dv->dirtree),
@@ -764,107 +766,62 @@ dirview_make_visible (DirView * dv, GtkCTreeNode * node)
     gtk_clist_thaw (GTK_CLIST (dv->dirtree));
 }
 
+static void
+dirview_register_button(DirView *dv, GtkWidget *toolbar,
+		GtkToolButton **button, const gchar *label, const char **xpm,
+		void (*callback) (GtkToolButton*, DirView*))
+{
+    GtkWidget *iconw;
+
+    iconw = pixbuf_create_pixmap_from_xpm_data(xpm);
+	*button = GTK_TOOL_BUTTON(gtk_tool_button_new(iconw,
+			label));
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar),
+			GTK_TOOL_ITEM(*button), TOOLBAR_APPEND);
+	gtk_tool_item_set_tooltip_text(GTK_TOOL_ITEM(*button),
+			label);
+
+	g_signal_connect(G_OBJECT(*button), "clicked",
+			G_CALLBACK(callback), dv);
+}
+
 static GtkWidget *
-dirview_create_toolbar (DirView * dv)
+dirview_create_toolbar(DirView * dv)
 {
     GtkWidget *toolbar;
-    GtkWidget *iconw;
 
     g_return_val_if_fail (dv, NULL);
 
 #ifdef USE_GTK2
     toolbar = gtk_toolbar_new ();
 #else
-    toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+	toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
     gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
     gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar),
 				 GTK_TOOLBAR_SPACE_LINE);
     gtk_toolbar_set_space_size (GTK_TOOLBAR (toolbar), 16);
 #endif
 
-    /*
-     * refresh 
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (refresh_xpm);
-    dv->toolbar_refresh_btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-						       NULL,
-						       _("Refresh"),
-						       NULL,
-						       iconw,
-						       GTK_SIGNAL_FUNC
-						       (cb_dirview_refresh_dir_tree),
-						       dv);
-    /*
-     * up 
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (up_xpm);
-    dv->toolbar_up_btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-						  NULL,
-						  _("Up"),
-						  NULL,
-						  iconw,
-						  GTK_SIGNAL_FUNC
-						  (cb_dirview_up), dv);
-    /*
-     * down 
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (down_xpm);
-    dv->toolbar_down_btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-						    NULL,
-						    _("Down"),
-						    NULL,
-						    iconw,
-						    GTK_SIGNAL_FUNC
-						    (cb_dirview_down), dv);
-    /*
-     * collapse 
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (left_xpm);
-    dv->toolbar_collapse_btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-							NULL,
-							_("Collapse"),
-							NULL,
-							iconw,
-							GTK_SIGNAL_FUNC
-							(cb_dirview_collapse),
-							dv);
-    /*
-     * expand 
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (right_xpm);
-    dv->toolbar_expand_btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-						      NULL,
-						      _("Expand"),
-						      NULL,
-						      iconw,
-						      GTK_SIGNAL_FUNC
-						      (cb_dirview_expand),
-						      dv);
+	dirview_register_button(dv, toolbar, &(dv->toolbar_refresh_btn),
+			"Refresh", refresh_xpm, cb_dirview_refresh_dir_tree);
 
-    /*
-     * show/hide dotfile
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (dotfile_xpm);
-    dv->toolbar_show_dotfile_btn =
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-				 NULL,
-				 _("Show/Hide dotfile"),
-				 NULL, iconw,
-				 GTK_SIGNAL_FUNC (cb_dirview_show_dotfile),
-				 dv);
+	dirview_register_button(dv, toolbar, &(dv->toolbar_up_btn),
+			"Up", up_xpm, cb_dirview_up);
 
-	/*
-	 * home button
-	 */
-    iconw = pixbuf_create_pixmap_from_xpm_data (home_xpm);
-    dv->toolbar_go_home = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-						      NULL,
-						      _("Home"),
-						      NULL,
-						      iconw,
-						      GTK_SIGNAL_FUNC
-						      (cb_dirview_home),
-						      dv);
+	dirview_register_button(dv, toolbar, &(dv->toolbar_down_btn),
+			"Down", down_xpm, cb_dirview_down);
+
+	dirview_register_button(dv, toolbar, &(dv->toolbar_collapse_btn),
+			"Collapse", left_xpm, cb_dirview_collapse);
+
+	dirview_register_button(dv, toolbar, &(dv->toolbar_expand_btn),
+			"Expand", right_xpm, cb_dirview_expand);
+
+	dirview_register_button(dv, toolbar, &(dv->toolbar_show_dotfile_btn),
+			"Show/Hide dotfile", dotfile_xpm, cb_dirview_show_dotfile);
+
+	dirview_register_button(dv, toolbar, &(dv->toolbar_go_home),
+			"Home", home_xpm, cb_dirview_home);
 
     gtk_widget_show_all (toolbar);
     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
@@ -873,7 +830,7 @@ dirview_create_toolbar (DirView * dv)
 }
 
 static void
-dirview_update_toolbar (DirView * dv)
+dirview_update_toolbar(DirView *dv)
 {
     GtkCTreeNode *node;
     GList  *sel_list;
@@ -891,41 +848,45 @@ dirview_update_toolbar (DirView * dv)
 
     current = len - g_list_length ((GList *) node);
 
-    if (current == 0)
-    {
-	gtk_widget_set_sensitive (dv->toolbar_up_btn, FALSE);
-	gtk_widget_set_sensitive (dv->toolbar_down_btn, TRUE);
-    }
-    else if (current == (len - 1))
-    {
-	gtk_widget_set_sensitive (dv->toolbar_up_btn, TRUE);
-	gtk_widget_set_sensitive (dv->toolbar_down_btn, FALSE);
-    }
-    else
-    {
-	gtk_widget_set_sensitive (dv->toolbar_up_btn, TRUE);
-	gtk_widget_set_sensitive (dv->toolbar_down_btn, TRUE);
-    }
+	if (current == 0) {
+		gtk_widget_set_sensitive(gtk_tool_button_get_icon_widget(
+						dv->toolbar_up_btn), FALSE);
+		gtk_widget_set_sensitive(gtk_tool_button_get_icon_widget(
+					dv->toolbar_down_btn), TRUE);
+	} else if (current == (len - 1)) {
+		gtk_widget_set_sensitive(gtk_tool_button_get_icon_widget(
+					dv->toolbar_up_btn), TRUE);
+		gtk_widget_set_sensitive(gtk_tool_button_get_icon_widget(
+					dv->toolbar_down_btn), FALSE);
+	} else {
+		gtk_widget_set_sensitive(gtk_tool_button_get_icon_widget(
+					dv->toolbar_up_btn), TRUE);
+		gtk_widget_set_sensitive(gtk_tool_button_get_icon_widget(
+					dv->toolbar_down_btn), TRUE);
+	}
 
     gtk_ctree_get_node_info (GTK_CTREE (dv->dirtree), node, NULL, NULL,
 			     NULL, NULL, NULL, NULL, &is_leaf, &expanded);
 
-    gtk_widget_set_sensitive (dv->toolbar_expand_btn, !is_leaf);
-    gtk_widget_set_sensitive (dv->toolbar_collapse_btn, !is_leaf);
+	gtk_widget_set_sensitive(gtk_tool_button_get_icon_widget(
+				dv->toolbar_expand_btn), !is_leaf);
+	gtk_widget_set_sensitive(gtk_tool_button_get_icon_widget(
+				dv->toolbar_collapse_btn), !is_leaf);
 
     if (is_leaf)
-	return;
+		return;
 
-    if (expanded)
-    {
-	gtk_widget_set_sensitive (dv->toolbar_expand_btn, FALSE);
-	gtk_widget_set_sensitive (dv->toolbar_collapse_btn, TRUE);
-    }
-    else
-    {
-	gtk_widget_set_sensitive (dv->toolbar_expand_btn, TRUE);
-	gtk_widget_set_sensitive (dv->toolbar_collapse_btn, FALSE);
-    }
+	if (expanded) {
+		gtk_widget_set_sensitive(gtk_tool_button_get_icon_widget(
+					dv->toolbar_expand_btn), FALSE);
+		gtk_widget_set_sensitive(gtk_tool_button_get_icon_widget(
+					dv->toolbar_collapse_btn), TRUE);
+	} else {
+		gtk_widget_set_sensitive(gtk_tool_button_get_icon_widget(
+					dv->toolbar_expand_btn), TRUE);
+		gtk_widget_set_sensitive(gtk_tool_button_get_icon_widget(
+					dv->toolbar_collapse_btn), FALSE);
+	}
 }
 
 /*
@@ -940,7 +901,7 @@ dirview_create (const gchar * start_path, GtkWidget * parent_win)
     dirview = g_new0 (DirView, 1);
 
     /*
-     * main vbox 
+     * main vbox
      */
     dirview->container = gtk_vbox_new (FALSE, 0);
     g_object_ref (dirview->container);
@@ -950,7 +911,7 @@ dirview_create (const gchar * start_path, GtkWidget * parent_win)
     gtk_widget_show (dirview->container);
 
     /*
-     * toolbar 
+     * toolbar
      */
     dirview->toolbar_eventbox = gtk_event_box_new ();
     gtk_container_set_border_width (GTK_CONTAINER (dirview->toolbar_eventbox),
@@ -964,7 +925,7 @@ dirview_create (const gchar * start_path, GtkWidget * parent_win)
 		       dirview->toolbar);
 
     /*
-     * scrolled window 
+     * scrolled window
      */
     dirview->scroll_win = gtk_scrolled_window_new (NULL, NULL);
     gtk_container_set_border_width (GTK_CONTAINER (dirview->scroll_win), 1);
@@ -976,7 +937,7 @@ dirview_create (const gchar * start_path, GtkWidget * parent_win)
     gtk_widget_show (dirview->scroll_win);
 
     /*
-     * dirtree 
+     * dirtree
      */
     dirview->dirtree =
 	dirtree_new (parent_win, start_path, conf.scan_dir, conf.check_hlinks,
@@ -984,26 +945,26 @@ dirview_create (const gchar * start_path, GtkWidget * parent_win)
 		     conf.dirtree_expander_style);
 
     gtk_container_add (GTK_CONTAINER (dirview->scroll_win), dirview->dirtree);
-    gtk_widget_set_usize (GTK_WIDGET (dirview->scroll_win),
+    gtk_widget_set_size_request(GTK_WIDGET (dirview->scroll_win),
 			  conf.dirtree_width, conf.dirtree_height);
     gtk_widget_show (dirview->dirtree);
 
     /*
-     * callback singnals 
+     * callback singnals
      */
-    gtk_signal_connect (GTK_OBJECT (dirview->dirtree), "button_press_event",
-			GTK_SIGNAL_FUNC (cb_dirview_button_press_event),
+    g_signal_connect(G_OBJECT(dirview->dirtree), "button_press_event",
+			G_CALLBACK(cb_dirview_button_press_event),
 			dirview);
 
-    gtk_signal_connect (GTK_OBJECT (dirview->dirtree), "button_release_event",
-			GTK_SIGNAL_FUNC (cb_dirview_button_release_event),
+	g_signal_connect(G_OBJECT(dirview->dirtree), "button_release_event",
+			G_CALLBACK(cb_dirview_button_release_event),
 			dirview);
 
-    gtk_signal_connect (GTK_OBJECT (dirview->dirtree), "key_press_event",
-			GTK_SIGNAL_FUNC (cb_dirview_key_press), dirview);
+    g_signal_connect(G_OBJECT(dirview->dirtree), "key_press_event",
+			G_CALLBACK(cb_dirview_key_press), dirview);
 
-    gtk_signal_connect (GTK_OBJECT (dirview->dirtree), "select_file",
-			GTK_SIGNAL_FUNC (cb_dirview_select_file), dirview);
+    g_signal_connect(G_OBJECT(dirview->dirtree), "select_file",
+			G_CALLBACK(cb_dirview_select_file), dirview);
 
     gtk_widget_show (dirview->scroll_win);
     dirview_update_toolbar (dirview);
