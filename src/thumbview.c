@@ -179,10 +179,10 @@ cb_thumbview_button_press (GtkWidget * widget, GdkEventButton * event,
 			NULL, NULL, NULL, NULL, event->button, event->time);
 
 #ifdef USE_GTK2
-	gtk_object_ref (GTK_OBJECT (popup_menu));
-	gtk_object_sink (GTK_OBJECT (popup_menu));
+	g_object_ref (GTK_OBJECT (popup_menu));
+	g_object_ref_sink (GTK_OBJECT (popup_menu));
 #endif
-	gtk_widget_unref (popup_menu);
+	g_object_unref (popup_menu);
 
 	return TRUE;
     }

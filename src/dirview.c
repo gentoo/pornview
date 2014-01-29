@@ -137,11 +137,11 @@ cb_dirview_button_press_event (GtkWidget * widget, GdkEventButton * event,
 			0);
 
 #ifdef USE_GTK2
-	gtk_object_ref (GTK_OBJECT (dirview_popup));
-	gtk_object_sink (GTK_OBJECT (dirview_popup));
+	g_object_ref  (GTK_OBJECT (dirview_popup));
+	g_object_ref_sink (GTK_OBJECT (dirview_popup));
 #endif
 
-	gtk_widget_unref (dirview_popup);
+	g_object_unref (dirview_popup);
     }
 
     return FALSE;
@@ -927,10 +927,10 @@ dirview_create (const gchar * start_path, GtkWidget * parent_win)
      * main vbox 
      */
     dirview->container = gtk_vbox_new (FALSE, 0);
-    gtk_widget_ref (dirview->container);
+    g_object_ref (dirview->container);
     gtk_object_set_data_full (GTK_OBJECT (parent_win), "dirview_container",
 			      dirview->container,
-			      (GtkDestroyNotify) gtk_widget_unref);
+			      (GtkDestroyNotify) g_object_unref);
     gtk_widget_show (dirview->container);
 
     /*

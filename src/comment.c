@@ -1059,8 +1059,8 @@ comment_init (Comment * comment)
     comment->note = NULL;
 
 #ifdef USE_GTK2
-    gtk_object_ref (GTK_OBJECT (comment));
-    gtk_object_sink (GTK_OBJECT (comment));
+    g_object_ref (GTK_OBJECT (comment));
+    g_object_ref_sink (GTK_OBJECT (comment));
 #endif
 }
 
@@ -1105,7 +1105,7 @@ comment_ref (Comment * comment)
     g_return_val_if_fail (comment, NULL);
     g_return_val_if_fail (IS_COMMENT (comment), NULL);
 
-    gtk_object_ref (GTK_OBJECT (comment));
+    g_object_ref (GTK_OBJECT (comment));
 
     return comment;
 }
@@ -1116,5 +1116,5 @@ comment_unref (Comment * comment)
     g_return_if_fail (comment);
     g_return_if_fail (IS_COMMENT (comment));
 
-    gtk_object_unref (GTK_OBJECT (comment));
+    g_object_unref (GTK_OBJECT (comment));
 }
