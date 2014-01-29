@@ -114,7 +114,7 @@ cb_dirview_button_press_event (GtkWidget * widget, GdkEventButton * event,
 	path = g_strdup (dirnode->path);
 	if (path[strlen (path) - 1] == '/')
 	    path[strlen (path) - 1] = '\0';
-	parent = g_dirname (path);
+	parent = g_path_get_dirname (path);
 
 	if (!parent || !strcmp (parent, ".") || !iswritable (parent)
 	    || !strcmp (node_text, ".") || !strcmp (node_text, ".."))
@@ -389,7 +389,7 @@ cb_dirview_mkdir (void)
     DirTreeNode *dirnode;
     gboolean success;
     gint    row;
-    gchar  *path;
+    gchar  *path, *basename;
     gchar  *new_path;
 
     node = GTK_CLIST (dirview->dirtree)->selection->data;
@@ -407,10 +407,12 @@ cb_dirview_mkdir (void)
     {
 	gchar  *message = NULL;
 
+	basename = g_path_get_basename(dirnode->path);
 	message =
 	    g_strdup_printf ("%s \"%s\".", _("Permission denied"),
-			     g_basename (dirnode->path));
+			     basename);
 	dialog_message (_("Error"), message, browser->window);
+	g_free(basename);
 	g_free (message);
 
 	return;
@@ -428,9 +430,11 @@ cb_dirview_mkdir (void)
 
     dirtree_refresh_tree (DIRTREE (dirview->dirtree), node, FALSE);
 
+	basename = g_path_get_basename(new_path);
     node =
 	dirtree_find_file (DIRTREE (dirview->dirtree), node,
-			   g_basename (new_path));
+			   basename);
+	g_free(basename);
     dirtree_refresh_tree (DIRTREE (dirview->dirtree), node, TRUE);
 
     dirview_scroll_center ();
@@ -523,12 +527,14 @@ cb_dirview_rename_node (ClistEditData * ced, const gchar * old,
     if (rename (src_path, dest_path) < 0)
     {
 	gchar  *message = NULL;
+	gchar  *basename;
 
+	basename = g_path_get_basename(src_path);
 	message =
 	    g_strdup_printf ("%s \"%s\".\n%s", _("Faild to rename directory"),
-			     g_basename (src_path), g_strerror (errno));
+			     basename, g_strerror (errno));
 	dialog_message (_("Error"), message, browser->window);
-
+	g_free(basename);
 	g_free (message);
     }
     else
@@ -574,11 +580,14 @@ cb_dirview_rename_dir (void)
     if (!exist)
     {
 	gchar  *message = NULL;
+	gchar  *basename;
 
+	basename = g_path_get_basename(dirnode->path);
 	message =
 	    g_strdup_printf ("%s \"%s\".", _("Directory not exist"),
-			     g_basename (dirnode->path));
+			     basename);
 	dialog_message (_("Error"), message, browser->window);
+	g_free(basename);
 	g_free (message);
 
 	return;
@@ -615,6 +624,7 @@ cb_dirview_delete_dir (void)
     ConfirmType action;
     gchar  *path = NULL;
     gchar  *message = NULL;
+	gchar  *basename;
 
 
     node = GTK_CLIST (dirview->dirtree)->selection->data;
@@ -636,10 +646,12 @@ cb_dirview_delete_dir (void)
     if (!exist)
     {
 
+	basename = g_path_get_basename(dirnode->path);
 	message =
 	    g_strdup_printf ("%s \"%s\".", _("Directory not exist"),
-			     g_basename (dirnode->path));
+			     basename);
 	dialog_message (_("Error"), message, browser->window);
+	g_free(basename);
 	g_free (message);
 
 	return;
@@ -648,12 +660,14 @@ cb_dirview_delete_dir (void)
     /*
      * confirm 
      */
+	basename = g_path_get_basename(dirnode->path);
     message =
 	g_strdup_printf ("%s \"%s\" ?", _("Delete directory"),
-			 g_basename (dirnode->path));
+			 basename);
     action =
 	dialog_confirm (_("Confirm Deleting Directory"), message,
 			browser->window);
+	g_free(basename);
     g_free (message);
 
     if (action != CONFIRM_YES)
@@ -666,10 +680,12 @@ cb_dirview_delete_dir (void)
 
     if (rmdir (path) < 0)
     {
+	basename = g_path_get_basename(path);
 	message =
 	    g_strdup_printf ("%s \"%s\".\n%s", _("Faild to delete directory"),
-			     g_basename (path), g_strerror (errno));
+			     basename, g_strerror (errno));
 	dialog_message (_("Error"), message, browser->window);
+	g_free(basename);
 	g_free (message);
 
 	g_free (path);

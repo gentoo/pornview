@@ -125,7 +125,7 @@ menu_create_items (GtkWidget * window,
 	gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
 
     widget = gtk_item_factory_get_widget (factory, path);
-    gtk_signal_connect (GTK_OBJECT (widget), "destroy",
+	g_signal_connect (GTK_OBJECT (widget), "destroy",
 			GTK_SIGNAL_FUNC (cb_menu_destroy), factory);
 
     return widget;
