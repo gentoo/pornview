@@ -35,6 +35,7 @@
 #define TOOLBAR_PREPEND 0
 
 DirView *dirview = NULL;
+GtkCTreeNode *prev_node = NULL;
 
 static void cb_dirview_refresh_dir_tree (GtkToolButton *button, DirView *dv);
 static void cb_dirview_mkdir (void);
@@ -59,23 +60,32 @@ static GtkItemFactoryEntry dirview_popup_items[] = {
 static void dirview_update_toolbar (DirView * dv);
 static void dirview_make_visible (DirView * dv, GtkCTreeNode * node);
 
+static void
+cb_dirview_back(GtkToolButton *button, DirView *dv)
+{
+	dirview_select_node(dv, prev_node);
+}
+
 static  gint
 cb_dirview_button_press_event (GtkWidget * widget, GdkEventButton * event,
 			       gpointer data)
 {
     DirView *dv = data;
+	GtkCTreeNode *node = GTK_CLIST(dv->dirtree)->selection->data;
+
+	if (event->type == GDK_BUTTON_PRESS && event->button == 1) {
+		prev_node = node;
+		return FALSE;
+	}
 
     if (event->type == GDK_BUTTON_PRESS && event->button == 3)
     {
 	GtkWidget *dirview_popup, *menuitem;
 	GtkItemFactory *ifactory;
-	GtkCTreeNode *node;
 	DirTreeNode *dirnode;
 	gint    n_menu_items;
 	gchar  *path, *parent, *node_text;
 	gboolean expanded, is_leaf;
-
-	node = GTK_CLIST (dv->dirtree)->selection->data;
 
 	if (!node)
 	    return FALSE;
@@ -173,6 +183,7 @@ cb_dirview_key_press (GtkWidget * widget, GdkEventKey * event, DirView * dv)
 	return FALSE;
 
     node = sel_list->data;
+	prev_node = node;
 
     switch (keyval)
     {
@@ -310,6 +321,7 @@ cb_dirview_home(GtkToolButton *button, DirView *dv)
 
     sel_list = GTK_CLIST (dv->dirtree)->selection;
     node = sel_list->data;
+	prev_node = node;
 
 	while (GTK_CTREE_NODE_PREV (node)) {
 		node = GTK_CTREE_NODE_PREV (node);
@@ -338,6 +350,7 @@ cb_dirview_down(GtkToolButton *button, DirView *dv)
 	return;
 
     node = sel_list->data;
+	prev_node = node;
     node = GTK_CTREE_NODE_NEXT (node);
 
 	dirview_select_node(dv, node);
@@ -356,7 +369,7 @@ cb_dirview_up(GtkToolButton *button, DirView *dv)
 	return;
 
     node = sel_list->data;
-
+	prev_node = node;
     node = GTK_CTREE_NODE_PREV (node);
 
 	dirview_select_node(dv, node);
@@ -822,6 +835,9 @@ dirview_create_toolbar(DirView * dv)
 
 	dirview_register_button(dv, toolbar, &(dv->toolbar_go_home),
 			"Home", home_xpm, cb_dirview_home);
+
+	dirview_register_button(dv, toolbar, &(dv->toolbar_back),
+			"Back", left_xpm, cb_dirview_back);
 
     gtk_widget_show_all (toolbar);
     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);

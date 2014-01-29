@@ -24,6 +24,7 @@ struct _DirView
     GtkToolButton      *toolbar_expand_btn;
     GtkToolButton      *toolbar_show_dotfile_btn;
     GtkToolButton      *toolbar_go_home;
+    GtkToolButton      *toolbar_back;
 
     GtkWidget      *scroll_win;
     GtkWidget      *dirtree;
