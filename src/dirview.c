@@ -315,9 +315,9 @@ cb_dirview_home(GtkWidget * widget, DirView * dv)
 
     rp = g_strdup (getenv("HOME"));
     tmp = strtok (rp, "/");
-	node = dirtree_find_file(dv->dirtree, node, tmp);
+	node = dirtree_find_file((DirTree *)dv->dirtree, node, tmp);
 	tmp = strtok(NULL, "/");
-	node = dirtree_find_file(dv->dirtree, node, tmp);
+	node = dirtree_find_file((DirTree *)dv->dirtree, node, tmp);
 	dirview_select_node(dv, node);
 
 	g_free (rp);
