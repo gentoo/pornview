@@ -29,6 +29,8 @@
 #include "pixmaps/right.xpm"
 #include "pixmaps/dotfile.xpm"
 #include "pixmaps/home.xpm"
+#include "pixmaps/collapse.xpm"
+#include "pixmaps/expand.xpm"
 
 #define min(a, b) (((a)<(b))?(a):(b))
 #define TOOLBAR_APPEND -1
@@ -825,10 +827,10 @@ dirview_create_toolbar(DirView * dv)
 			"Down", down_xpm, cb_dirview_down);
 
 	dirview_register_button(dv, toolbar, &(dv->toolbar_collapse_btn),
-			"Collapse", left_xpm, cb_dirview_collapse);
+			"Collapse", collapse_xpm, cb_dirview_collapse);
 
 	dirview_register_button(dv, toolbar, &(dv->toolbar_expand_btn),
-			"Expand", right_xpm, cb_dirview_expand);
+			"Expand", expand_xpm, cb_dirview_expand);
 
 	dirview_register_button(dv, toolbar, &(dv->toolbar_show_dotfile_btn),
 			"Show/Hide dotfile", dotfile_xpm, cb_dirview_show_dotfile);
