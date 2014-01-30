@@ -19,6 +19,8 @@
   - Another X Image Viewer - David RAMBOZ
   - GImageView - Takuro Ashie
 
+  src/pixmaps/refresh.xpm comes from matplotlib
+
 === Warning 
 
  This software is not meant to used for anything else than testing.
