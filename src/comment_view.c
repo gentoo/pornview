@@ -133,7 +133,6 @@ cb_save_button_pressed (GtkButton * button, CommentView * cv)
     g_return_if_fail (cv);
     g_return_if_fail (cv->comment);
 
-#if USE_GTK2
     {
 	GtkTextBuffer *buffer;
 	GtkTextIter start, end;
@@ -145,14 +144,6 @@ cb_save_button_pressed (GtkButton * button, CommentView * cv)
 
 	note = gtk_text_buffer_get_text (buffer, &start, &end, TRUE);
     }
-#else /* USE_GTK2 */
-    {
-	gint    len;
-
-	len = gtk_text_get_length (GTK_TEXT (cv->note_box));
-	note = gtk_editable_get_chars (GTK_EDITABLE (cv->note_box), 0, len);
-    }
-#endif /* USE_GTK2 */
 
     if (note && *note)
 	comment_update_note (cv->comment, note);
@@ -658,15 +649,8 @@ create_note_page (CommentView * cv)
 				    GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
     gtk_widget_show (scrolledwin);
 
-#ifdef USE_GTK2
     cv->note_box = gtk_text_view_new ();
-#else /* USE_GTK2 */
-    cv->note_box = gtk_text_new (gtk_scrolled_window_get_hadjustment
-				 (GTK_SCROLLED_WINDOW (scrolledwin)),
-				 gtk_scrolled_window_get_vadjustment
-				 (GTK_SCROLLED_WINDOW (scrolledwin)));
-    gtk_text_set_editable (GTK_TEXT (cv->note_box), TRUE);
-#endif /* USE_GTK2 */
+
     gtk_container_add (GTK_CONTAINER (scrolledwin), cv->note_box);
     gtk_widget_show (cv->note_box);
 
@@ -949,17 +933,10 @@ comment_view_reset_data (CommentView * cv)
 
 	if (cv->comment->note && *cv->comment->note)
 	{
-#ifdef USE_GTK2
 	    GtkTextBuffer *buffer;
 
 	    buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (cv->note_box));
 	    gtk_text_buffer_set_text (buffer, cv->comment->note, -1);
-#else /* USE_GTK2 */
-
-	    gtk_text_insert (GTK_TEXT (cv->note_box), NULL, NULL, NULL,
-			     cv->comment->note, -1);
-
-#endif /* USE_GTK2 */
 	}
     }
 
@@ -996,20 +973,11 @@ comment_view_clear_data (CommentView * cv)
     gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (cv->key_combo)->entry), "\0");
     gtk_entry_set_text (GTK_ENTRY (cv->value_entry), "\0");
 
-#ifdef USE_GTK2
     {
 	GtkTextBuffer *buffer;
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (cv->note_box));
 	gtk_text_buffer_set_text (buffer, "\0", -1);
     }
-#else /* USE_GTK2 */
-    {
-	GtkText *text;
-	text = GTK_TEXT (cv->note_box);
-	gtk_text_set_point (text, 0);
-	gtk_text_forward_delete (text, gtk_text_get_length (text));
-    }
-#endif /* USE_GTK2 */
 
     comment_view_set_sensitive (cv);
 }

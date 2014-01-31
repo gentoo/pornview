@@ -53,11 +53,7 @@ enum
 
 static void editable_list_init (EditableList * editlist);
 static void editable_list_class_init (EditableListClass * klass);
-#ifdef USE_GTK2
 static void editable_list_finalize (GObject * object);
-#else
-static void editable_list_finalize (GtkObject * object);
-#endif
 
 /* private */
 static void editable_list_set_move_button_sensitive (EditableList * editlist);
@@ -216,11 +212,7 @@ free_rowdata (gpointer key, gpointer value, gpointer data)
 #endif /* (GTK_MAJOR_VERSION >= 2) */
 
 static void
-#ifdef USE_GTK2
 editable_list_finalize (GObject * object)
-#else
-editable_list_finalize (GtkObject * object)
-#endif
 {
     EditableList *editlist = EDITABLE_LIST (object);
     gint    i;

@@ -9,10 +9,8 @@
 
 #include "pornview.h"
 
-#ifdef USE_GTK2
 #define GTK_ENABLE_BROKEN 1
 #include <gtk/gtktext.h>
-#endif
 
 #include "zalbum.h"
 
@@ -89,14 +87,7 @@ imageinfo_set_data (void)
     gtk_text_backward_delete (GTK_TEXT (text),
 			      gtk_text_get_length (GTK_TEXT (text)));
 
-#ifdef USE_GTK2
     gtk_text_insert (GTK_TEXT (text), NULL, NULL, NULL, buf, -1);
-#else
-    gtk_text_insert (GTK_TEXT (text),
-		     gdk_font_load
-		     ("-misc-fixed-medium-r-normal-*-13-*-*-*-c-*-*-*"), NULL,
-		     NULL, buf, -1);
-#endif
 
     gtk_text_thaw (GTK_TEXT (text));
 
@@ -206,10 +197,6 @@ imageinfo_dialog (void)
     dialog = gtk_dialog_new ();
     gtk_window_set_title (GTK_WINDOW (dialog), _("File Properties"));
 
-#ifndef USE_GTK2
-    GTK_WINDOW (dialog)->type = GTK_WINDOW_DIALOG;
-#endif
-
     gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
     gtk_window_set_policy (GTK_WINDOW (dialog), FALSE, FALSE, FALSE);
     gtk_window_set_transient_for (GTK_WINDOW (dialog),
@@ -296,11 +283,7 @@ imageinfo_dialog (void)
     button = gtk_button_new_with_label (_("Close"));
     gtk_widget_show (button);
 
-#ifdef USE_GTK2
     gtk_widget_set_usize (GTK_WIDGET (button), 280, -2);
-#else
-    gtk_widget_set_usize (GTK_WIDGET (button), 280, 35);
-#endif
 
     gtk_box_pack_start (GTK_BOX (hbox3), button, FALSE, TRUE, 0);
 

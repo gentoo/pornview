@@ -185,18 +185,10 @@ browser_create (gchar* path)
     gtk_box_pack_start (GTK_BOX (vbox), menu, FALSE, FALSE, 0);
     gtk_widget_show (menu);
 
-#ifndef USE_GTK2
-    gtk_accel_group_attach (accel, GTK_OBJECT (browser->window));
-#endif
-
     /*
      * toolbar 
      */
-#ifdef USE_GTK2
     toolbar = gtk_toolbar_new ();
-#else
-    toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-#endif
 
     gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, TRUE, 0);
     gtk_widget_show (toolbar);
@@ -204,10 +196,6 @@ browser_create (gchar* path)
     iconw = pixbuf_create_pixmap_from_xpm_data (exit_xpm);
     gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL, _("Exit"), NULL,
 			     iconw, (GtkSignalFunc) browser_destroy, NULL);
-
-#ifndef USE_GTK2
-    gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-#endif
 
     gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 

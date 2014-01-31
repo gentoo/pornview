@@ -671,11 +671,7 @@ load_file (int number)
 
     cell = ZLIST_CELL_FROM_INDEX (ZLIST (thumbview->album), number);
 
-#ifdef USE_GTK2
     if ((im->image = gdk_pixbuf_new_from_file (cell->name, NULL)) == NULL)
-#else
-    if ((im->image = gdk_pixbuf_new_from_file (cell->name)) == NULL)
-#endif
     {
 	g_free (im);
 	return NULL;

@@ -396,9 +396,7 @@ menu_popup_modal (GtkWidget * popup,
 
 void
 menu_calc_popup_position (GtkMenu * menu, gint * x_ret, gint * y_ret,
-#ifdef USE_GTK2
 			  gboolean * push_in,
-#endif
 			  gpointer data)
 {
     GdkWindow *window = data;

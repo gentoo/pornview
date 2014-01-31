@@ -76,10 +76,6 @@ gedo_hpaned_class_init (GedoHPanedClass * class)
     widget_class->size_request = gedo_hpaned_size_request;
     widget_class->size_allocate = gedo_hpaned_size_allocate;
 
-#ifndef USE_GTK2
-    widget_class->draw = gedo_hpaned_draw;
-#endif
-
     widget_class->button_press_event = gedo_hpaned_button_press;
     widget_class->button_release_event = gedo_hpaned_button_release;
 

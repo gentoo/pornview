@@ -657,11 +657,7 @@ path_selection_new_with_files (GtkWidget * entry, const gchar * path,
     gtk_signal_connect (GTK_OBJECT (button), "clicked",
 			GTK_SIGNAL_FUNC (cb_dest_home), dd);
     gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 0);
-#ifndef USE_GTK2
-    gtk_widget_set_usize (button, 100, -1);
-#else
     gtk_widget_set_usize (button, 85, 28);
-#endif
 
     gtk_widget_show (button);
 

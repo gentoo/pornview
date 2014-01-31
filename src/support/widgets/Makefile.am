@@ -39,10 +39,8 @@ libsupport_widgets_la_SOURCES =	\
 
 #EXTRA_DIST = gimv_marshal.list
 #
-#if USE_GTK2
 #gimv_marshal.h : gimv_marshal.list $(GLIB_GENMARSHAL)
 #	$(GLIB_GENMARSHAL) $< --header --prefix=gimv_marshal > $@
 #
 #gimv_marshal.c : gimv_marshal.list $(GLIB_GENMARSHAL)
 #	$(GLIB_GENMARSHAL) $< --body --prefix=gimv_marshal > $@
-#endif

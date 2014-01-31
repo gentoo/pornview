@@ -37,13 +37,7 @@
 #define GTK_MPLAYER_REFRESH_RATE 100	/* 1/10 [sec] */
 #define GTK_MPLAYER_BUF_SIZE 1024
 
-#ifdef USE_GTK2
-#  define gtk_object_class_add_signals(class, func, type)
-#else
-#  ifndef GTK_CLASS_TYPE
-#     define GTK_CLASS_TYPE(object_class) object_class->type
-#  endif
-#endif
+#define gtk_object_class_add_signals(class, func, type)
 
 enum
 {
@@ -196,7 +190,6 @@ gtk_mplayer_class_init (GtkMPlayerClass * class)
 
     parent_class = gtk_type_class (gtk_widget_get_type ());
 
-#if (defined USE_GTK2) && (defined GTK_DISABLE_DEPRECATED)
     gtk_mplayer_signals[PLAY_SIGNAL]
 	= g_signal_new ("play",
 			G_TYPE_FROM_CLASS (object_class),
@@ -228,39 +221,7 @@ gtk_mplayer_class_init (GtkMPlayerClass * class)
 			G_STRUCT_OFFSET (GtkMPlayerClass, position_changed),
 			NULL, NULL,
 			g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
-#else
-    gtk_mplayer_signals[PLAY_SIGNAL]
-	= gtk_signal_new ("play",
-			  GTK_RUN_FIRST,
-			  GTK_CLASS_TYPE (object_class),
-			  GTK_SIGNAL_OFFSET (GtkMPlayerClass, play),
-			  gtk_signal_default_marshaller, GTK_TYPE_NONE, 0);
 
-    gtk_mplayer_signals[STOP_SIGNAL]
-	= gtk_signal_new ("stop",
-			  GTK_RUN_FIRST,
-			  GTK_CLASS_TYPE (object_class),
-			  GTK_SIGNAL_OFFSET (GtkMPlayerClass, stop),
-			  gtk_signal_default_marshaller, GTK_TYPE_NONE, 0);
-
-    gtk_mplayer_signals[PAUSE_SIGNAL]
-	= gtk_signal_new ("pause",
-			  GTK_RUN_FIRST,
-			  GTK_CLASS_TYPE (object_class),
-			  GTK_SIGNAL_OFFSET (GtkMPlayerClass, pause),
-			  gtk_signal_default_marshaller, GTK_TYPE_NONE, 0);
-
-    gtk_mplayer_signals[POS_CHANGED_SIGNAL]
-	= gtk_signal_new ("position-changed",
-			  GTK_RUN_FIRST,
-			  GTK_CLASS_TYPE (object_class),
-			  GTK_SIGNAL_OFFSET (GtkMPlayerClass,
-					     position_changed),
-			  gtk_signal_default_marshaller, GTK_TYPE_NONE, 0);
-
-    gtk_object_class_add_signals (object_class, gtk_mplayer_signals,
-				  LAST_SIGNAL);
-#endif
     /*
      * object class methods 
      */

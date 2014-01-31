@@ -125,7 +125,6 @@ gtk_xine_class_init (GtkXineClass * class)
 
     parent_class = gtk_type_class (gtk_widget_get_type ());
 
-#if (defined USE_GTK2) && (defined GTK_DISABLE_DEPRECATED)
     gtk_xine_signals[PLAY_SIGNAL]
 	= gtk_signal_new ("play",
 			  GTK_RUN_FIRST,
@@ -161,46 +160,6 @@ gtk_xine_class_init (GtkXineClass * class)
 			  GTK_CLASS_TYPE (object_class),
 			  GTK_SIGNAL_OFFSET (GtkXineClass, branched),
 			  g_cclosure_marshal_VOID__VOID, GTK_TYPE_NONE, 0);
-#else /* (defined USE_GTK2) && (defined GTK_DISABLE_DEPRECATED) */
-    gtk_xine_signals[PLAY_SIGNAL]
-	= gtk_signal_new ("play",
-			  GTK_RUN_FIRST,
-			  GTK_CLASS_TYPE (object_class),
-			  GTK_SIGNAL_OFFSET (GtkXineClass, play),
-			  gtk_signal_default_marshaller, GTK_TYPE_NONE, 0);
-
-    gtk_xine_signals[STOP_SIGNAL]
-	= gtk_signal_new ("stop",
-			  GTK_RUN_FIRST,
-			  GTK_CLASS_TYPE (object_class),
-			  GTK_SIGNAL_OFFSET (GtkXineClass, stop),
-			  gtk_signal_default_marshaller, GTK_TYPE_NONE, 0);
-
-    gtk_xine_signals[PLAYBACK_FINISHED_SIGNAL]
-	= gtk_signal_new ("playback_finished",
-			  GTK_RUN_FIRST,
-			  GTK_CLASS_TYPE (object_class),
-			  GTK_SIGNAL_OFFSET (GtkXineClass, playback_finished),
-			  gtk_signal_default_marshaller, GTK_TYPE_NONE, 0);
-
-    gtk_xine_signals[NEED_NEXT_MRL_SIGNAL]
-	= gtk_signal_new ("need_next_mrl",
-			  GTK_RUN_FIRST,
-			  GTK_CLASS_TYPE (object_class),
-			  GTK_SIGNAL_OFFSET (GtkXineClass, need_next_mrl),
-			  gtk_marshal_NONE__POINTER,
-			  GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
-
-    gtk_xine_signals[BRANCHED_SIGNAL]
-	= gtk_signal_new ("branched",
-			  GTK_RUN_FIRST,
-			  GTK_CLASS_TYPE (object_class),
-			  GTK_SIGNAL_OFFSET (GtkXineClass, branched),
-			  gtk_signal_default_marshaller, GTK_TYPE_NONE, 0);
-
-    gtk_object_class_add_signals (object_class, gtk_xine_signals,
-				  LAST_SIGNAL);
-#endif /* (defined USE_GTK2) && (defined GTK_DISABLE_DEPRECATED) */
 
     widget_class->realize = gtk_xine_realize;
     widget_class->unrealize = gtk_xine_unrealize;
@@ -537,39 +496,24 @@ event_listener (void *data, xine_event_t * event)
       case XINE_EVENT_INPUT_SELECT:
 	  break;
       case XINE_EVENT_PLAYBACK_FINISHED:
-#ifdef USE_GTK2
 	  g_signal_emit (G_OBJECT (gtx),
 			 gtk_xine_signals[PLAYBACK_FINISHED_SIGNAL], 0);
-#else /* USE_GTK2 */
-	  gtk_signal_emit (GTK_OBJECT (gtx),
-			   gtk_xine_signals[PLAYBACK_FINISHED_SIGNAL]);
-#endif /* USE_GTK2 */
 	  break;
       case XINE_EVENT_BRANCHED:
 	  /*
 	   * g_print ("\"XINE_EVENT_BRANCHED\" signal\n"); 
 	   */
-#ifdef USE_GTK2
 	  g_signal_emit (G_OBJECT (gtx),
 			 gtk_xine_signals[BRANCHED_SIGNAL], 0);
-#else /* USE_GTK2 */
-	  gtk_signal_emit (GTK_OBJECT (gtx),
-			   gtk_xine_signals[BRANCHED_SIGNAL]);
-#endif /* USE_GTK2 */
 	  break;
       case XINE_EVENT_NEED_NEXT_MRL:
       {
 	  xine_next_mrl_event_t *uevent = (xine_next_mrl_event_t *) event;
 	  gchar  *next_mrl;
 
-#ifdef USE_GTK2
 	  g_signal_emit (G_OBJECT (gtx),
 			 gtk_xine_signals[NEED_NEXT_MRL_SIGNAL],
 			 0, &next_mrl);
-#else /* USE_GTK2 */
-	  gtk_signal_emit (GTK_OBJECT (gtx),
-			   gtk_xine_signals[NEED_NEXT_MRL_SIGNAL], &next_mrl);
-#endif /* USE_GTK2 */
 
 	  if (next_mrl && *next_mrl)
 	  {
@@ -666,15 +610,9 @@ gtk_xine_realize (GtkWidget * widget)
     /*
      * track configure events of toplevel window
      */
-#ifdef USE_GTK2
     g_signal_connect_after (G_OBJECT (gtk_widget_get_toplevel (widget)),
 			    "configure-event",
 			    G_CALLBACK (configure_cb), this);
-#else /* USE_GTK2 */
-    gtk_signal_connect_after (GTK_OBJECT (gtk_widget_get_toplevel (widget)),
-			      "configure-event",
-			      GTK_SIGNAL_FUNC (configure_cb), this);
-#endif /* USE_GTK2 */
 
     printf ("xine_thread: init threads\n");
 
@@ -817,15 +755,9 @@ gtk_xine_unrealize (GtkWidget * widget)
 
     xine_exit (this->xine);
 
-#ifdef USE_GTK2
     g_signal_handlers_disconnect_by_func (G_OBJECT
 					  (gtk_widget_get_toplevel (widget)),
 					  G_CALLBACK (configure_cb), this);
-#else /* USE_GTK2 */
-    gtk_signal_disconnect_by_func (GTK_OBJECT
-				   (gtk_widget_get_toplevel (widget)),
-				   GTK_SIGNAL_FUNC (configure_cb), this);
-#endif /* USE_GTK2 */
 
     /*
      * Hide all windows 
@@ -903,11 +835,7 @@ gtk_xine_play (GtkXine * gtx, const gchar * mrl, gint pos, gint start_time)
     retval = xine_play (gtx->xine, (char *) mrl, pos, start_time);
 
     if (retval)
-#ifdef USE_GTK2
 	g_signal_emit (G_OBJECT (gtx), gtk_xine_signals[PLAY_SIGNAL], 0);
-#else /* USE_GTK2 */
-	gtk_signal_emit (GTK_OBJECT (gtx), gtk_xine_signals[PLAY_SIGNAL]);
-#endif /* USE_GTK2 */
 
     return retval;
 }
@@ -949,11 +877,7 @@ gtk_xine_stop (GtkXine * gtx)
 	XFlush (gtx->display);
     }
 
-#ifdef USE_GTK2
     g_signal_emit (G_OBJECT (gtx), gtk_xine_signals[STOP_SIGNAL], 0);
-#else /* USE_GTK2 */
-    gtk_signal_emit (GTK_OBJECT (gtx), gtk_xine_signals[STOP_SIGNAL]);
-#endif /* USE_GTK2 */
 }
 
 gint

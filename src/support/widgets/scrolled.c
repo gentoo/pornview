@@ -28,11 +28,7 @@
 
 #define bw(widget)                  GTK_CONTAINER(widget)->border_width
 
-#ifdef USE_GTK2
 #define WIDGET_DRAW(widget, area) gdk_window_invalidate_rect (widget->window, area, TRUE)
-#else
-#define WIDGET_DRAW(widget, area) (gtk_signal_emit_by_name (GTK_OBJECT(widget), "draw", area))
-#endif
 
 enum
 {

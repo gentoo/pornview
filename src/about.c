@@ -48,10 +48,6 @@ about_dialog (void)
     dialog = gtk_dialog_new ();
     gtk_object_set_data (GTK_OBJECT (dialog), "dialog", dialog);
 
-#ifndef USE_GTK2
-    GTK_WINDOW (dialog)->type = GTK_WINDOW_DIALOG;
-#endif
-
     gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
     gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
     gtk_window_set_policy (GTK_WINDOW (dialog), FALSE, FALSE, FALSE);
@@ -76,16 +72,10 @@ about_dialog (void)
 
     gtk_widget_realize (dialog);
 
-#ifdef USE_GTK2
     pixbuf =
 	gdk_pixbuf_new_from_file (g_strconcat
 				  (PACKAGE_DATA_DIR, "/logo.png", NULL),
 				  NULL);
-#else
-    pixbuf =
-	gdk_pixbuf_new_from_file (g_strconcat
-				  (PACKAGE_DATA_DIR, "/logo.png", NULL));
-#endif
 
     if (pixbuf != NULL)
     {
@@ -110,20 +100,14 @@ about_dialog (void)
 
     gtk_container_set_border_width (GTK_CONTAINER (dialog_action_area), 10);
 
-#ifdef USE_GTK2
     gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area),
 			       GTK_BUTTONBOX_SPREAD);
-#endif
 
     button = gtk_button_new_with_label (_("Close"));
     gtk_widget_show (button);
     gtk_box_pack_start (GTK_BOX (dialog_action_area), button, FALSE, TRUE, 0);
 
-#ifdef USE_GTK2
     gtk_widget_set_usize (GTK_WIDGET (button), 300, -2);
-#else
-    gtk_widget_set_usize (GTK_WIDGET (button), 300, 35);
-#endif
 
     GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
     gtk_widget_grab_default (button);

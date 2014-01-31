@@ -36,9 +36,7 @@ main (int argc, char *argv[])
     setlocale (LC_ALL, "");
     bindtextdomain (PACKAGE, LOCALEDIR);
 
-#ifdef USE_GTK2
     bind_textdomain_codeset (PACKAGE, "UTF-8");
-#endif
 
     textdomain (PACKAGE);
     gtk_set_locale ();

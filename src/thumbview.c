@@ -178,10 +178,8 @@ cb_thumbview_button_press (GtkWidget * widget, GdkEventButton * event,
 	gtk_menu_popup (GTK_MENU (popup_menu),
 			NULL, NULL, NULL, NULL, event->button, event->time);
 
-#ifdef USE_GTK2
 	g_object_ref (GTK_OBJECT (popup_menu));
 	g_object_ref_sink (GTK_OBJECT (popup_menu));
-#endif
 	g_object_unref (popup_menu);
 
 	return TRUE;
@@ -592,15 +590,7 @@ thumbview_create_toolbar (ThumbView * tv)
 
     g_return_val_if_fail (tv, NULL);
 
-#ifdef USE_GTK2
     toolbar = gtk_toolbar_new ();
-#else
-    toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-    gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
-    gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar),
-				 GTK_TOOLBAR_SPACE_LINE);
-    gtk_toolbar_set_space_size (GTK_TOOLBAR (toolbar), 16);
-#endif
 
     /*
      * refresh
@@ -1201,11 +1191,8 @@ thumbview_thumbs_next (void)
 		    g_strconcat (cache_dir, "/", g_basename (cell->name),
 				 PORNVIEW_CACHE_THUMB_EXT, NULL);
 
-#ifdef USE_GTK2
 		pixbuf = gdk_pixbuf_new_from_file (cache_path, NULL);
-#else
-		pixbuf = gdk_pixbuf_new_from_file (cache_path);
-#endif
+
 		if (pixbuf)
 		{
 		    gdk_pixbuf_render_pixmap_and_mask (pixbuf, &pixmap,

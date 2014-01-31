@@ -39,11 +39,7 @@
 static void zlist_class_init (ZListClass * klass);
 static void zlist_init (ZList * list);
 
-#ifdef USE_GTK2
 static void zlist_finalize (GObject * object);
-#else
-static void zlist_finalize (GtkObject * object);
-#endif
 
 static void zlist_map (GtkWidget * widget);
 static void zlist_unmap (GtkWidget * widget);
@@ -224,10 +220,6 @@ zlist_class_init (ZListClass * klass)
     widget_class->size_allocate = zlist_size_allocate;
     widget_class->expose_event = zlist_expose;
 
-#ifndef USE_GTK2
-    widget_class->draw = zlist_draw;
-#endif
-
     widget_class->button_press_event = zlist_button_press;
     widget_class->button_release_event = zlist_button_release;
     widget_class->motion_notify_event = zlist_motion_notify;
@@ -299,11 +291,7 @@ zlist_new (guint flags)
 }
 
 static void
-#ifdef USE_GTK2
 zlist_finalize (GObject * object)
-#else				/* USE_GTK2 */
-zlist_finalize (GtkObject * object)
-#endif				/* USE_GTK2 */
 {
     OBJECT_CLASS_FINALIZE_SUPER (parent_class, object);
 }
@@ -753,10 +741,6 @@ zlist_button_press (GtkWidget * widget, GdkEventButton * event)
     {
       case GTK_SELECTION_SINGLE:
 
-#ifndef USE_GTK2
-      case GTK_SELECTION_MULTIPLE:
-#endif
-
 	  list->anchor = idx;
 	  zlist_cell_draw_focus (list, idx);
 	  break;
@@ -836,17 +820,6 @@ zlist_button_release (GtkWidget * widget, GdkEventButton * event)
 	  list->anchor = index;
 	  break;
 
-#ifndef USE_GTK2
-      case GTK_SELECTION_MULTIPLE:
-	  if (list->anchor == index)
-	  {
-	      list->focus = index;
-	      zlist_cell_toggle (list, index);
-	  }
-	  list->anchor = index;
-	  break;
-#endif
-
       case GTK_SELECTION_EXTENDED:
 	  if ((list->flags & ZLIST_USES_DND))
 	  {
@@ -906,11 +879,6 @@ zlist_motion_notify (GtkWidget * widget, GdkEventMotion * event)
 	switch (list->selection_mode)
 	{
 	  case GTK_SELECTION_SINGLE:
-
-#ifndef USE_GTK2
-	  case GTK_SELECTION_MULTIPLE:
-#endif
-
 	      zlist_cell_draw_focus (list, index);
 	      break;
 
@@ -1003,10 +971,6 @@ zlist_focus_in (GtkWidget * widget, GdkEventFocus * event)
 {
     GTK_WIDGET_SET_FLAGS (widget, GTK_HAS_FOCUS);
 
-#ifndef USE_GTK2
-    gtk_widget_draw_focus (widget);
-#endif
-
     return FALSE;
 }
 
@@ -1014,10 +978,6 @@ static  gint
 zlist_focus_out (GtkWidget * widget, GdkEventFocus * event)
 {
     GTK_WIDGET_UNSET_FLAGS (widget, GTK_HAS_FOCUS);
-
-#ifndef USE_GTK2
-    gtk_widget_draw_default (widget);
-#endif
 
     return FALSE;
 }

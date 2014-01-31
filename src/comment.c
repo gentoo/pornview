@@ -38,11 +38,7 @@ CommentSignalType;
 
 static void comment_init (Comment * comment);
 static void comment_class_init (CommentClass * klass);
-#ifdef USE_GTK2
 static void comment_finalize (GObject * object);
-#else
-static void comment_finalize (GtkObject * object);
-#endif
 
 static gchar *defval_time (ImageInfo * info, gpointer data);
 static gchar *defval_file_url (ImageInfo * info, gpointer data);
@@ -1058,18 +1054,12 @@ comment_init (Comment * comment)
 
     comment->note = NULL;
 
-#ifdef USE_GTK2
     g_object_ref (GTK_OBJECT (comment));
     g_object_ref_sink (GTK_OBJECT (comment));
-#endif
 }
 
 static void
-#ifdef USE_GTK2
 comment_finalize (GObject * object)
-#else
-comment_finalize (GtkObject * object)
-#endif
 {
     Comment *comment = COMMENT (object);
     GList  *node;

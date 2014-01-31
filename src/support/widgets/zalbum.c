@@ -40,11 +40,7 @@ typedef void (*DrawFunc) (ZAlbum * album, ZAlbumCell * cell,
 static void zalbum_class_init (ZAlbumClass * klass);
 static void zalbum_init (ZAlbum * album);
 
-#ifdef USE_GTK2
 static void zalbum_finalize (GObject * object);
-#else
-static void zalbum_finalize (GtkObject * object);
-#endif
 
 static void zalbum_clear (ZList * list);
 static void zalbum_size_allocate (GtkWidget * widget,
@@ -74,10 +70,6 @@ static void zalbum_draw_string (GtkWidget * widget, ZAlbumCell * cell,
 				int max_width, int center);
 
 static GtkWidgetClass *parent_class = NULL;
-
-#ifndef USE_GTK2
-static GdkFont *album_font = NULL;
-#endif
 
 static ZAlbumColumnInfo default_cinfo[ZALBUM_COLUMNS] = {
     {200, 10, 0},
@@ -173,20 +165,11 @@ zalbum_new (ZAlbumMode mode)
 
     album->len = 0;
 
-#ifndef USE_GTK2
-    album_font =
-	gdk_font_load ("-*-helvetica-medium-r-normal-*-*-100-*-*-*-*-*-*");
-#endif
-
     return (GtkWidget *) album;
 }
 
 static void
-#ifdef USE_GTK2
 zalbum_finalize (GObject * object)
-#else				/* USE_GTK2 */
-zalbum_finalize (GtkObject * object)
-#endif				/* USE_GTK2 */
 {
     zalbum_clear (ZLIST (object));
 
@@ -546,15 +529,9 @@ zalbum_draw_string (GtkWidget * widget, ZAlbumCell * cell, char *string,
     if (!center)
 	x_pad = 0;
 
-#ifdef USE_GTK2
     gdk_draw_string (widget->window, gtk_style_get_font (widget->style),
 		     widget->style->fg_gc[CELL_STATE (cell)],
 		     x + x_pad, y, string);
-#else
-    gdk_draw_string (widget->window, album_font,
-		     widget->style->fg_gc[CELL_STATE (cell)],
-		     x + x_pad, y, string);
-#endif
 }
 
 static void

@@ -165,11 +165,7 @@ generic_dialog_setup (GenericDialog * gd,
     gd->data = data;
     gd->cb_cancel = cb_cancel;
 
-#ifdef USE_GTK2
     gd->dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-#else
-    gd->dialog = gtk_window_new (GTK_WINDOW_DIALOG);
-#endif
 
     gtk_window_set_wmclass (GTK_WINDOW (gd->dialog), wmsubclass, wmclass);
     gtk_signal_connect (GTK_OBJECT (gd->dialog), "delete_event",
@@ -202,12 +198,8 @@ generic_dialog_setup (GenericDialog * gd,
     gd->hbox = gtk_hbutton_box_new ();
     gtk_button_box_set_layout (GTK_BUTTON_BOX (gd->hbox), GTK_BUTTONBOX_END);
 
-#ifndef USE_GTK2
     gtk_button_box_set_spacing (GTK_BUTTON_BOX (gd->hbox), 0);
     gtk_button_box_set_child_size (GTK_BUTTON_BOX (gd->hbox), 95, 35);
-#else
-    gtk_button_box_set_spacing (GTK_BUTTON_BOX (gd->hbox), 10);
-#endif
 
     gtk_box_pack_start (GTK_BOX (vbox), gd->hbox, FALSE, FALSE, 0);
     gtk_widget_show (gd->hbox);

@@ -151,10 +151,6 @@ dirtree_new (GtkWidget * win, const gchar * start_path, gboolean check_dir,
 
     widget = gtk_type_new (dirtree_get_type ());
 
-#ifndef USE_GTK2
-    gtk_ctree_construct (GTK_CTREE (widget), 1, 0, NULL);
-#endif
-
     dt = DIRTREE (widget);
     dt->collapse = FALSE;
     dt->check_dir = check_dir;

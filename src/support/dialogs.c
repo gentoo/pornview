@@ -56,10 +56,6 @@ dialog_confirm (const gchar * title, const gchar * message,
     dialog = gtk_dialog_new ();
     gtk_window_set_title (GTK_WINDOW (dialog), title);
 
-#ifndef USE_GTK2
-    GTK_WINDOW (dialog)->type = GTK_WINDOW_DIALOG;
-#endif
-
     gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
     gtk_window_set_policy (GTK_WINDOW (dialog), FALSE, FALSE, FALSE);
     gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
@@ -104,11 +100,9 @@ dialog_confirm (const gchar * title, const gchar * message,
     gtk_widget_set_usize (GTK_WIDGET (label), 220, -1);
     gtk_widget_show (label);
 
-#ifdef USE_GTK2
     gtk_button_box_set_layout (GTK_BUTTON_BOX
 			       (GTK_DIALOG (dialog)->action_area),
 			       GTK_BUTTONBOX_END);
-#endif
 
     /*
      * buttons
@@ -121,10 +115,6 @@ dialog_confirm (const gchar * title, const gchar * message,
     GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
     gtk_widget_show (button);
 
-#ifndef USE_GTK2
-    gtk_widget_set_usize (GTK_WIDGET (button), 150, 35);
-#endif
-
     button = gtk_button_new_with_label (_("No"));
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->action_area),
 			button, FALSE, FALSE, 0);
@@ -132,11 +122,7 @@ dialog_confirm (const gchar * title, const gchar * message,
 			GTK_SIGNAL_FUNC (cb_dialog_confirm_no), &retval);
     GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 
-#ifndef USE_GTK2
-    gtk_widget_set_usize (GTK_WIDGET (button), 150, 35);
-#endif
-
-    gtk_widget_show (button);
+	gtk_widget_show (button);
 
     gtk_widget_grab_default (button);
 
@@ -173,10 +159,6 @@ dialog_message (const gchar * title, const gchar * message,
     dialog = gtk_dialog_new ();
     gtk_object_set_data (GTK_OBJECT (dialog), "dialog", dialog);
     gtk_window_set_title (GTK_WINDOW (dialog), title);
-
-#ifndef USE_GTK2
-    GTK_WINDOW (dialog)->type = GTK_WINDOW_DIALOG;
-#endif
 
     gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
     gtk_window_set_policy (GTK_WINDOW (dialog), FALSE, FALSE, FALSE);
@@ -236,10 +218,8 @@ dialog_message (const gchar * title, const gchar * message,
     gtk_widget_show (dialog_action_area);
     gtk_container_set_border_width (GTK_CONTAINER (dialog_action_area), 5);
 
-#ifdef USE_GTK2
     gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area),
 			       GTK_BUTTONBOX_SPREAD);
-#endif
 
     button = gtk_button_new_with_label (_("Close"));
     gtk_widget_ref (button);
@@ -247,11 +227,7 @@ dialog_message (const gchar * title, const gchar * message,
 			      (GtkDestroyNotify) gtk_widget_unref);
     gtk_widget_show (button);
 
-#ifndef USE_GTK2
-    gtk_widget_set_usize (GTK_WIDGET (button), 150, 35);
-#else
     gtk_widget_set_usize (GTK_WIDGET (button), 150, -2);
-#endif
 
     gtk_box_pack_start (GTK_BOX (dialog_action_area), button, FALSE, FALSE,
 			0);
@@ -271,10 +247,6 @@ dialog_choose_dir (const gchar * title)
     GtkWidget *dialog;
 
     dialog = gtk_file_selection_new (title);
-
-#ifndef USE_GTK2
-    GTK_WINDOW (dialog)->type = GTK_WINDOW_DIALOG;
-#endif
 
     gtk_window_set_policy (GTK_WINDOW (dialog), FALSE, FALSE, FALSE);
     gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
@@ -390,10 +362,6 @@ dialog_textentry (const gchar * title,
      * dialog window 
      */
     window = gtk_dialog_new ();
-
-#ifndef USE_GTK2
-    GTK_WINDOW (window)->type = GTK_WINDOW_DIALOG;
-#endif
 
     gtk_window_set_title (GTK_WINDOW (window), title);
     gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_MOUSE);

@@ -150,10 +150,8 @@ cb_dirview_button_press_event (GtkWidget * widget, GdkEventButton * event,
 	gtk_menu_popup (GTK_MENU (dirview_popup), NULL, NULL, NULL, NULL,
 			3, gtk_get_current_event_time());
 
-#ifdef USE_GTK2
 	g_object_ref  (GTK_OBJECT (dirview_popup));
 	g_object_ref_sink (GTK_OBJECT (dirview_popup));
-#endif
 
 	g_object_unref (dirview_popup);
     }
@@ -807,15 +805,7 @@ dirview_create_toolbar(DirView * dv)
 
     g_return_val_if_fail (dv, NULL);
 
-#ifdef USE_GTK2
     toolbar = gtk_toolbar_new ();
-#else
-	toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-    gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
-    gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar),
-				 GTK_TOOLBAR_SPACE_LINE);
-    gtk_toolbar_set_space_size (GTK_TOOLBAR (toolbar), 16);
-#endif
 
 	dirview_register_button(dv, toolbar, &(dv->toolbar_refresh_btn),
 			"Refresh", refresh_xpm, cb_dirview_refresh_dir_tree);

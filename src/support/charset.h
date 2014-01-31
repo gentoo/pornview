@@ -21,14 +21,6 @@
 
 #include <glib.h>
 
-#ifdef USE_GTK2
-#else
-typedef guint32 gunichar;
-
-gboolean        g_utf8_validate (const gchar * str,
-				 gssize max_len, const gchar ** end);
-#endif
-
 #define CHARSET_ASCII  "US-ASCII"
 #define CHARSET_UTF8   "UTF-8"
 

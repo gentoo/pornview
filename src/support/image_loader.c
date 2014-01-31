@@ -80,9 +80,7 @@ cb_image_loader_area (GdkPixbufLoader * loader,
 static void
 image_loader_stop (ImageLoader * il)
 {
-#ifdef USE_GTK2
     GError *err = NULL;
-#endif
 
     if (!il)
 	return;
@@ -99,19 +97,11 @@ image_loader_stop (ImageLoader * il)
 	 * some loaders do not have a pixbuf till close, order is important here 
 	 */
 
-#ifdef USE_GTK2
 	gdk_pixbuf_loader_close (il->loader, &err);
-#else
-	gdk_pixbuf_loader_close (il->loader);
-#endif
 
 	image_loader_sync_pixbuf (il);
 
-#ifdef USE_GTK2
 	g_object_unref (il->loader);
-#else
-	gtk_object_unref (GTK_OBJECT (il->loader));
-#endif
 
 	il->loader = NULL;
     }
@@ -173,9 +163,7 @@ cb_image_loader_idle (gpointer data)
     gint    b;
     gint    c;
 
-#ifdef USE_GTK2
     GError *err = NULL;
-#endif
 
     if (!il)
 	return FALSE;
@@ -206,12 +194,8 @@ cb_image_loader_idle (gpointer data)
 	    return FALSE;
 	}
 
-#ifdef USE_GTK2
 	if (b < 0
 	    || (b > 0 && !gdk_pixbuf_loader_write (il->loader, buf, b, &err)))
-#else
-	if (b < 0 || (b > 0 && !gdk_pixbuf_loader_write (il->loader, buf, b)))
-#endif
 	{
 	    image_loader_error (il);
 	    return FALSE;
@@ -240,9 +224,7 @@ image_loader_begin (ImageLoader * il)
     gint    buf_size;
     int     b;
 
-#ifdef USE_GTK2
     GError *err = NULL;
-#endif
 
     if (!il->loader || il->pixbuf)
 	return FALSE;
@@ -266,11 +248,7 @@ image_loader_begin (ImageLoader * il)
 	return FALSE;
     }
 
-#ifdef USE_GTK2
     if (gdk_pixbuf_loader_write (il->loader, buf, b, &err))
-#else
-    if (gdk_pixbuf_loader_write (il->loader, buf, b))
-#endif
     {
 	il->bytes_read += b;
 
@@ -301,13 +279,8 @@ image_loader_begin (ImageLoader * il)
 	    {
 		b = read (il->load_fd, buf, buf_size);
 		if (b < 0 || (b > 0
-#ifdef USE_GTK2
 			      && !gdk_pixbuf_loader_write (il->loader, buf, b,
 							   &err)))
-#else
-			      && !gdk_pixbuf_loader_write (il->loader, buf,
-							   b)))
-#endif
 		{
 		    image_loader_stop (il);
 		    return FALSE;
@@ -374,13 +347,8 @@ image_loader_setup (ImageLoader * il)
 
     il->loader = gdk_pixbuf_loader_new ();
 
-#ifdef USE_GTK2
     g_signal_connect (G_OBJECT (il->loader), "area_updated",
 		      G_CALLBACK (cb_image_loader_area), il);
-#else
-    gtk_signal_connect (GTK_OBJECT (il->loader), "area_updated",
-			GTK_SIGNAL_FUNC (cb_image_loader_area), il);
-#endif
 
     return image_loader_begin (il);
 }
