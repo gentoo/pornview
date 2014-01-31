@@ -69,11 +69,11 @@ gedo_paned_get_type (void)
 	    (GtkClassInitFunc) gedo_paned_class_init,
 	    (GtkObjectInitFunc) gedo_paned_init,
 	    /*
-	     * reserved_1 
+	     * reserved_1
 	     */
 	    NULL,
 	    /*
-	     * reserved_2 
+	     * reserved_2
 	     */
 	    NULL,
 	    (GtkClassInitFunc) NULL,
@@ -333,7 +333,7 @@ gedo_paned_expose (GtkWidget * widget, GdkEventExpose * event)
 	paned = GEDO_PANED (widget);
 
 	/*
-	 * An expose event for the handle 
+	 * An expose event for the handle
 	 */
 	if (event->window == paned->handle)
 	{
@@ -563,8 +563,8 @@ gedo_paned_xor_line (GedoPaned * paned)
  * @paned: The paned object.
  * @use_minsize: Whether or not to use the minimum size option.
  * @minsize: The minimun size to use if the option is enabled.
- * 
- * If @use_minsize = TRUE then set @minsize as the minimal size child 1 can 
+ *
+ * If @use_minsize = TRUE then set @minsize as the minimal size child 1 can
  * be set to.
  * If @use_minsize = FALSE then disable this option, that is, child 1 can have
  * any size.
@@ -586,8 +586,8 @@ gedo_paned_child1_use_minsize (GedoPaned * paned,
  * @paned: The paned object.
  * @use_minsize: Whether or not to use the minimum size option.
  * @minsize: The minimun size to use if the option is enabled.
- * 
- * If @use_minsize = TRUE then set @minsize as the minimal size child 2 can 
+ *
+ * If @use_minsize = TRUE then set @minsize as the minimal size child 2 can
  * be set to.
  * If @use_minsize = FALSE then disable this option, that is, child 2 can have
  * any size.
@@ -657,7 +657,7 @@ gedo_paned_compute_position (GedoPaned * paned,
 
 
     /*
-     * Ensure that minimum sizes, if enabled, are respected. 
+     * Ensure that minimum sizes, if enabled, are respected.
      */
     if (paned->child1_use_minsize)
     {
@@ -684,7 +684,7 @@ gedo_paned_compute_position (GedoPaned * paned,
 /*
  * gedo_paned_hide_child1: hide child 1.
  * @paned: The paned widget.
- * 
+ *
  * Hide the child number 1.
  */
 void
@@ -703,7 +703,7 @@ gedo_paned_hide_child1 (GedoPaned * paned)
 /*
  * gedo_paned_hide_child2: collapse child 2.
  * @paned: The paned widget.
- * 
+ *
  * Hide the child number 2.
  */
 void
@@ -722,7 +722,7 @@ gedo_paned_hide_child2 (GedoPaned * paned)
 /*
  * gedo_paned_split: split the paned widget in two halves.
  * @paned: The paned widget.
- * 
+ *
  * Give both children the same size.
  */
 void
@@ -782,7 +782,7 @@ gedo_paned_motion (GtkWidget * widget, GdkEventMotion * event)
 	    child1_size = paned->last_allocation - paned->child2_minsize;
 
 	/*
-	 * Avoid blinking. 
+	 * Avoid blinking.
 	 */
 	if (child1_size == last_size)
 	    return FALSE;

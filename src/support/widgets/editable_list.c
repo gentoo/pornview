@@ -218,7 +218,7 @@ editable_list_finalize (GObject * object)
     gint    i;
 
     /*
-     * remove column funcs 
+     * remove column funcs
      */
     for (i = 0; i < editlist->columns; i++)
     {
@@ -423,7 +423,7 @@ cb_editlist_up_button (GtkButton * button, gpointer data)
 	gint    i, colnum = gtk_tree_model_get_n_columns (model);
 
 	/*
-	 * get src row 
+	 * get src row
 	 */
 	selection = gtk_tree_view_get_selection (treeview);
 	success = gtk_tree_selection_get_selected (selection, &model, &iter);
@@ -432,7 +432,7 @@ cb_editlist_up_button (GtkButton * button, gpointer data)
 	treepath = gtk_tree_model_get_path (model, &iter);
 
 	/*
-	 * get prev row 
+	 * get prev row
 	 */
 	success = gtk_tree_path_prev (treepath);
 	if (!success)
@@ -443,7 +443,7 @@ cb_editlist_up_button (GtkButton * button, gpointer data)
 	gtk_tree_model_get_iter (model, &prev_iter, treepath);
 
 	/*
-	 * get src data 
+	 * get src data
 	 */
 	values = g_new0 (GValue, colnum);
 	for (i = 0; i < colnum; i++)
@@ -452,7 +452,7 @@ cb_editlist_up_button (GtkButton * button, gpointer data)
 	}
 
 	/*
-	 * insert dest row before prev 
+	 * insert dest row before prev
 	 */
 	gtk_list_store_insert_before (GTK_LIST_STORE (model),
 				      &dest_iter, &prev_iter);
@@ -466,19 +466,19 @@ cb_editlist_up_button (GtkButton * button, gpointer data)
 	g_free (values);
 
 	/*
-	 * delete src 
+	 * delete src
 	 */
 	gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
 
 	/*
-	 * select dest 
+	 * select dest
 	 */
 	gtk_tree_path_free (treepath);
 	treepath = gtk_tree_model_get_path (model, &dest_iter);
 	gtk_tree_view_set_cursor (treeview, treepath, NULL, FALSE);
 
 	/*
-	 * clean 
+	 * clean
 	 */
 	gtk_tree_path_free (treepath);
     }
@@ -518,7 +518,7 @@ cb_editlist_down_button (GtkButton * button, gpointer data)
 	gint    i, colnum = gtk_tree_model_get_n_columns (model);
 
 	/*
-	 * get src row 
+	 * get src row
 	 */
 	selection = gtk_tree_view_get_selection (treeview);
 	success = gtk_tree_selection_get_selected (selection, &model, &iter);
@@ -526,7 +526,7 @@ cb_editlist_down_button (GtkButton * button, gpointer data)
 	    return;
 
 	/*
-	 * get prev row 
+	 * get prev row
 	 */
 	next_iter = iter;
 	success = gtk_tree_model_iter_next (model, &next_iter);
@@ -534,7 +534,7 @@ cb_editlist_down_button (GtkButton * button, gpointer data)
 	    return;
 
 	/*
-	 * get src data 
+	 * get src data
 	 */
 	values = g_new0 (GValue, colnum);
 	for (i = 0; i < colnum; i++)
@@ -543,7 +543,7 @@ cb_editlist_down_button (GtkButton * button, gpointer data)
 	}
 
 	/*
-	 * insert dest row before prev 
+	 * insert dest row before prev
 	 */
 	gtk_list_store_insert_after (GTK_LIST_STORE (model),
 				     &dest_iter, &next_iter);
@@ -557,18 +557,18 @@ cb_editlist_down_button (GtkButton * button, gpointer data)
 	g_free (values);
 
 	/*
-	 * delete src 
+	 * delete src
 	 */
 	gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
 
 	/*
-	 * select dest 
+	 * select dest
 	 */
 	treepath = gtk_tree_model_get_path (model, &dest_iter);
 	gtk_tree_view_set_cursor (treeview, treepath, NULL, FALSE);
 
 	/*
-	 * clean 
+	 * clean
 	 */
 	gtk_tree_path_free (treepath);
     }
@@ -754,14 +754,14 @@ editable_list_set_move_button_sensitive (EditableList * editlist)
     else
     {
 	/*
-	 * up button 
+	 * up button
 	 */
 	if (selected == 0)
 	    gtk_widget_set_sensitive (editlist->up_button, FALSE);
 	else
 	    gtk_widget_set_sensitive (editlist->up_button, TRUE);
 	/*
-	 * down button 
+	 * down button
 	 */
 	if (selected < rownum - 1)
 	    gtk_widget_set_sensitive (editlist->down_button, TRUE);
@@ -811,7 +811,7 @@ editable_list_create_list_widget (EditableList * editlist, gint colnum)
     g_signal_connect (G_OBJECT (clist), "cursor_changed",
 		      G_CALLBACK (cb_editlist_cursor_changed), editlist);
     /*
-     * set column 
+     * set column
      */
     for (i = 0; i < colnum; i++)
     {
@@ -982,7 +982,7 @@ editable_list_new (gint colnum)
 #endif /* (GTK_MAJOR_VERSION >= 2) */
     main_vbox = GTK_WIDGET (editlist);
     /*
-     * clist 
+     * clist
      */
     hbox = gtk_hbox_new (FALSE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (hbox), 0);
@@ -1000,7 +1000,7 @@ editable_list_new (gint colnum)
     gtk_container_add (GTK_CONTAINER (scrollwin), clist);
     gtk_widget_show (clist);
     /*
-     * move buttons 
+     * move buttons
      */
     vbox = editlist->move_button_area = gtk_vbox_new (TRUE, 0);
     gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 2);
@@ -1031,7 +1031,7 @@ editable_list_new (gint colnum)
     gtk_box_pack_start (GTK_BOX (vbox1), button, FALSE, FALSE, 2);
     gtk_widget_show (button);
     /*
-     * edit area 
+     * edit area
      */
     editlist->edit_area = gtk_hbox_new (FALSE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (editlist->edit_area), 5);
@@ -1039,7 +1039,7 @@ editable_list_new (gint colnum)
 			TRUE, 0);
     gtk_widget_show (editlist->edit_area);
     /*
-     * edit buttons 
+     * edit buttons
      */
     hbox = editlist->action_button_area = gtk_hbox_new (FALSE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
@@ -1101,7 +1101,7 @@ editable_list_new (gint colnum)
 			editlist);
 #endif /* (GTK_MAJOR_VERSION >= 2) */
     /*
-     * initialize column func tables 
+     * initialize column func tables
      */
     editlist->column_func_tables
 	= g_new0 (EditableListColumnFuncTable *, editlist->columns);

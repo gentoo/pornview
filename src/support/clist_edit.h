@@ -24,7 +24,7 @@ struct _ClistEditData
 
     gchar          *old_name;
     gchar          *new_name;
-	 
+
 	gint (*edit_func) (ClistEditData * ced, const gchar * oldname,
 			   const gchar * newname, gpointer data);
 

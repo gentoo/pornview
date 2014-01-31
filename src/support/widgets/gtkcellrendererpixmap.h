@@ -58,7 +58,7 @@ extern          "C"
 	GtkCellRendererClass parent_class;
 
 	/*
-	 * Padding for future expansion 
+	 * Padding for future expansion
 	 */
 	void            (*_gtk_reserved1) (void);
 	void            (*_gtk_reserved2) (void);

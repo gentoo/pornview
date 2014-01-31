@@ -66,9 +66,9 @@ cursors[] =
  * cursor_get:
  * @window: Window whose screen and colormap determine the cursor's.
  * @type: A cursor type.
- * 
+ *
  * Creates a cursor.
- * 
+ *
  * Return value: The newly-created cursor.
  **/
 GdkCursor *

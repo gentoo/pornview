@@ -50,11 +50,11 @@ gedo_vpaned_get_type (void)
 	    (GtkClassInitFunc) gedo_vpaned_class_init,
 	    (GtkObjectInitFunc) gedo_vpaned_init,
 	    /*
-	     * reserved_1 
+	     * reserved_1
 	     */
 	    NULL,
 	    /*
-	     * reserved_2 
+	     * reserved_2
 	     */
 	    NULL,
 	    (GtkClassInitFunc) NULL,
@@ -177,7 +177,7 @@ gedo_vpaned_size_allocate (GtkWidget * widget, GtkAllocation * allocation)
 	if ((paned->child_hidden == 1) && paned->child1)
 	{
 	    /*
-	     * hide child1 and show child2 if it exists. 
+	     * hide child1 and show child2 if it exists.
 	     */
 	    gtk_widget_hide (paned->child1);
 	    if (paned->child2 && !GTK_WIDGET_VISIBLE (paned->child2))
@@ -187,7 +187,7 @@ gedo_vpaned_size_allocate (GtkWidget * widget, GtkAllocation * allocation)
 	if ((paned->child_hidden == 2) && paned->child2)
 	{
 	    /*
-	     * hide child2 and show child1 if it exists. 
+	     * hide child2 and show child1 if it exists.
 	     */
 	    gtk_widget_hide (paned->child2);
 	    if (paned->child1 && !GTK_WIDGET_VISIBLE (paned->child1))
@@ -197,7 +197,7 @@ gedo_vpaned_size_allocate (GtkWidget * widget, GtkAllocation * allocation)
     else
     {
 	/*
-	 * Show both children. 
+	 * Show both children.
 	 */
 	if (paned->child1 && !GTK_WIDGET_VISIBLE (paned->child1))
 	    gtk_widget_show (paned->child1);
@@ -207,8 +207,8 @@ gedo_vpaned_size_allocate (GtkWidget * widget, GtkAllocation * allocation)
     }
 
     /*
-     * Move the handle before the children so we don't get extra expose 
-     * events 
+     * Move the handle before the children so we don't get extra expose
+     * events
      */
 
     paned->handle_xpos = border_width;
@@ -246,7 +246,7 @@ gedo_vpaned_size_allocate (GtkWidget * widget, GtkAllocation * allocation)
 
     /*
      * Now allocate the childen, making sure, when resizing not to
-     * overlap the windows 
+     * overlap the windows
      */
     if (GTK_WIDGET_MAPPED (widget) &&
 	paned->child1 && GTK_WIDGET_VISIBLE (paned->child1) &&
@@ -374,7 +374,7 @@ gedo_vpaned_button_press (GtkWidget * widget, GdkEventButton * event)
 	paned->in_drag = TRUE;
 	/*
 	 * We need a server grab here, not gtk_grab_add(), since
-	 * we don't want to pass events on to the widget's children 
+	 * we don't want to pass events on to the widget's children
 	 */
 	gdk_pointer_grab (paned->handle, FALSE,
 			  GDK_POINTER_MOTION_HINT_MASK

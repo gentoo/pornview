@@ -96,7 +96,7 @@ reset_scrollbar (ImageView * iv)
     g_return_if_fail (iv->vadj);
 
     /*
-     * horizontal 
+     * horizontal
      */
     if (iv->x_pos < 0)
 	iv->hadj->value = 0 - iv->x_pos;
@@ -111,7 +111,7 @@ reset_scrollbar (ImageView * iv)
     iv->hadj->page_size = iv->draw_area->allocation.width;
 
     /*
-     * vertical 
+     * vertical
      */
     if (iv->y_pos < 0)
 	iv->vadj->value = 0 - iv->y_pos;
@@ -141,13 +141,13 @@ imageview_draw_image (ImageView * iv)
     allocate_draw_buffer (iv);
 
     /*
-     * fill background by default bg color 
+     * fill background by default bg color
      */
     bg_gc = iv->draw_area->style->black_gc;
     gdk_draw_rectangle (buffer, bg_gc, TRUE, 0, 0, -1, -1);
 
     /*
-     * draw image to buffer 
+     * draw image to buffer
      */
 
     if (iv->pixmap)
@@ -171,7 +171,7 @@ imageview_draw_image (ImageView * iv)
     }
 
     /*
-     * draw from buffer to foreground 
+     * draw from buffer to foreground
      */
     gdk_draw_pixmap (iv->draw_area->window,
 		     iv->draw_area->style->
@@ -291,7 +291,7 @@ imageview_open_navwin (ImageView * iv, gfloat x_root, gfloat y_root)
 	return;
 
     /*
-     * get pixmap for navigator 
+     * get pixmap for navigator
      */
     gdk_window_get_size (iv->pixmap, &src_width, &src_height);
 
@@ -321,12 +321,12 @@ imageview_open_navwin (ImageView * iv, gfloat x_root, gfloat y_root)
 	goto ERROR;
 
     /*
-     * open navigate window 
+     * open navigate window
      */
     navwin_create (iv, x_root, y_root, pixmap, mask);
 
     /*
-     * free 
+     * free
      */
     gdk_pixmap_unref (pixmap);
 
@@ -360,7 +360,7 @@ imageview_calc_image_size (ImageView * iv)
 	fit = TRUE;
 
     /*
-     * image scale 
+     * image scale
      */
     if (iv->rotate == 0 || iv->rotate == 2)
     {
@@ -375,7 +375,7 @@ imageview_calc_image_size (ImageView * iv)
 
 
     /*
-     * calculate image size 
+     * calculate image size
      */
 
     if (fit)
@@ -779,7 +779,7 @@ load_first_image (ImageView * iv)
     destroy_image (next_image);
 
     id = 0;
-    
+
     while (id < iv->f_max && !(current_image = load_file (id)))
 	id++;
 
@@ -803,7 +803,7 @@ load_last_image (ImageView * iv)
     destroy_image (next_image);
 
     id = iv->f_max - 1;
-    
+
     while (id >= 0 && !(current_image = load_file (id)))
 	id--;
 
@@ -812,7 +812,7 @@ load_last_image (ImageView * iv)
     next_image = NULL;
 
     id--;
-    
+
     while (id >= 0 && !(previous_image = load_file (id)))
 	id--;
 }
@@ -935,7 +935,7 @@ imageview_fullscreen_delete (ImageView * iv)
 	imageview_slideshow_delete (iv);
 
     /*
-     * restore draw widget 
+     * restore draw widget
      */
 
     view_type = viewtype_get ();
@@ -965,7 +965,7 @@ imageview_fullscreen_delete (ImageView * iv)
     gtk_widget_grab_focus (GTK_WIDGET (iv->draw_area));
 
     /*
-     * disable auto hide cursor stuff 
+     * disable auto hide cursor stuff
      */
     if (iv->hide_cursor_timer_id != 0)
 	gtk_timeout_remove (iv->hide_cursor_timer_id);
@@ -1323,7 +1323,7 @@ cb_image_motion_notify (GtkWidget * widget, GdkEventMotion * event,
 	iv->dragging = TRUE;
 
     /*
-     * scroll image 
+     * scroll image
      */
     if (iv->button == 1)
     {
@@ -1647,7 +1647,7 @@ imageview_create (void)
 	imageview->fit_to_frame = FALSE;
 
     /*
-     * container 
+     * container
      */
     imageview->container = gtk_frame_new (NULL);
     gtk_frame_set_shadow_type (GTK_FRAME (imageview->container),
@@ -1655,7 +1655,7 @@ imageview_create (void)
     gtk_widget_show (imageview->container);
 
     /*
-     * create widgets 
+     * create widgets
      */
     imageview->table = gtk_table_new (2, 2, FALSE);
     gtk_widget_show (imageview->table);
@@ -1725,7 +1725,7 @@ imageview_create (void)
 			GTK_SIGNAL_FUNC (cb_image_button_release), imageview);
 
     /*
-     * set flags 
+     * set flags
      */
     GTK_WIDGET_SET_FLAGS (GTK_WIDGET (imageview->draw_area), GTK_CAN_FOCUS);
 
@@ -1738,7 +1738,7 @@ imageview_create (void)
 			   | GDK_POINTER_MOTION_HINT_MASK);
 
     /*
-     * set signals 
+     * set signals
      */
     gtk_signal_connect (GTK_OBJECT (imageview->hadj), "value_changed",
 			GTK_SIGNAL_FUNC (cb_scrollbar_value_changed),

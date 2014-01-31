@@ -73,26 +73,26 @@ extern          "C"
 	gint16          handle_ypos;
 
 	/*
-	 * whether it is an horizontal or a vertical paned. 
+	 * whether it is an horizontal or a vertical paned.
 	 */
 	guint           horizontal:1;
 
 	/*
-	 * minimal sizes for child1 and child2. (default value : 0) 
+	 * minimal sizes for child1 and child2. (default value : 0)
 	 */
 	gint            child1_minsize;
 	gint            child2_minsize;
 
 	/*
-	 * whether the minimal size option is enabled or not. 
+	 * whether the minimal size option is enabled or not.
 	 */
 	guint           child1_use_minsize:1;
 	guint           child2_use_minsize:1;
 
 	/*
-	 * stores what child is hiden, if any: 
+	 * stores what child is hiden, if any:
 	 * * 0   : no child collapsed.
-	 * * 1,2 : index of the collapsed child. 
+	 * * 1,2 : index of the collapsed child.
 	 */
 	guint           child_hidden:2;
     };

@@ -167,14 +167,14 @@ prefs_progs_page (void)
     gtk_signal_connect (GTK_OBJECT (editlist), "list_updated",
 			GTK_SIGNAL_FUNC (cb_editlist_updated), NULL);
     gtk_widget_set_usize (editlist, -2, 320);
-	
+
     /*
      *  create edit area
      */
     hbox = EDITABLE_LIST (editlist)->edit_area;
 
     /*
-     * program name entry 
+     * program name entry
      */
     vbox = gtk_vbox_new (FALSE, 0);
     gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
@@ -192,7 +192,7 @@ prefs_progs_page (void)
     gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, TRUE, 0);
 
     /*
-     * command entry 
+     * command entry
      */
     vbox = gtk_vbox_new (FALSE, 0);
     gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
@@ -211,7 +211,7 @@ prefs_progs_page (void)
     gtk_box_pack_start (GTK_BOX (hbox2), entry, TRUE, TRUE, 0);
 
     /*
-     * check box 
+     * check box
      */
     toggle = editable_list_create_check_button (EDITABLE_LIST (editlist), 2,
 						_("Dialog"), FALSE,
@@ -246,7 +246,7 @@ prefs_scripts_page (void)
     gtk_box_pack_start (GTK_BOX (main_vbox), frame, TRUE, TRUE, 0);
 
     /*
-     * Show dialog 
+     * Show dialog
      */
     toggle =
 	check_button_create (_("Show dialog befor execute script"),

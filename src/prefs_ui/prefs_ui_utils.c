@@ -113,7 +113,7 @@ cb_dirprefs_dirsel_pressed (GtkButton * button, gpointer data)
 
     default_path = gtk_entry_get_text (GTK_ENTRY (dirprefs->entry));
     path = dialog_choose_dir_modal (dialog_title, default_path, GTK_WINDOW(prefs_window));
-    
+
     if (path)
 	gtk_entry_set_text (GTK_ENTRY (dirprefs->entry), path);
     g_free (path);
@@ -147,7 +147,7 @@ prefs_ui_dir_list_prefs (const gchar * title,
     dirprefs->dialog_title = dialog_title;
 
     /*
-     * frame 
+     * frame
      */
     frame = gtk_frame_new (title);
     gtk_container_set_border_width (GTK_CONTAINER (frame), 0);
@@ -159,7 +159,7 @@ prefs_ui_dir_list_prefs (const gchar * title,
 			GTK_SIGNAL_FUNC (cb_dirprefs_destroy), dirprefs);
 
     /*
-     * clist 
+     * clist
      */
     dirprefs->editlist = editlist
 	= editable_list_new_with_titles (titles_num, titles);
@@ -171,7 +171,7 @@ prefs_ui_dir_list_prefs (const gchar * title,
 			dirprefs);
 
     /*
-     * entry area 
+     * entry area
      */
     hbox = EDITABLE_LIST (editlist)->edit_area;
 

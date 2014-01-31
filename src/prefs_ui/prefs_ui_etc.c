@@ -28,7 +28,7 @@ GtkWidget *slideshow_interval_label = NULL;
 typedef struct PrefsWin_Tag
 {
     /*
-     * comment 
+     * comment
      */
     GtkWidget *comment_editlist;
     GtkWidget *comment_key_entry;
@@ -115,7 +115,7 @@ check_duplicate_comment_key (const gchar * key, gint this_row)
 	if (!strcmp (entry->key, key))
 	{
 	    /*
-	     * FIXME!! add error handling 
+	     * FIXME!! add error handling
 	     */
 	    return TRUE;
 	}
@@ -288,7 +288,7 @@ cb_comment_editlist_confirm (EditableList * editlist,
 	if (strcmp (entry->key, key))
 	{
 	    /*
-	     * FIXME!! add error handling 
+	     * FIXME!! add error handling
 	     */
 	    *flags |= EDITABLE_LIST_CONFIRM_CANNOT_CHANGE;
 	    return;
@@ -296,7 +296,7 @@ cb_comment_editlist_confirm (EditableList * editlist,
 	if (strcmp (_(entry->display_name), name))
 	{
 	    /*
-	     * FIXME!! add error handling 
+	     * FIXME!! add error handling
 	     */
 	    *flags |= EDITABLE_LIST_CONFIRM_CANNOT_CHANGE;
 	    return;
@@ -457,7 +457,7 @@ prefs_comment_page (void)
     gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 10);
 
     /*
-     * Key Name definition frame 
+     * Key Name definition frame
      */
     frame = gtk_frame_new (_(" Key Name Definition "));
     gtk_box_pack_start (GTK_BOX (main_vbox), frame, TRUE, TRUE, 0);
@@ -520,7 +520,7 @@ prefs_comment_page (void)
     gtk_widget_show (entry);
 
     /*
-     * "insert" check box 
+     * "insert" check box
      */
     toggle = editable_list_create_check_button (EDITABLE_LIST (editlist), 2,
 						_("Enable"), TRUE,
@@ -530,7 +530,7 @@ prefs_comment_page (void)
     gtk_widget_show (toggle);
 
     /*
-     * "Auto" check box 
+     * "Auto" check box
      */
     toggle = editable_list_create_check_button (EDITABLE_LIST (editlist), 3,
 						_("Auto"), FALSE,
@@ -540,7 +540,7 @@ prefs_comment_page (void)
     gtk_widget_show (toggle);
 
     /*
-     * "display" check box 
+     * "display" check box
      */
     toggle = editable_list_create_check_button (EDITABLE_LIST (editlist), 4,
 						_("Display"), TRUE,
@@ -550,7 +550,7 @@ prefs_comment_page (void)
     gtk_widget_show (toggle);
 
     /*
-     * definition type column 
+     * definition type column
      */
     editable_list_set_column_funcs (EDITABLE_LIST (editlist),
 				    NULL, 5, NULL,
@@ -558,7 +558,7 @@ prefs_comment_page (void)
 				    NULL, NULL, NULL);
 
     /*
-     * for row data 
+     * for row data
      */
     editable_list_set_get_row_data_func (EDITABLE_LIST (editlist),
 					 cb_editlist_get_row_data);
@@ -571,7 +571,7 @@ prefs_comment_page (void)
 
 
     /*
-     * Charset Frame 
+     * Charset Frame
      */
     frame = gtk_frame_new (_("Character set"));
     gtk_box_pack_start (GTK_BOX (main_vbox), frame, FALSE, FALSE, 10);

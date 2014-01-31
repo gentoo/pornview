@@ -56,7 +56,7 @@ thumb_loader_save_to_cache (ThumbLoader * tl)
 	{
 	    struct utimbuf ut;
 	    /*
-	     * set thumb time to that of source file 
+	     * set thumb time to that of source file
 	     */
 
 	    ut.actime = ut.modtime = filetime (tl->path);
@@ -149,7 +149,7 @@ cb_thumb_loader_done (ImageLoader * il, gpointer data)
     if (tl->from_cache && pw != tl->max_w && ph != tl->max_h)
     {
 	/*
-	 * requested thumbnail size may have changed, load original 
+	 * requested thumbnail size may have changed, load original
 	 */
 	tl->from_cache = FALSE;
 
@@ -165,7 +165,7 @@ cb_thumb_loader_done (ImageLoader * il, gpointer data)
     gdk_pixbuf_ref (pixbuf);
 
     /*
-     * scale ?? 
+     * scale ??
      */
 
     if (pw > tl->max_w || ph > tl->max_h)
@@ -202,7 +202,7 @@ cb_thumb_loader_done (ImageLoader * il, gpointer data)
     gdk_pixbuf_unref (pixbuf);
 
     /*
-     * save it ? 
+     * save it ?
      */
     if (conf.enable_thumb_caching && save)
     {
@@ -328,7 +328,7 @@ thumb_loader_start (ThumbLoader * tl,
     if (!image_loader_start (tl->il, cb_thumb_loader_done, tl))
     {
 	/*
-	 * try from original if cache attempt 
+	 * try from original if cache attempt
 	 */
 	if (tl->from_cache)
 	{
@@ -339,7 +339,7 @@ thumb_loader_start (ThumbLoader * tl,
 		return TRUE;
 	}
 	/*
-	 * mark failed thumbnail in cache with 0 byte file 
+	 * mark failed thumbnail in cache with 0 byte file
 	 */
 	if (conf.enable_thumb_caching)
 	{

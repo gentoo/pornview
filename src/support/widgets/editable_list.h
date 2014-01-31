@@ -82,7 +82,7 @@ struct EditableList_Tag
     GtkVBox         parent;
 
     /*
-     * public (read only) 
+     * public (read only)
      */
     GtkWidget      *clist;
 
@@ -98,7 +98,7 @@ struct EditableList_Tag
     GtkWidget      *action_button_area;
 
     /*
-     * private 
+     * private
      */
     gint            max_row;
     gint            columns;
@@ -135,12 +135,12 @@ struct EditableListColumnFuncTable_Tag
     GtkDestroyNotify destroy_fn;
 
     /*
-     * will be called when an item is selected (or unselected) 
+     * will be called when an item is selected (or unselected)
      */
     EditableListSetDataFn set_data_fn;
 
     /*
-     * will be called when an action button is pressed 
+     * will be called when an action button is pressed
      */
     EditableListGetDataFn get_data_fn;
     EditableListResetFn reset_fn;

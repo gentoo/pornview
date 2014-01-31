@@ -42,7 +42,7 @@ struct CommentClass_Tag
     GtkObjectClass  parent_class;
 
     /*
-     * -- Signals -- 
+     * -- Signals --
      */
     void            (*file_saved) (Comment * comment, ImageInfo * info);
     void            (*file_deleted) (Comment * comment, ImageInfo * info);

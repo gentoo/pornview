@@ -249,7 +249,7 @@ detect_kanji (const guchar * str)
     }
 
     /*
-     * FIXME!! nnnnm 
+     * FIXME!! nnnnm
      */
     if (g_utf8_validate (str, strlen (str), NULL))
 	return KC_UTF8;

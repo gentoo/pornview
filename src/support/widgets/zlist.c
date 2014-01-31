@@ -119,11 +119,11 @@ zlist_get_type (void)
 	    (GtkClassInitFunc) zlist_class_init,
 	    (GtkObjectInitFunc) zlist_init,
 	    /*
-	     * reserved_1 
+	     * reserved_1
 	     */
 	    NULL,
 	    /*
-	     * reserved_2 
+	     * reserved_2
 	     */
 	    NULL,
 	    (GtkClassInitFunc) NULL,
@@ -481,7 +481,7 @@ zlist_draw (GtkWidget * widget, GdkRectangle * area)
 
     list_area.x = list_area.y = 0;
     /*
-     * xxx 
+     * xxx
      */
     list_area.width = widget->allocation.width;
     list_area.height = widget->allocation.height;
@@ -489,8 +489,8 @@ zlist_draw (GtkWidget * widget, GdkRectangle * area)
     if (!area)
 	area = &list_area;
     /*
-     * gdk_window_clear_area (widget->window, 
-     * area->x, area->y, area->width, area->height); 
+     * gdk_window_clear_area (widget->window,
+     * area->x, area->y, area->width, area->height);
      */
 
     if (!list->cell_count)
@@ -513,7 +513,7 @@ zlist_draw (GtkWidget * widget, GdkRectangle * area)
     if (list->flags & ZLIST_HORIZONTAL)
     {
 	/*
-	 * clear the padding area (bottom & top) 
+	 * clear the padding area (bottom & top)
 	 */
 	c = list->y_pad - area->y;
 	if (c > 0)
@@ -530,7 +530,7 @@ zlist_draw (GtkWidget * widget, GdkRectangle * area)
 	for (j = first_column; j < last_column; j++)
 	{
 	    /*
-	     * clear the cell vertical padding 
+	     * clear the cell vertical padding
 	     */
 	    if (list->cell_x_pad)
 		gdk_window_clear_area (widget->window,
@@ -542,7 +542,7 @@ zlist_draw (GtkWidget * widget, GdkRectangle * area)
 		 i++, idx++)
 	    {
 		/*
-		 * clear the cell horizontal padding 
+		 * clear the cell horizontal padding
 		 */
 		if (list->cell_y_pad)
 		    gdk_window_clear_area (widget->window,
@@ -574,7 +574,7 @@ zlist_draw (GtkWidget * widget, GdkRectangle * area)
 	}			/* columns loop */
 
 	/*
-	 * clear the right of the list  XXX should hasppen 
+	 * clear the right of the list  XXX should hasppen
 	 */
 	c = area->x + area->width - CELL_X_FROM_COL (list, j);
 	if (c > 0)
@@ -585,7 +585,7 @@ zlist_draw (GtkWidget * widget, GdkRectangle * area)
     else
     {				/* VERTICAL ZLIST (ie zlist with a vertical scrollbar) */
 	/*
-	 * clear the padding area (right & left) 
+	 * clear the padding area (right & left)
 	 */
 	c = list->x_pad - area->x;
 	if (c > 0)
@@ -601,7 +601,7 @@ zlist_draw (GtkWidget * widget, GdkRectangle * area)
 	for (i = first_row; i < last_row; i++)
 	{
 	    /*
-	     * clear the cell horizontal padding 
+	     * clear the cell horizontal padding
 	     */
 	    if (list->cell_y_pad)
 		gdk_window_clear_area (widget->window,
@@ -611,11 +611,11 @@ zlist_draw (GtkWidget * widget, GdkRectangle * area)
 	    idx = i * list->columns + first_column;
 	    for (j = first_column;
 		 /*
-		  * idx < list->cell_count && 
+		  * idx < list->cell_count &&
 		  */ j < last_column; j++, idx++)
 	    {
 		/*
-		 * clear the cell vertical padding 
+		 * clear the cell vertical padding
 		 */
 		if (list->cell_x_pad)
 		    gdk_window_clear_area (widget->window,
@@ -648,7 +648,7 @@ zlist_draw (GtkWidget * widget, GdkRectangle * area)
 	}			/* rows loop */
 
 	/*
-	 * clear the bottom of the list 
+	 * clear the bottom of the list
 	 */
 	c = area->y + area->height - CELL_Y_FROM_ROW (list, i);
 	if (c > 0)
@@ -664,9 +664,9 @@ zlist_draw (GtkWidget * widget, GdkRectangle * area)
 	zlist_highlight (widget);
 }
 
-/* 
+/*
  * Selection semantics used in this widget:
- * 
+ *
  * note : me is the cell pointed by the cursor
  *
  *--------------------------------------------------------------------------------------
@@ -695,8 +695,8 @@ zlist_draw (GtkWidget * widget, GdkRectangle * area)
  *             |   cell_select (me)         |                       |                  |
  *             |                            |                       |                  |
  * ------------------------------------------------------------------------------------|
- * 
- * XXX needs to be changed because of dnd 
+ *
+ * XXX needs to be changed because of dnd
  */
 
 static  gint
@@ -826,7 +826,7 @@ zlist_button_release (GtkWidget * widget, GdkEventButton * event)
 	      int     x, y;
 
 	      /*
-	       * on a drag-drop event, the event->x & event->y always seem to be 0 
+	       * on a drag-drop event, the event->x & event->y always seem to be 0
 	       */
 	      gdk_window_get_pointer (widget->window, &x, &y, NULL);
 	      index = zlist_cell_index_from_xy (list, x, y);
@@ -911,7 +911,7 @@ zlist_motion_notify (GtkWidget * widget, GdkEventMotion * event)
     return FALSE;
 }
 
-/* 
+/*
  * GtkContainers doesn't seem to forward the focus movement to
  * containers which don't have child widgets
  */
@@ -1091,9 +1091,9 @@ zlist_forall (GtkContainer * container,
     /*
      * ZList *list;
      * int i;
-     * 
+     *
      * list = ZLIST(container);
-     * 
+     *
      * if (include_internals)
      * for (i = 0; i < list->cell_count; i++)
      * (* callback) (ZLIST_CELL_FROM_INDEX (list, i), callback_data);
@@ -1266,7 +1266,7 @@ zlist_remove (ZList * list, gpointer cell)
     zlist_cell_area (list, index, &area);
 
     /*
-     * using gdk_window_copy_area will be faster but harder too 
+     * using gdk_window_copy_area will be faster but harder too
      */
     area.width = GTK_WIDGET (list)->allocation.width - area.x;
     area.height = GTK_WIDGET (list)->allocation.height - area.y;
@@ -1549,7 +1549,7 @@ zlist_update_cell_size (ZList * list, gpointer cell)
 
 /*
  * Focus & Selection handling
- * 
+ *
  */
 
 static void
@@ -1651,7 +1651,7 @@ zlist_extend_selection (ZList * list, int to)
 
     for (i = s; i <= e; i++)
 	/*
-	 * XXX the state of the cell should be cached in the cells array 
+	 * XXX the state of the cell should be cached in the cells array
 	 */
 	if (!g_list_find (list->selection, GUINT_TO_POINTER (i)))
 	    zlist_cell_select (list, i);

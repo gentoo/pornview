@@ -19,7 +19,7 @@ struct _Browser
     GtkWidget      *window;
     GtkItemFactory *menu;
     GtkWidget      *notebook;
-    
+
     GtkWidget      *status_dir;
     GtkWidget      *status_name;
     GtkWidget      *status_image;

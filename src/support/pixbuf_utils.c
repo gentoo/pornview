@@ -82,7 +82,7 @@ pixbuf_to_file_as_png (GdkPixbuf * pixbuf, gchar * filename)
 		  PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
     /*
-     * Some text to go with the png image 
+     * Some text to go with the png image
      */
     text[0].key = "Title";
     text[0].text = filename;
@@ -93,12 +93,12 @@ pixbuf_to_file_as_png (GdkPixbuf * pixbuf, gchar * filename)
     png_set_text (png_ptr, info_ptr, text, 2);
 
     /*
-     * Write header data 
+     * Write header data
      */
     png_write_info (png_ptr, info_ptr);
 
     /*
-     * if there is no alpha in the data, allocate buffer to expand into 
+     * if there is no alpha in the data, allocate buffer to expand into
      */
     if (has_alpha)
 	buffer = NULL;
@@ -106,7 +106,7 @@ pixbuf_to_file_as_png (GdkPixbuf * pixbuf, gchar * filename)
 	buffer = g_malloc (4 * width);
 
     /*
-     * pump the raster data into libpng, one scan line at a time 
+     * pump the raster data into libpng, one scan line at a time
      */
     for (i = 0; i < height; i++)
     {
@@ -118,7 +118,7 @@ pixbuf_to_file_as_png (GdkPixbuf * pixbuf, gchar * filename)
 	else
 	{
 	    /*
-	     * expand RGB to RGBA using an opaque alpha value 
+	     * expand RGB to RGBA using an opaque alpha value
 	     */
 	    int     x;
 	    char   *buffer_ptr = buffer;

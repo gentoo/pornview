@@ -93,7 +93,7 @@ get_file_charset (void)
 	return charset_get_internal ();
 
     /*
-     * get default charset for each language 
+     * get default charset for each language
      */
     if (!strncmp (lang, "ja", 2))
     {				/* japanese */
@@ -455,7 +455,7 @@ comment_append_data (Comment * comment, const gchar * key,
 	comment->data_list = g_list_append (comment->data_list, entry);
 
 	/*
-	 * find template 
+	 * find template
 	 */
 	template = comment_data_entry_find_template_by_key (key);
 	if (template)
@@ -477,7 +477,7 @@ comment_append_data (Comment * comment, const gchar * key,
     }
 
     /*
-     * free old value 
+     * free old value
      */
     if (entry->value)
     {
@@ -486,7 +486,7 @@ comment_append_data (Comment * comment, const gchar * key,
     }
 
     /*
-     * set new value 
+     * set new value
      */
     if (entry->auto_val && entry->def_val_fn)
     {
@@ -702,12 +702,12 @@ comment_get_from_image_info (ImageInfo * info)
     comment->info = image_info_ref (info);
 
     /*
-     * get comment file path 
+     * get comment file path
      */
     comment->filename = comment_get_path (info->filename);
 
     /*
-     * get comment 
+     * get comment
      */
     if (file_exists (comment->filename))
     {
@@ -880,7 +880,7 @@ comment_update_data_entry_list (void)
 	return;
 
     /*
-     * for undefined system entry in prefs 
+     * for undefined system entry in prefs
      */
     list = comment_get_system_data_entry_list ();
 
@@ -897,7 +897,7 @@ comment_update_data_entry_list (void)
 	    continue;
 
 	/*
-	 * strip space characters 
+	 * strip space characters
 	 */
 	for (j = 0; j < 5; j++)
 	{
@@ -911,7 +911,7 @@ comment_update_data_entry_list (void)
 	name = charset_locale_to_internal (values[1]);
 
 	/*
-	 * check duplicate 
+	 * check duplicate
 	 */
 	node = NULL;
 	node = g_list_find_custom (comment_data_entry_list,
@@ -923,7 +923,7 @@ comment_update_data_entry_list (void)
 	}
 
 	/*
-	 * add entry 
+	 * add entry
 	 */
 	entry = comment_data_entry_new (key, name,
 					text_to_boolean (values[2]),
@@ -938,7 +938,7 @@ comment_update_data_entry_list (void)
 	    = g_list_append (comment_data_entry_list, entry);
 
 	/*
-	 * for undefined system entry in prefs 
+	 * for undefined system entry in prefs
 	 */
 	if (!entry->userdef)
 	{
@@ -960,7 +960,7 @@ comment_update_data_entry_list (void)
     }
 
     /*
-     * append system defined entry if it isn't exist in prefs 
+     * append system defined entry if it isn't exist in prefs
      */
     for (node = list; node; node = g_list_next (node))
     {

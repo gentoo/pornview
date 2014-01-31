@@ -33,7 +33,7 @@ struct _GenericDialog
     gpointer        data;
 
     /*
-     * private 
+     * private
      */
     GtkWidget      *cancel_button;
 };

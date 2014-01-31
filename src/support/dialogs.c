@@ -70,7 +70,7 @@ dialog_confirm (const gchar * title, const gchar * message,
 			GTK_SIGNAL_FUNC (cb_dialog_confirm_no), NULL);
 
     /*
-     * message area 
+     * message area
      */
     vbox = gtk_vbox_new (FALSE, 0);
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), vbox, TRUE, TRUE,
@@ -84,14 +84,14 @@ dialog_confirm (const gchar * title, const gchar * message,
     gtk_widget_show (hbox);
 
     /*
-     * icon 
+     * icon
      */
     icon = pixbuf_create_pixmap_from_xpm_data (question_xpm);
     gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
     gtk_widget_show (icon);
 
     /*
-     * message 
+     * message
      */
     label = gtk_label_new (message);
     gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
@@ -177,7 +177,7 @@ dialog_message (const gchar * title, const gchar * message,
     gtk_widget_show (dialog_vbox);
 
     /*
-     * message area 
+     * message area
      */
     vbox = gtk_vbox_new (FALSE, 0);
     gtk_widget_ref (vbox);
@@ -193,14 +193,14 @@ dialog_message (const gchar * title, const gchar * message,
     gtk_widget_show (hbox);
 
     /*
-     * icon 
+     * icon
      */
     icon = pixbuf_create_pixmap_from_xpm_data (alert_xpm);
     gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
     gtk_widget_show (icon);
 
     /*
-     * message 
+     * message
      */
     label = gtk_label_new (message);
     gtk_widget_ref (label);
@@ -359,7 +359,7 @@ dialog_textentry (const gchar * title,
     gchar  *str = NULL;
 
     /*
-     * dialog window 
+     * dialog window
      */
     window = gtk_dialog_new ();
 
@@ -370,7 +370,7 @@ dialog_textentry (const gchar * title,
     gtk_widget_show (window);
 
     /*
-     * main area 
+     * main area
      */
     vbox = gtk_vbox_new (FALSE, 0);
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), vbox, TRUE, TRUE,
@@ -384,14 +384,14 @@ dialog_textentry (const gchar * title,
     gtk_widget_show (hbox);
 
     /*
-     * label 
+     * label
      */
     label = gtk_label_new (label_text);
     gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
     gtk_widget_show (label);
 
     /*
-     * entry 
+     * entry
      */
     if (flags & TEXT_ENTRY_WRAP_ENTRY)
 	box = vbox;
@@ -424,7 +424,7 @@ dialog_textentry (const gchar * title,
     gtk_widget_grab_focus (entry);
 
     /*
-     * button 
+     * button
      */
     button = gtk_button_new_with_label (_("OK"));
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area),
@@ -503,7 +503,7 @@ dialog_progress_create (gchar * title, gchar * initial_message,
     *cancel_pressed = FALSE;
 
     /*
-     * create dialog window 
+     * create dialog window
      */
     window = gtk_dialog_new ();
     gtk_container_border_width (GTK_CONTAINER (window), 3);
@@ -514,7 +514,7 @@ dialog_progress_create (gchar * title, gchar * initial_message,
 			GTK_SIGNAL_FUNC (cb_dummy), NULL);
 
     /*
-     * message area 
+     * message area
      */
     vbox = gtk_vbox_new (FALSE, 5);
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), vbox,
@@ -523,20 +523,20 @@ dialog_progress_create (gchar * title, gchar * initial_message,
     gtk_widget_show (vbox);
 
     /*
-     * label 
+     * label
      */
     label = gtk_label_new (initial_message);
     gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
     /*
-     * progress bar 
+     * progress bar
      */
     progressbar = gtk_progress_bar_new ();
     gtk_progress_set_show_text (GTK_PROGRESS (progressbar), TRUE);
     gtk_box_pack_start (GTK_BOX (vbox), progressbar, FALSE, FALSE, 0);
 
     /*
-     * cancel button 
+     * cancel button
      */
     button = gtk_button_new_with_label (_("Cancel"));
     gtk_container_border_width (GTK_CONTAINER (button), 0);

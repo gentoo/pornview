@@ -157,7 +157,7 @@ cb_clist_edit_click (GtkWidget * widget, GdkEventButton * event,
     if (xr < x || yr < y || xr > x + w || yr > y + h)
     {
 	/*
-	 * gobble the release event, so it does not propgate to an underlying widget 
+	 * gobble the release event, so it does not propgate to an underlying widget
 	 */
 	gtk_signal_connect (GTK_OBJECT (ced->window), "button_release_event",
 			    GTK_SIGNAL_FUNC (cb_clist_edit_click_end), ced);
@@ -256,7 +256,7 @@ clist_edit_by_row (GtkCList * clist, gint row, gint column,
 
     /*
      * figure the position of the rename window
-     * (some borrowed from clist internals, may break in future ?) 
+     * (some borrowed from clist internals, may break in future ?)
      */
 
     if (GTK_IS_CTREE (clist))
@@ -289,7 +289,7 @@ clist_edit_by_row (GtkCList * clist, gint row, gint column,
     y += wy;
 
     /*
-     * create the window 
+     * create the window
      */
 
     ced->window = gtk_window_new (GTK_WINDOW_POPUP);
@@ -307,7 +307,7 @@ clist_edit_by_row (GtkCList * clist, gint row, gint column,
     gtk_widget_show (ced->entry);
 
     /*
-     * now show it 
+     * now show it
      */
     gtk_widget_set_uposition (ced->window, x - 10, y - POPUP_H_PADDING);
     gtk_widget_set_usize (ced->window, w + 10, h + (POPUP_H_PADDING * 2));
@@ -316,7 +316,7 @@ clist_edit_by_row (GtkCList * clist, gint row, gint column,
     gtk_widget_show (ced->window);
 
     /*
-     * grab it 
+     * grab it
      */
     gtk_widget_grab_focus (ced->entry);
     /*
@@ -362,7 +362,7 @@ shift_color (GdkColor * src)
     gshort  cs = 0xffff / 100 * 10;	/* 10% shift */
 
     /*
-     * up or down ? 
+     * up or down ?
      */
     if (((gint) src->red + (gint) src->green + (gint) src->blue) / 3 >
 	0xffff / 2)

@@ -161,13 +161,13 @@ prefs_win_create_page (PrefsWinPagePrivate * priv)
 	return;
 
     /*
-     * translate page title 
+     * translate page title
      */
     if (priv->page->path)
 	title = g_basename (_(priv->page->path));
 
     /*
-     * create page 
+     * create page
      */
     if (priv->page->create_page_fn)
     {
@@ -351,7 +351,7 @@ prefs_win_create_navtree (void)
 		      G_CALLBACK (cb_tree_cursor_changed), NULL);
 
     /*
-     * name column 
+     * name column
      */
     col = gtk_tree_view_column_new ();
 
@@ -378,7 +378,7 @@ prefs_win_create_navtree (void)
     gtk_tree_view_set_expander_column (GTK_TREE_VIEW (tree), col);
 
     /*
-     * create pages 
+     * create pages
      */
     for (i = 0; i < prefs_pages_num; i++)
     {
@@ -392,12 +392,12 @@ prefs_win_create_navtree (void)
 	    continue;
 
 	/*
-	 * translate page title 
+	 * translate page title
 	 */
 	title = g_basename (_(prefs_pages[i].path));
 
 	/*
-	 * set private data 
+	 * set private data
 	 */
 	priv = g_new0 (PrefsWinPagePrivate, 1);
 	priv->page = &prefs_pages[i];
@@ -480,7 +480,7 @@ prefs_win_create_navtree (void)
     GtkCTreeNode *sel_node = NULL;
 
     /*
-     * create tree 
+     * create tree
      */
     ctree = prefs_win.tree = gtk_ctree_new (1, 0);
     prefs_win.tree = ctree;
@@ -495,7 +495,7 @@ prefs_win_create_navtree (void)
 			GTK_SIGNAL_FUNC (cb_ctree_select_row), NULL);
 
     /*
-     * create pages 
+     * create pages
      */
     for (i = 0; i < prefs_pages_num; i++)
     {
@@ -508,12 +508,12 @@ prefs_win_create_navtree (void)
 	    continue;
 
 	/*
-	 * translate page title 
+	 * translate page title
 	 */
 	title = g_basename (_(prefs_pages[i].path));
 
 	/*
-	 * insert node 
+	 * insert node
 	 */
 	parent = prefs_win_navtree_get_parent (&prefs_pages[i]);
 	node = gtk_ctree_insert_node (GTK_CTREE (ctree), parent, NULL,
@@ -525,7 +525,7 @@ prefs_win_create_navtree (void)
 	    gtk_ctree_expand (GTK_CTREE (ctree), parent);
 
 	/*
-	 * set private data 
+	 * set private data
 	 */
 	priv = g_new0 (PrefsWinPagePrivate, 1);
 	priv->page = &prefs_pages[i];
@@ -623,7 +623,7 @@ prefs_win_open (const gchar * path)
     GtkWidget *notebook, *pane, *scrolledwin, *navtree;
 
     /*
-     * if preference window is alredy opend, raise it and return 
+     * if preference window is alredy opend, raise it and return
      */
     if (prefs_window)
     {
@@ -634,13 +634,13 @@ prefs_win_open (const gchar * path)
     prefs_win.ok_pressed = FALSE;
 
     /*
-     * allocate buffer for new config 
+     * allocate buffer for new config
      */
     config_prechanged = g_memdup (&conf, sizeof (Config));
     config_changed = g_memdup (&conf, sizeof (Config));
 
     /*
-     * create config window 
+     * create config window
      */
     prefs_window = gtk_dialog_new ();
     gtk_window_set_position (GTK_WINDOW (prefs_window), GTK_WIN_POS_CENTER);
@@ -654,7 +654,7 @@ prefs_win_open (const gchar * path)
 			GTK_SIGNAL_FUNC (cb_prefs_win_destroy), NULL);
 
     /*
-     * pane 
+     * pane
      */
     pane = gedo_hpaned_new ();
     gtk_container_set_border_width (GTK_CONTAINER (pane), 5);
@@ -666,13 +666,13 @@ prefs_win_open (const gchar * path)
     gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_TOP);
     gtk_notebook_set_scrollable (GTK_NOTEBOOK (notebook), TRUE);
     /*
-     * gtk_notebook_popup_enable (GTK_NOTEBOOK (notebook)); 
+     * gtk_notebook_popup_enable (GTK_NOTEBOOK (notebook));
      */
     gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
     gtk_widget_show (notebook);
 
     /*
-     * scrolled window 
+     * scrolled window
      */
     scrolledwin = gtk_scrolled_window_new (NULL, NULL);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwin),
@@ -682,7 +682,7 @@ prefs_win_open (const gchar * path)
     gtk_widget_show (scrolledwin);
 
     /*
-     * navigation tree 
+     * navigation tree
      */
     navtree = prefs_win_create_navtree ();
     gtk_container_add (GTK_CONTAINER (scrolledwin), navtree);
@@ -692,7 +692,7 @@ prefs_win_open (const gchar * path)
     gedo_paned_add2 (GEDO_PANED (pane), notebook);
 
     /*
-     * button 
+     * button
      */
     gtk_dialog_add_buttons (GTK_DIALOG (prefs_window),
 			    GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,

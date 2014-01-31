@@ -97,7 +97,7 @@ file_type_update_image_types (gchar * imgtype_disables,
     file_type_free_image_types ();
 
     /*
-     * store system defined image types 
+     * store system defined image types
      */
     if (imgtype_disables && *imgtype_disables)
     {
@@ -134,7 +134,7 @@ file_type_update_image_types (gchar * imgtype_disables,
 	g_strfreev (sysdef_disables);
 
     /*
-     * store user defined image types 
+     * store user defined image types
      */
     if (imgtype_user_defs && *imgtype_user_defs)
 	user_defs = g_strsplit (imgtype_user_defs, ";", -1);
@@ -158,7 +158,7 @@ file_type_update_image_types (gchar * imgtype_disables,
 	if (!*sections[0])
 	    goto ERROR;
 	/*
-	 * if (filter_check_duplicate (sections[0], -1, FALSE)) goto ERROR; 
+	 * if (filter_check_duplicate (sections[0], -1, FALSE)) goto ERROR;
 	 */
 	if (!*sections[2] || strcasecmp (sections[2], "ENABLE"))
 	    goto ERROR;

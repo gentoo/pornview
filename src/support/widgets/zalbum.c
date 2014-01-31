@@ -97,11 +97,11 @@ zalbum_get_type ()
 	    (GtkClassInitFunc) zalbum_class_init,
 	    (GtkObjectInitFunc) zalbum_init,
 	    /*
-	     * reserved 1 
+	     * reserved 1
 	     */
 	    NULL,
 	    /*
-	     * reserved 2 
+	     * reserved 2
 	     */
 	    NULL,
 	    (GtkClassInitFunc) NULL
@@ -278,7 +278,7 @@ zalbum_size_allocate (GtkWidget * widget, GtkAllocation * allocation)
     album = ZALBUM (widget);
 
     /*
-     * expand the first column 
+     * expand the first column
      */
     for (i = 1; i < ZALBUM_COLUMNS; i++)
     {
@@ -461,10 +461,10 @@ zalbum_draw_preview (ZAlbum * album, ZAlbumCell * cell,
 
     /*
      * ydest += LINE_HEIGHT(widget->style->font);
-     * 
+     *
      * snprintf (buff, 64, "%dx%dx%d", cell->image->width, cell->image->height, cell->image->bpp * 8);
-     * 
-     * zalbum_draw_string (widget, cell, buff, 
+     *
+     * zalbum_draw_string (widget, cell, buff,
      * cell_area->x, ydest, cell_area->width, 1);
      */
 }
@@ -547,15 +547,15 @@ zalbum_prepare_cell (ZAlbum * album, ZAlbumCell * cell,
      * widget->style->dark_gc [GTK_STATE_NORMAL],
      * FALSE, cell_area->x, cell_area->y,
      * cell_area->width - 1, cell_area->height - 1);
-     * 
+     *
      * cell_area->x += 1; cell_area->y += 1; cell_area->width -= 2; cell_area->height -= 2;
-     * 
+     *
      * gdk_draw_rectangle (widget->window,
      * widget->style->light_gc [GTK_STATE_NORMAL],
      * FALSE, cell_area->x, cell_area->y,
      * cell_area->width, cell_area->height);
-     * 
-     * cell_area->x += CELL_PADDING - 1; cell_area->y += CELL_PADDING - 1; 
+     *
+     * cell_area->x += CELL_PADDING - 1; cell_area->y += CELL_PADDING - 1;
      * cell_area->width -= 2 * CELL_PADDING - 2; cell_area->height -= 2 * CELL_PADDING - 2;
      */
 
@@ -589,8 +589,8 @@ zalbum_cell_draw_focus (ZList * list, gpointer cell, GdkRectangle * cell_area)
 		     cell_area->width, cell_area->height);
     /*
      * gdk_draw_rectangle (GTK_WIDGET(list)->window,
-     * GTK_WIDGET(list)->style->black_gc, 
-     * FALSE, cell_area->x, cell_area->y, 
+     * GTK_WIDGET(list)->style->black_gc,
+     * FALSE, cell_area->x, cell_area->y,
      * cell_area->width - 1, cell_area->height - 1); */
 }
 
@@ -605,7 +605,7 @@ zalbum_cell_draw_default (ZList * list, gpointer cell,
 		     cell_area->width, cell_area->height);
     /*
      * gdk_draw_rectangle (GTK_WIDGET(list)->window,
-     * GTK_WIDGET(list)->style->white_gc, //dark_gc [GTK_STATE_NORMAL], 
+     * GTK_WIDGET(list)->style->white_gc, //dark_gc [GTK_STATE_NORMAL],
      * FALSE, cell_area->x, cell_area->y,
      * cell_area->width - 1, cell_area->height - 1);
      */

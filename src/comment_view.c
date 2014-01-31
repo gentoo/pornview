@@ -309,7 +309,7 @@ cb_clist_row_move (GtkCList * clist, gint arg1, gint arg2, CommentView * cv)
     pos2 = g_list_position (cv->comment->data_list, node2);
 
     /*
-     * swap data position in the list 
+     * swap data position in the list
      */
     if (pos1 > pos2)
     {
@@ -405,7 +405,7 @@ cb_combo_select (GtkWidget * label, CommentView * cv)
 	    {
 		gtk_clist_select_row (GTK_CLIST (clist), row, 0);
 		/*
-		 * gtk_clist_moveto (GTK_CLIST (clist), row, 0, 0.0, 0.0); 
+		 * gtk_clist_moveto (GTK_CLIST (clist), row, 0, 0.0, 0.0);
 		 */
 		break;
 	    }
@@ -492,7 +492,7 @@ create_data_page (CommentView * cv)
     gtk_notebook_append_page (GTK_NOTEBOOK (cv->notebook), vbox, label);
 
     /*
-     * scrolled window & clist 
+     * scrolled window & clist
      */
     scrolledwin = gtk_scrolled_window_new (NULL, NULL);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwin),
@@ -514,7 +514,7 @@ create_data_page (CommentView * cv)
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (clist), TRUE);
 
 	/*
-	 * set column for key 
+	 * set column for key
 	 */
 	col = gtk_tree_view_column_new ();
 	gtk_tree_view_column_set_title (col, titles[0]);
@@ -524,7 +524,7 @@ create_data_page (CommentView * cv)
 	gtk_tree_view_append_column (GTK_TREE_VIEW (clist), col);
 
 	/*
-	 * set column for value 
+	 * set column for value
 	 */
 	col = gtk_tree_view_column_new ();
 	gtk_tree_view_column_set_title (col, titles[1]);
@@ -544,7 +544,7 @@ create_data_page (CommentView * cv)
     clist = cv->comment_clist = gtk_clist_new_with_titles (2, titles);
     gtk_clist_set_selection_mode (GTK_CLIST (clist), GTK_SELECTION_SINGLE);
     /*
-     * gtk_clist_set_column_width (GTK_CLIST(clist), 0, 80); 
+     * gtk_clist_set_column_width (GTK_CLIST(clist), 0, 80);
      */
     gtk_clist_set_column_auto_resize (GTK_CLIST (clist), 0, TRUE);
     gtk_clist_set_column_auto_resize (GTK_CLIST (clist), 1, TRUE);
@@ -561,7 +561,7 @@ create_data_page (CommentView * cv)
 #endif /* ENABLE_TREEVIEW */
 
     /*
-     * entry area 
+     * entry area
      */
     hbox = gtk_hbox_new (FALSE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
@@ -595,7 +595,7 @@ create_data_page (CommentView * cv)
 			GTK_SIGNAL_FUNC (cb_entry_enter), cv);
 
     /*
-     * buttons 
+     * buttons
      */
     hbox = gtk_hbox_new (FALSE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
@@ -638,7 +638,7 @@ create_note_page (CommentView * cv)
     GtkWidget *label;
 
     /*
-     * "Note" page 
+     * "Note" page
      */
     label = gtk_label_new (_(" Note "));
     gtk_widget_set_name (label, "TabLabel");
@@ -1040,7 +1040,7 @@ comment_view_create ()
     create_note_page (cv);
 
     /*
-     * button area 
+     * button area
      */
     hbox = cv->button_area = gtk_hbox_new (FALSE, 0);
     gtk_box_pack_start (GTK_BOX (cv->main_vbox), cv->button_area, FALSE,

@@ -73,11 +73,11 @@ scrolled_get_type (void)
 	    (GtkClassInitFunc) scrolled_class_init,
 	    (GtkObjectInitFunc) scrolled_init,
 	    /*
-	     * reserved_1 
+	     * reserved_1
 	     */
 	    NULL,
 	    /*
-	     * reserved_2 
+	     * reserved_2
 	     */
 	    NULL,
 	    (GtkClassInitFunc) NULL,
@@ -416,7 +416,7 @@ check_exposures (GtkWidget * widget)
 
     /*
      * Make sure graphics expose events are processed before scrolling
-     * again 
+     * again
      */
     while ((event = gdk_event_get_graphics_expose (widget->window)) != NULL)
     {

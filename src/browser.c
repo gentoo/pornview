@@ -166,7 +166,7 @@ browser_create (gchar* path)
     gtk_container_add (GTK_CONTAINER (browser->window), vbox);
 
     /*
-     * main menu 
+     * main menu
      */
     accel = gtk_accel_group_new ();
     browser->menu =
@@ -186,7 +186,7 @@ browser_create (gchar* path)
     gtk_widget_show (menu);
 
     /*
-     * toolbar 
+     * toolbar
      */
     toolbar = gtk_toolbar_new ();
 
@@ -213,7 +213,7 @@ browser_create (gchar* path)
     gedo_paned_add1 (GEDO_PANED (hpaned), vpaned);
 
     /*
-     * dirtree 
+     * dirtree
      */
     dirview_create (browser->current_path->str, browser->window);
 
@@ -224,7 +224,7 @@ browser_create (gchar* path)
     browser->notebook = commentview->notebook;
 
     /*
-     * videoplay 
+     * videoplay
      */
 #ifdef ENABLE_MOVIE
     videoplay_create ();
@@ -251,13 +251,13 @@ browser_create (gchar* path)
     gedo_paned_add2 (GEDO_PANED (hpaned), commentview->main_vbox);
 
     /*
-     * thumbview 
+     * thumbview
      */
     thumbview_create (browser->window);
     gedo_paned_add2 (GEDO_PANED (vpaned), THUMBVIEW_CONTAINER);
 
     /*
-     * statusbar 
+     * statusbar
      */
     hbox = gtk_hbox_new (FALSE, 0);
     gtk_widget_set_name (hbox, "StatusBarContainer");

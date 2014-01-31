@@ -53,7 +53,7 @@ navwin_new (ImageView * iv)
     gtk_container_add (GTK_CONTAINER (in_frame), navwin->preview);
 
     /*
-     * need gc to draw the preview sqr with 
+     * need gc to draw the preview sqr with
      */
     navwin->gc = gdk_gc_new (GTK_WIDGET (iv->draw_area)->window);
     gdk_gc_set_function (navwin->gc, GDK_INVERT);
@@ -141,7 +141,7 @@ navwin_update_view (NavWindow * navwin)
     navwin->factor = factor;
 
     /*
-     * Popup window size. 
+     * Popup window size.
      */
     popup_width = MAX ((gint) floor (factor * w + 0.5), 1);
     popup_height = MAX ((gint) floor (factor * h + 0.5), 1);
@@ -150,7 +150,7 @@ navwin_update_view (NavWindow * navwin)
 			   popup_width, popup_height);
 
     /*
-     * The square. 
+     * The square.
      */
     imageview_get_image_frame_size (iv, &fwidth, &fheight);
 
@@ -170,7 +170,7 @@ navwin_update_view (NavWindow * navwin)
 	navwin->sqr_y = 0;
 
     /*
-     * fix x (or y) if image is smaller than frame 
+     * fix x (or y) if image is smaller than frame
      */
     if (fwidth > navwin->image_width)
 	navwin->fix_x_pos = (0 - iv->x_pos);
@@ -182,7 +182,7 @@ navwin_update_view (NavWindow * navwin)
 	navwin->fix_y_pos = 1;
 
     /*
-     * Popup window position. 
+     * Popup window position.
      */
     popup_x = MIN ((gint) navwin->x_root - navwin->sqr_x
 		   - BORDER_WIDTH
@@ -220,7 +220,7 @@ navwin_grab_pointer (NavWindow * navwin)
     gdk_cursor_destroy (cursor);
 
     /*
-     * Capture keyboard events. 
+     * Capture keyboard events.
      */
     gdk_keyboard_grab (navwin->popup_win->window, TRUE, GDK_CURRENT_TIME);
     gtk_widget_grab_focus (navwin->popup_win);

@@ -122,7 +122,7 @@ exif_view_create_window (const gchar * filename)
     gtk_widget_show_all (ev->window);
 
     /*
-     * button 
+     * button
      */
     button = gtk_button_new_with_label (_("Close"));
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ev->window)->action_area),
@@ -194,14 +194,14 @@ exif_view_create (const gchar * filename)
     gtk_widget_show (notebook);
 
     /*
-     * Tag Tables 
+     * Tag Tables
      */
     for (i = 0; i < num_labels - 1; i++)
     {
 	GtkWidget *scrolledwin, *clist;
 
 	/*
-	 * scrolled window & clist 
+	 * scrolled window & clist
 	 */
 	label = gtk_label_new (_(labels[i]));
 	scrolledwin = gtk_scrolled_window_new (NULL, NULL);

@@ -71,7 +71,7 @@ extern          "C"
 	int             xpos, ypos;
 
 	/*
-	 * fullscreen stuff 
+	 * fullscreen stuff
 	 */
 
 	int             fullscreen_mode;

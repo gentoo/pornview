@@ -47,7 +47,7 @@ is_default_codeset (const gchar * charset)
 }
 
  /*
-  * known character set list 
+  * known character set list
   */
 static const gchar *knwon_charset_items[] = {
     "default",
@@ -80,7 +80,7 @@ charset_get_known_list (const gchar * lang)
 }
 
  /*
-  * auto detect method for each language. 
+  * auto detect method for each language.
   */
 extern const gchar *japanese_detect_charset (const gchar * str);
 
@@ -108,7 +108,7 @@ charset_get_auto_detect_func (CharsetAutoDetectType type)
 }
 
  /*
-  * detecting locale & internal charset. 
+  * detecting locale & internal charset.
   */
 gchar  *charset_locale = NULL;
 gchar  *charset_internal = NULL;
@@ -250,7 +250,7 @@ charset_get_internal (void)
 }
 
  /*
-  * any code -> internal converter 
+  * any code -> internal converter
   */
 gchar  *
 charset_to_internal (const gchar * src,
@@ -304,7 +304,7 @@ charset_to_internal_auto (const gchar * src, CharsetAutoDetectFn func)
 }
 
  /*
-  * any code -> locale converter 
+  * any code -> locale converter
   */
 gchar  *
 charset_to_locale (const gchar * src,
@@ -360,7 +360,7 @@ charset_to_locale_auto (const gchar * src, CharsetAutoDetectFn func)
 }
 
  /*
-  * internal -> any code converter 
+  * internal -> any code converter
   */
 gchar  *
 charset_from_internal (const gchar * src, const gchar * dest_codeset)
@@ -372,7 +372,7 @@ charset_from_internal (const gchar * src, const gchar * dest_codeset)
 }
 
  /*
-  * locale -> any code converter 
+  * locale -> any code converter
   */
 gchar  *
 charset_from_locale (const gchar * src, const gchar * dest_codeset)
@@ -384,7 +384,7 @@ charset_from_locale (const gchar * src, const gchar * dest_codeset)
 }
 
  /*
-  * any -> any code converter 
+  * any -> any code converter
   */
 gchar  *
 charset_conv (const gchar * src,

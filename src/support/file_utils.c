@@ -385,7 +385,7 @@ copy_file_attributes (const gchar * s, const gchar * t)
 	ret = TRUE;
 
 	/*
-	 * set the dest file attributes to that of source (ignoring errors) 
+	 * set the dest file attributes to that of source (ignoring errors)
 	 */
 
 	if (chown (t, st.st_uid, st.st_gid) < 0)
@@ -454,14 +454,14 @@ move_file (const gchar * s, const gchar * t)
     {
 	/*
 	 * this may have failed because moving a file across filesystems
-	 * was attempted, so try copy and delete instead 
+	 * was attempted, so try copy and delete instead
 	 */
 	if (copy_file (s, t))
 	{
 	    if (unlink (s) < 0)
 	    {
 		/*
-		 * err, now we can't delete the source file so return FALSE 
+		 * err, now we can't delete the source file so return FALSE
 		 */
 		return FALSE;
 	    }
@@ -488,13 +488,13 @@ path_list (const gchar * path, GList ** files, GList ** dirs)
     if ((dp = opendir (path)) == NULL)
     {
 	/*
-	 * dir not found 
+	 * dir not found
 	 */
 	return FALSE;
     }
 
     /*
-     * root dir fix 
+     * root dir fix
      */
     if (path[0] == '/' && path[1] == '\0')
 	path = "";
@@ -502,7 +502,7 @@ path_list (const gchar * path, GList ** files, GList ** dirs)
     while ((dir = readdir (dp)) != NULL)
     {
 	/*
-	 * skip removed files 
+	 * skip removed files
 	 */
 	if (dir->d_ino > 0)
 	{
@@ -681,7 +681,7 @@ size2str (size_t size, int space)
     i = size;
 
     /*
-     * detect digit num 
+     * detect digit num
      */
     while (i > 0)
     {
@@ -695,7 +695,7 @@ size2str (size_t size, int space)
 	return g_strdup (tmp);
 
     /*
-     * until first comma 
+     * until first comma
      */
     if (n_digit % 3 != 0)
     {
@@ -706,7 +706,7 @@ size2str (size_t size, int space)
     }
 
     /*
-     * until end of string 
+     * until end of string
      */
     while (tmp[i] != '\0')
     {
@@ -718,7 +718,7 @@ size2str (size_t size, int space)
     }
 
     /*
-     * end of string 
+     * end of string
      */
     comma[j] = '\0';
 
@@ -888,13 +888,13 @@ get_dir (const gchar * dirname, GetDirFlags flags,
 	    }
 
 	    /*
-	     * ignore dot file 
+	     * ignore dot file
 	     */
 	    if (!(flags & GETDIR_READ_DOT) && entry->d_name[0] == '.')
 		continue;
 
 	    /*
-	     * get full path 
+	     * get full path
 	     */
 	    if (dirname[strlen (dirname) - 1] == '/')
 		g_snprintf (buf, MAX_PATH_LEN, "%s%s", dirname,
@@ -904,7 +904,7 @@ get_dir (const gchar * dirname, GetDirFlags flags,
 			    entry->d_name);
 
 	    /*
-	     * if path is file 
+	     * if path is file
 	     */
 	    if (!isdir (buf)
 		|| (!(flags & GETDIR_FOLLOW_SYMLINK) && islink (buf)))
@@ -926,7 +926,7 @@ get_dir (const gchar * dirname, GetDirFlags flags,
 		}
 
 		/*
-		 * if path is dir 
+		 * if path is dir
 		 */
 	    }
 	    else if (isdir (buf))
@@ -957,7 +957,7 @@ get_dir (const gchar * dirname, GetDirFlags flags,
     }
 
     /*
-     * recursive get 
+     * recursive get
      */
     if (flags & GETDIR_RECURSIVE)
     {
@@ -985,7 +985,7 @@ get_dir (const gchar * dirname, GetDirFlags flags,
     }
 
     /*
-     * return value 
+     * return value
      */
     if (filelist_ret)
 	*filelist_ret = filelist;

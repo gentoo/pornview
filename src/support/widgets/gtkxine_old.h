@@ -69,7 +69,7 @@ extern          "C"
 	gint            status;
 
 	/*
-	 * fullscreen stuff 
+	 * fullscreen stuff
 	 */
 	int             fullscreen_mode;
 	int             fullscreen_width, fullscreen_height;

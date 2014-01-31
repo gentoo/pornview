@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -110,7 +110,7 @@ exif_data_load_data_entry (ExifData * data, ExifEntry * entry,
 	doff = offset + 8;
 
     /*
-     * Sanity check 
+     * Sanity check
      */
     if (size < doff + s)
 	return;
@@ -188,7 +188,7 @@ exif_data_load_data_content (ExifData * data, ExifContent * ifd,
     ExifTag tag;
 
     /*
-     * Read the number of entries 
+     * Read the number of entries
      */
     n = exif_get_short (d + offset, data->priv->order);
 #ifdef DEBUG
@@ -297,7 +297,7 @@ exif_data_save_data_content (ExifData * data, ExifContent * ifd,
 	      n_ptr++;
 
 	  /*
-	   * The pointer to IFD_GPS is in IFD_0. 
+	   * The pointer to IFD_GPS is in IFD_0.
 	   */
 	  if (data->ifd[EXIF_IFD_GPS]->count)
 	      n_ptr++;
@@ -322,7 +322,7 @@ exif_data_save_data_content (ExifData * data, ExifContent * ifd,
     *d = realloc (*d, sizeof (char) * *ds);
 
     /*
-     * Save the number of entries 
+     * Save the number of entries
      */
     exif_set_short (*d + 6 + offset, data->priv->order,
 		    ifd->count + n_ptr + n_thumb);
@@ -334,7 +334,7 @@ exif_data_save_data_content (ExifData * data, ExifContent * ifd,
 #endif
 
     /*
-     * Save each entry 
+     * Save each entry
      */
     for (j = 0; j < ifd->count; j++)
 	exif_data_save_data_entry (data, ifd->entries[j],
@@ -342,7 +342,7 @@ exif_data_save_data_content (ExifData * data, ExifContent * ifd,
     offset += 12 * ifd->count;
 
     /*
-     * Now save special entries. 
+     * Now save special entries.
      */
     switch (i)
     {
@@ -370,7 +370,7 @@ exif_data_save_data_content (ExifData * data, ExifContent * ifd,
 	  }
 
 	  /*
-	   * The pointer to IFD_GPS is in IFD_0, too. 
+	   * The pointer to IFD_GPS is in IFD_0, too.
 	   */
 	  if (data->ifd[EXIF_IFD_GPS]->count)
 	  {
@@ -419,7 +419,7 @@ exif_data_save_data_content (ExifData * data, ExifContent * ifd,
 	  {
 
 	      /*
-	       * EXIF_TAG_JPEG_INTERCHANGE_FORMAT 
+	       * EXIF_TAG_JPEG_INTERCHANGE_FORMAT
 	       */
 	      exif_set_short (*d + 6 + offset + 0, data->priv->order,
 			      EXIF_TAG_JPEG_INTERCHANGE_FORMAT);
@@ -438,7 +438,7 @@ exif_data_save_data_content (ExifData * data, ExifContent * ifd,
 #endif
 
 	      /*
-	       * EXIF_TAG_JPEG_INTERCHANGE_FORMAT_LENGTH 
+	       * EXIF_TAG_JPEG_INTERCHANGE_FORMAT_LENGTH
 	       */
 	      exif_set_short (*d + 6 + offset + 0, data->priv->order,
 			      EXIF_TAG_JPEG_INTERCHANGE_FORMAT_LENGTH);
@@ -456,7 +456,7 @@ exif_data_save_data_content (ExifData * data, ExifContent * ifd,
     }
 
     /*
-     * Correctly terminate the directory 
+     * Correctly terminate the directory
      */
     if (i == EXIF_IFD_0 && (data->ifd[EXIF_IFD_1]->count || data->size))
     {
@@ -522,7 +522,7 @@ exif_data_load_data (ExifData * data, const unsigned char *d,
 	    }
 
 	    /*
-	     * JPEG_MARKER_SOI 
+	     * JPEG_MARKER_SOI
 	     */
 	    if (d[0] == JPEG_MARKER_SOI)
 	    {
@@ -532,7 +532,7 @@ exif_data_load_data (ExifData * data, const unsigned char *d,
 	    }
 
 	    /*
-	     * JPEG_MARKER_APP0 
+	     * JPEG_MARKER_APP0
 	     */
 	    if (d[0] == JPEG_MARKER_APP0)
 	    {
@@ -547,13 +547,13 @@ exif_data_load_data (ExifData * data, const unsigned char *d,
 	    }
 
 	    /*
-	     * JPEG_MARKER_APP1 
+	     * JPEG_MARKER_APP1
 	     */
 	    if (d[0] == JPEG_MARKER_APP1)
 		break;
 
 	    /*
-	     * Unknown marker or data. Give up. 
+	     * Unknown marker or data. Give up.
 	     */
 #ifdef DEBUG
 	    printf ("EXIF marker not found.\n");
@@ -601,7 +601,7 @@ exif_data_load_data (ExifData * data, const unsigned char *d,
 #endif
 
     /*
-     * Byte order (offset 6, length 2) 
+     * Byte order (offset 6, length 2)
      */
     if (size < 12)
 	return;
@@ -613,13 +613,13 @@ exif_data_load_data (ExifData * data, const unsigned char *d,
 	return;
 
     /*
-     * Fixed value 
+     * Fixed value
      */
     if (exif_get_short (d + 8, data->priv->order) != 0x002a)
 	return;
 
     /*
-     * IFD 0 offset 
+     * IFD 0 offset
      */
     offset = exif_get_long (d + 10, data->priv->order);
 #ifdef DEBUG
@@ -627,13 +627,13 @@ exif_data_load_data (ExifData * data, const unsigned char *d,
 #endif
 
     /*
-     * Parse the actual exif data (offset 14) 
+     * Parse the actual exif data (offset 14)
      */
     exif_data_load_data_content (data, data->ifd[EXIF_IFD_0], d + 6,
 				 size - 6, offset);
 
     /*
-     * IFD 1 offset 
+     * IFD 1 offset
      */
     n = exif_get_short (d + 6 + offset, data->priv->order);
     offset = exif_get_long (d + 6 + offset + 2 + 12 * n, data->priv->order);
@@ -644,7 +644,7 @@ exif_data_load_data (ExifData * data, const unsigned char *d,
 #endif
 
 	/*
-	 * Sanity check. 
+	 * Sanity check.
 	 */
 	if (offset > size - 6)
 	{
@@ -668,14 +668,14 @@ exif_data_save_data (ExifData * data, unsigned char **d, unsigned int *ds)
 	return;
 
     /*
-     * Header 
+     * Header
      */
     *ds = 6;
     *d = malloc (sizeof (char) * *ds);
     memcpy (*d, ExifHeader, 6);
 
     /*
-     * Order (offset 6) 
+     * Order (offset 6)
      */
     *ds += 2;
     *d = realloc (*d, sizeof (char) * *ds);
@@ -689,7 +689,7 @@ exif_data_save_data (ExifData * data, unsigned char **d, unsigned int *ds)
     }
 
     /*
-     * Fixed value (2 bytes, offset 8) 
+     * Fixed value (2 bytes, offset 8)
      */
     *ds += 2;
     *d = realloc (*d, sizeof (char) * *ds);
@@ -698,7 +698,7 @@ exif_data_save_data (ExifData * data, unsigned char **d, unsigned int *ds)
     /*
      * IFD 0 offset (4 bytes, offset 10).
      * We will start 8 bytes after the
-     * EXIF header (2 bytes for order, another 2 for the test, and 
+     * EXIF header (2 bytes for order, another 2 for the test, and
      * 4 bytes for the IFD 0 offset make 8 bytes together).
      */
     *ds += 4;
@@ -706,7 +706,7 @@ exif_data_save_data (ExifData * data, unsigned char **d, unsigned int *ds)
     exif_set_long (*d + 10, data->priv->order, 8);
 
     /*
-     * Now save IFD 0. IFD 1 will be saved automatically. 
+     * Now save IFD 0. IFD 1 will be saved automatically.
      */
 #ifdef DEBUG
     printf ("Saving IFDs...\n");
@@ -736,13 +736,13 @@ exif_data_new_from_file (const char *path)
 	while ((marker = fgetc (f)) == 0xff);
 
 	/*
-	 * JPEG_MARKER_SOI 
+	 * JPEG_MARKER_SOI
 	 */
 	if (marker == JPEG_MARKER_SOI)
 	    continue;
 
 	/*
-	 * JPEG_MARKER_APP0 
+	 * JPEG_MARKER_APP0
 	 */
 	if (marker == JPEG_MARKER_APP0)
 	{
@@ -755,19 +755,19 @@ exif_data_new_from_file (const char *path)
 	}
 
 	/*
-	 * JPEG_MARKER_APP1 
+	 * JPEG_MARKER_APP1
 	 */
 	if (marker == JPEG_MARKER_APP1)
 	    break;
 
 	/*
-	 * Unknown marker or data. Give up. 
+	 * Unknown marker or data. Give up.
 	 */
 	return (NULL);
     }
 
     /*
-     * EXIF data found. Allocate the necessary memory and read the data. 
+     * EXIF data found. Allocate the necessary memory and read the data.
      */
     lh = fgetc (f);
     ll = fgetc (f);
@@ -971,7 +971,7 @@ entry_set_byte_order (ExifEntry * e, void *data)
       case EXIF_FORMAT_ASCII:
       default:
 	  /*
-	   * Nothing here. 
+	   * Nothing here.
 	   */
 	  break;
     }

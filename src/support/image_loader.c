@@ -94,7 +94,7 @@ image_loader_stop (ImageLoader * il)
     if (il->loader)
     {
 	/*
-	 * some loaders do not have a pixbuf till close, order is important here 
+	 * some loaders do not have a pixbuf till close, order is important here
 	 */
 
 	gdk_pixbuf_loader_close (il->loader, &err);
@@ -255,7 +255,7 @@ image_loader_begin (ImageLoader * il)
 	if (b < sizeof (buf))
 	{
 	    /*
-	     * end of file already 
+	     * end of file already
 	     */
 	    image_loader_stop (il);
 
@@ -268,11 +268,11 @@ image_loader_begin (ImageLoader * il)
 	else
 	{
 	    /*
-	     * larger file 
+	     * larger file
 	     */
 
 	    /*
-	     * read until size is known 
+	     * read until size is known
 	     */
 	    while (il->loader && !gdk_pixbuf_loader_get_pixbuf (il->loader)
 		   && b > 0)
@@ -293,7 +293,7 @@ image_loader_begin (ImageLoader * il)
 	    if (il->bytes_read == il->bytes_total || b < sizeof (buf))
 	    {
 		/*
-		 * done, handle (broken) loaders that do not have pixbuf till close 
+		 * done, handle (broken) loaders that do not have pixbuf till close
 		 */
 		image_loader_stop (il);
 
@@ -311,7 +311,7 @@ image_loader_begin (ImageLoader * il)
 	    }
 
 	    /*
-	     * finally, progressive loading :) 
+	     * finally, progressive loading :)
 	     */
 	    il->idle_id =
 		gtk_idle_add_priority (il->idle_priority,

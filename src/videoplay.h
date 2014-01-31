@@ -40,7 +40,7 @@ struct _VideoPlay
     GtkWidget      *next_btn;
 
     /*
-     * seek 
+     * seek
      */
     GtkWidget      *seek_vbox;
     GtkWidget      *seek_label;

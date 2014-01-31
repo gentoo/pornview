@@ -21,7 +21,7 @@ typedef struct _ImageInfo
     gint            height;
 
     /*
-     * reference count 
+     * reference count
      */
     guint           ref_count;
 }

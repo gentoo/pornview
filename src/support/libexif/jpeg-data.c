@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -116,7 +116,7 @@ jpeg_data_save_data (JPEGData * data, unsigned char **d, unsigned int *ds)
 #endif
 
 	/*
-	 * Write the marker 
+	 * Write the marker
 	 */
 	*d = realloc (*d, sizeof (char) * (*ds + 2));
 	(*d)[*ds + 0] = 0xff;
@@ -149,7 +149,7 @@ jpeg_data_save_data (JPEGData * data, unsigned char **d, unsigned int *ds)
 	      *ds += s.content.generic.size;
 
 	      /*
-	       * In case of SOS, we need to write the data. 
+	       * In case of SOS, we need to write the data.
 	       */
 	      if (s.marker == JPEG_MARKER_SOS)
 	      {
@@ -209,7 +209,7 @@ jpeg_data_load_data (JPEGData * data, const unsigned char *d,
 #endif
 
 	/*
-	 * Append this section 
+	 * Append this section
 	 */
 	jpeg_data_append_section (data);
 	s = &data->sections[data->count - 1];
@@ -224,7 +224,7 @@ jpeg_data_load_data (JPEGData * data, const unsigned char *d,
 	  default:
 
 	      /*
-	       * Read the length of the section 
+	       * Read the length of the section
 	       */
 	      len = ((d[o] << 8) | d[o + 1]) - 2;
 	      o += 2;
@@ -241,7 +241,7 @@ jpeg_data_load_data (JPEGData * data, const unsigned char *d,
 		    memcpy (s->content.generic.data, &d[o], len);
 
 		    /*
-		     * In case of SOS, image data will follow. 
+		     * In case of SOS, image data will follow.
 		     */
 		    if (s->marker == JPEG_MARKER_SOS)
 		    {
@@ -285,7 +285,7 @@ jpeg_data_load_file (JPEGData * data, const char *path)
 	return;
 
     /*
-     * For now, we read the data into memory. Patches welcome... 
+     * For now, we read the data into memory. Patches welcome...
      */
     fseek (f, 0, SEEK_END);
     size = ftell (f);

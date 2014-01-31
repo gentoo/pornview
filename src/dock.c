@@ -129,7 +129,7 @@ dock_build ()
     gtk_widget_show (eventbox);
 
     /*
-     * add the status to the plug 
+     * add the status to the plug
      */
     gtk_object_set_data (GTK_OBJECT (dock), "pixmapg", image);
     gtk_container_add (GTK_CONTAINER (eventbox), image);
@@ -137,7 +137,7 @@ dock_build ()
     gtk_widget_show_all (GTK_WIDGET (dock));
 
     /*
-     * add the popup menu 
+     * add the popup menu
      */
     popup_item_factory =
 	gtk_item_factory_new (GTK_TYPE_MENU, "<popup>", NULL);
@@ -166,7 +166,7 @@ dock_setup_properties (GdkWindow * window)
 	gdk_atom_intern ("_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR", FALSE);
 
     /*
-     * this is the old KDE 1.0 and GNOME 1.2 way... 
+     * this is the old KDE 1.0 and GNOME 1.2 way...
      */
     data[0] = TRUE;
     gdk_property_change (window, kwm_dockwindow_atom,
@@ -174,7 +174,7 @@ dock_setup_properties (GdkWindow * window)
 			 (guchar *) & data, 1);
 
     /*
-     * this is needed to support KDE 2.0 
+     * this is needed to support KDE 2.0
      */
     data[0] = 0;
     gdk_property_change (window, kde_net_system_tray_window_for_atom,

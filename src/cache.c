@@ -173,7 +173,7 @@ cache_find_location (CacheType type, const gchar * source, const gchar * ext)
 	g_free (path);
 
 	/*
-	 * try the opposite method if not found 
+	 * try the opposite method if not found
 	 */
 	if (type == CACHE_THUMBS)
 	{
@@ -304,7 +304,7 @@ cb_cache_maintain_home (gpointer data)
     if (cm->list && g_list_find (cm->done_list, cm->list->data) != NULL)
     {
 	/*
-	 * check if the dir is empty 
+	 * check if the dir is empty
 	 */
 
 	if (cm->list->data == path && just_done)
@@ -318,7 +318,7 @@ cb_cache_maintain_home (gpointer data)
 	else
 	{
 	    /*
-	     * must re-check for an empty dir 
+	     * must re-check for an empty dir
 	     */
 	    path = cm->list->data;
 	    if (isempty (path) && cm->list->next && rmdir (path) < 0)
@@ -594,7 +594,7 @@ cache_file_move (const gchar * src, const gchar * dest)
     if (!move_file (src, dest))
     {
 	/*
-	 * we remove it anyway - it's stale 
+	 * we remove it anyway - it's stale
 	 */
 	unlink (src);
     }

@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -158,7 +158,7 @@ exif_entry_get_value (ExifEntry * e)
 /*	bindtextdomain (GETTEXT_PACKAGE, LIBEXIF_LOCALEDIR); */
 
     /*
-     * We need the byte order 
+     * We need the byte order
      */
     if (!e || !e->parent || !e->parent->parent)
 	return (NULL);
@@ -1095,7 +1095,7 @@ exif_entry_get_value_brief (ExifEntry * e)
     double  d;
 
     /*
-     * We need the byte order 
+     * We need the byte order
      */
     if (!e || !e->parent || !e->parent->parent)
 	return (NULL);
@@ -1305,7 +1305,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
     ExifByteOrder o;
 
     /*
-     * We need the byte order 
+     * We need the byte order
      */
     if (!e || !e->parent || e->data || !e->parent->parent)
 	return;
@@ -1316,7 +1316,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
     {
 
 	  /*
-	   * LONG, 1 component, no default 
+	   * LONG, 1 component, no default
 	   */
       case EXIF_TAG_EXIF_IFD_POINTER:
       case EXIF_TAG_GPS_INFO_IFD_POINTER:
@@ -1331,7 +1331,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
 	  break;
 
 	  /*
-	   * SHORT, 1 component, no default 
+	   * SHORT, 1 component, no default
 	   */
       case EXIF_TAG_SUBJECT_LOCATION:
       case EXIF_TAG_SENSING_METHOD:
@@ -1344,7 +1344,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
       case EXIF_TAG_SUBJECT_DISTANCE_RANGE:
 
 	  /*
-	   * SHORT, 1 component, default 0 
+	   * SHORT, 1 component, default 0
 	   */
       case EXIF_TAG_IMAGE_WIDTH:
       case EXIF_TAG_IMAGE_LENGTH:
@@ -1364,7 +1364,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
 	  break;
 
 	  /*
-	   * SHORT, 1 component, default 1 
+	   * SHORT, 1 component, default 1
 	   */
       case EXIF_TAG_ORIENTATION:
       case EXIF_TAG_PLANAR_CONFIGURATION:
@@ -1377,7 +1377,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
 	  break;
 
 	  /*
-	   * SHORT, 1 component, default 2 
+	   * SHORT, 1 component, default 2
 	   */
       case EXIF_TAG_RESOLUTION_UNIT:
       case EXIF_TAG_FOCAL_PLANE_RESOLUTION_UNIT:
@@ -1389,7 +1389,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
 	  break;
 
 	  /*
-	   * SHORT, 1 component, default 3 
+	   * SHORT, 1 component, default 3
 	   */
       case EXIF_TAG_SAMPLES_PER_PIXEL:
 	  e->components = 1;
@@ -1419,7 +1419,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
 	  break;
 
 	  /*
-	   * SRATIONAL, 1 component, no default 
+	   * SRATIONAL, 1 component, no default
 	   */
       case EXIF_TAG_EXPOSURE_BIAS_VALUE:
       case EXIF_TAG_BRIGHTNESS_VALUE:
@@ -1432,7 +1432,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
 	  break;
 
 	  /*
-	   * RATIONAL, 1 component, no default 
+	   * RATIONAL, 1 component, no default
 	   */
       case EXIF_TAG_EXPOSURE_TIME:
       case EXIF_TAG_FOCAL_PLANE_X_RESOLUTION:
@@ -1455,7 +1455,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
 	  break;
 
 	  /*
-	   * RATIONAL, 1 component, default 72/1 
+	   * RATIONAL, 1 component, default 72/1
 	   */
       case EXIF_TAG_X_RESOLUTION:
       case EXIF_TAG_Y_RESOLUTION:
@@ -1469,7 +1469,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
 	  break;
 
 	  /*
-	   * RATIONAL, 2 components, no default 
+	   * RATIONAL, 2 components, no default
 	   */
       case EXIF_TAG_WHITE_POINT:
 	  e->components = 2;
@@ -1480,7 +1480,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
 	  break;
 
 	  /*
-	   * RATIONAL, 6 components 
+	   * RATIONAL, 6 components
 	   */
       case EXIF_TAG_REFERENCE_BLACK_WHITE:
 	  e->components = 6;
@@ -1541,7 +1541,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
 	  break;
 
 	  /*
-	   * UNDEFINED, 1 component, default 1 
+	   * UNDEFINED, 1 component, default 1
 	   */
       case EXIF_TAG_SCENE_TYPE:
 	  e->components = 1;
@@ -1552,7 +1552,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
 	  break;
 
 	  /*
-	   * UNDEFINED, 1 component, default 3 
+	   * UNDEFINED, 1 component, default 3
 	   */
       case EXIF_TAG_FILE_SOURCE:
 	  e->components = 1;
@@ -1563,7 +1563,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
 	  break;
 
 	  /*
-	   * UNDEFINED, 4 components, default 0 1 0 0 
+	   * UNDEFINED, 4 components, default 0 1 0 0
 	   */
       case EXIF_TAG_FLASH_PIX_VERSION:
 	  e->components = 4;
@@ -1574,7 +1574,7 @@ exif_entry_initialize (ExifEntry * e, ExifTag tag)
 	  break;
 
 	  /*
-	   * UNDEFINED, 4 components, default 0 2 1 0 
+	   * UNDEFINED, 4 components, default 0 2 1 0
 	   */
       case EXIF_TAG_EXIF_VERSION:
 	  e->components = 4;

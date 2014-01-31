@@ -69,18 +69,18 @@ extern          "C"
 	gfloat          length;
 
 	/*
-	 * video 
+	 * video
 	 */
 	gint            width;
 	gint            height;
 
 	/*
-	 * audio 
+	 * audio
 	 */
 
 
 	/*
-	 * other 
+	 * other
 	 */
 #if 0
 	StreamType      stream_type;
@@ -105,7 +105,7 @@ extern          "C"
 	GtkMPlayerFlags flags;
 
 	/*
-	 * command 
+	 * command
 	 */
 	gchar          *command;
 	gchar          *vo;	/* video out driver's name */
@@ -113,7 +113,7 @@ extern          "C"
 	GList          *args;	/* other arguments */
 
 	/*
-	 * media info 
+	 * media info
 	 */
 	GtkMPlayerMediaInfo media_info;
     };
@@ -123,7 +123,7 @@ extern          "C"
 	GtkWidgetClass  parent_class;
 
 	/*
-	 * signals 
+	 * signals
 	 */
 
 	void            (*play) (GtkMPlayer * player);

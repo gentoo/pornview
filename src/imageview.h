@@ -73,7 +73,7 @@ struct _ImageView
     gfloat          y_scale;
 
     /*
-     * information about image dragging 
+     * information about image dragging
      */
     guint           button;
     gboolean        pressed;

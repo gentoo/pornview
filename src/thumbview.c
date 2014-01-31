@@ -149,7 +149,7 @@ cb_thumbview_button_press (GtkWidget * widget, GdkEventButton * event,
 	GtkItemFactory *ifactory;
 
 	/*
-	 * create popup menu 
+	 * create popup menu
 	 */
 	n_menu_items = sizeof (thumbview_popupmenu_items)
 	    / sizeof (thumbview_popupmenu_items[0]) - 1;
@@ -319,7 +319,7 @@ cb_thumbview_cell_unselect (GtkWidget * widget, ZAlbumCell * cell,
 }
 
     /*
-     * toolbar callback functions 
+     * toolbar callback functions
      */
 
 static void
@@ -601,7 +601,7 @@ thumbview_create_toolbar (ThumbView * tv)
 				 _("Refresh"), NULL, iconw,
 				 GTK_SIGNAL_FUNC (cb_thumbview_refresh), tv);
     /*
-     * previous 
+     * previous
      */
     iconw = pixbuf_create_pixmap_from_xpm_data (left_xpm);
     tv->toolbar_previous_btn =
@@ -609,7 +609,7 @@ thumbview_create_toolbar (ThumbView * tv)
 				 _("Previous Image/Movie"), NULL, iconw,
 				 GTK_SIGNAL_FUNC (cb_thumbview_previous), tv);
     /*
-     * next 
+     * next
      */
     iconw = pixbuf_create_pixmap_from_xpm_data (right_xpm);
     tv->toolbar_next_btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
@@ -621,7 +621,7 @@ thumbview_create_toolbar (ThumbView * tv)
 						    (cb_thumbview_next), tv);
 
     /*
-     * first 
+     * first
      */
     iconw = pixbuf_create_pixmap_from_xpm_data (first_xpm);
     tv->toolbar_first_btn =
@@ -1290,7 +1290,7 @@ cb_open_image_by_external (GtkWidget * menuitem, ThumbView * tv)
 	GPOINTER_TO_INT (gtk_object_get_data (GTK_OBJECT (menuitem), "num"));
 
     /*
-     * find command 
+     * find command
      */
     if (action < sizeof (conf.progs) / sizeof (conf.progs[0]))
     {
@@ -1314,7 +1314,7 @@ cb_open_image_by_external (GtkWidget * menuitem, ThumbView * tv)
     }
 
     /*
-     * create command string 
+     * create command string
      */
     while (node)
     {
@@ -1356,7 +1356,7 @@ cb_open_image_by_external (GtkWidget * menuitem, ThumbView * tv)
     cmd = NULL;
 
     /*
-     * exec command 
+     * exec command
      */
     if (user_cmd)
     {
@@ -1389,7 +1389,7 @@ cb_open_image_by_script (GtkWidget * menuitem, ThumbView * tv)
     cmd = g_strdup (script);
 
     /*
-     * create command string 
+     * create command string
      */
     while (node)
     {
@@ -1438,7 +1438,7 @@ cb_open_image_by_script (GtkWidget * menuitem, ThumbView * tv)
     }
 
     /*
-     * exec command 
+     * exec command
      */
     if (user_cmd)
     {
@@ -1471,7 +1471,7 @@ create_progs_submenu (ThumbView * tv)
     menu = gtk_menu_new ();
 
     /*
-     * count items num 
+     * count items num
      */
     for (i = 0; i < conf_num; i++)
     {
@@ -1582,13 +1582,13 @@ thumbview_create (GtkWidget * parent_win)
     thumbview->selection = NULL;
 
     /*
-     * container 
+     * container
      */
     thumbview->container = gtk_vbox_new (FALSE, 0);
     gtk_widget_show (thumbview->container);
 
     /*
-     * toolbar 
+     * toolbar
      */
     thumbview->toolbar_eventbox = gtk_event_box_new ();
     gtk_container_set_border_width (GTK_CONTAINER
@@ -1624,7 +1624,7 @@ thumbview_create (GtkWidget * parent_win)
     gtk_widget_show (thumbview->scroll_win);
 
     /*
-     * create zalbum widget 
+     * create zalbum widget
      */
     thumbview->album = zalbum_new (ZALBUM_MODE_PREVIEW);
     gtk_container_add (GTK_CONTAINER (thumbview->scroll_win),

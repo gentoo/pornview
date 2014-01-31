@@ -28,13 +28,13 @@
 typedef struct PrefsWin_Tag
 {
     /*
-     * common 
+     * common
      */
     GtkWidget *startup_dir_entry;
     GtkWidget *startup_dir_table;
 
     /*
-     * filtering 
+     * filtering
      */
     GtkWidget *filter_editlist;
     GtkWidget *filter_ext_entry;
@@ -411,7 +411,7 @@ filter_set_value (void)
     gint    i, row;
 
     /*
-     * system defined image types 
+     * system defined image types
      */
 
     if (conf.imgtype_disables && *conf.imgtype_disables)
@@ -448,7 +448,7 @@ filter_set_value (void)
 
 
     /*
-     * user defined image types 
+     * user defined image types
      */
 
     if (conf.imgtype_user_defs && *conf.imgtype_user_defs)
@@ -543,7 +543,7 @@ cb_filter_editlist_confirm (EditableList * editlist,
 	return;
 
     /*
-     * check intput value 
+     * check intput value
      */
     if (!filter_check_value (ext, name))
     {
@@ -553,7 +553,7 @@ cb_filter_editlist_confirm (EditableList * editlist,
     }
 
     /*
-     * check duplicate 
+     * check duplicate
      */
     if (type == EDITABLE_LIST_ACTION_ADD)
 	duplicate = filter_check_duplicate (ext, -1, TRUE);
@@ -715,7 +715,7 @@ prefs_filter_page (void)
     main_vbox = gtk_vbox_new (FALSE, 0);
     gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 10);
 
-   /********************************************** 
+   /**********************************************
     * Image Types Frame
     **********************************************/
     frame = gtk_frame_new (_("Image Types"));
@@ -736,7 +736,7 @@ prefs_filter_page (void)
     gtk_widget_set_usize (editlist, -2, 320);
 
     /*
-     * entry area 
+     * entry area
      */
     hbox = EDITABLE_LIST (editlist)->edit_area;
 
@@ -781,7 +781,7 @@ prefs_filter_page (void)
     gtk_widget_show (entry);
 
     /*
-     * disable check box 
+     * disable check box
      */
     toggle = editable_list_create_check_button (EDITABLE_LIST (editlist), 2,
 						_("Disable"), FALSE,
@@ -791,7 +791,7 @@ prefs_filter_page (void)
     gtk_widget_show (toggle);
 
     /*
-     * definition type column 
+     * definition type column
      */
     editable_list_set_column_funcs (EDITABLE_LIST (editlist),
 				    NULL, 3, NULL,
@@ -799,7 +799,7 @@ prefs_filter_page (void)
 				    NULL, NULL, NULL);
 
     /*
-     * for row data 
+     * for row data
      */
     editable_list_set_get_row_data_func (EDITABLE_LIST (editlist),
 					 cb_filter_get_row_data);
@@ -902,7 +902,7 @@ prefs_charset_page (void)
     gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 10);
 
     /*
-     * common frame 
+     * common frame
      */
     frame = gtk_frame_new (_(" Common "));
     gtk_box_pack_start (GTK_BOX (main_vbox), frame, FALSE, TRUE, 0);
@@ -917,7 +917,7 @@ prefs_charset_page (void)
     gtk_box_pack_start (GTK_BOX (hbox), table, FALSE, TRUE, 5);
 
     /*
-     * locale charset 
+     * locale charset
      */
     hbox = gtk_hbox_new (FALSE, 0);
     gtk_table_attach (GTK_TABLE (table), hbox, 0, 1, 0, 1,
@@ -936,7 +936,7 @@ prefs_charset_page (void)
 			GTK_SIGNAL_FUNC (cb_locale_charset_changed), NULL);
 
     /*
-     * internal charset 
+     * internal charset
      */
     hbox = gtk_hbox_new (FALSE, 0);
     gtk_table_attach (GTK_TABLE (table), hbox, 0, 1, 1, 2,
@@ -955,7 +955,7 @@ prefs_charset_page (void)
 			GTK_SIGNAL_FUNC (cb_internal_charset_changed), NULL);
 
     /*
-     * Language to detect 
+     * Language to detect
      */
     hbox = gtk_hbox_new (FALSE, 0);
     gtk_box_pack_start (GTK_BOX (frame_vbox), hbox, FALSE, TRUE, 0);
@@ -969,7 +969,7 @@ prefs_charset_page (void)
     gtk_widget_show_all (frame);
 
     /*
-     * filename frame 
+     * filename frame
      */
     frame = gtk_frame_new (_(" File name "));
     gtk_box_pack_start (GTK_BOX (main_vbox), frame, FALSE, TRUE, 10);
@@ -979,7 +979,7 @@ prefs_charset_page (void)
     gtk_container_add (GTK_CONTAINER (frame), frame_vbox);
 
     /*
-     * charset for filename 
+     * charset for filename
      */
     hbox = gtk_hbox_new (FALSE, 0);
     gtk_box_pack_start (GTK_BOX (frame_vbox), hbox, FALSE, TRUE, 0);
@@ -987,7 +987,7 @@ prefs_charset_page (void)
     gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, TRUE, 5);
 
     /*
-     * filename charset 
+     * filename charset
      */
     combo = gtk_combo_new ();
     gtk_widget_set_usize (combo, 120, -1);

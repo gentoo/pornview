@@ -156,14 +156,14 @@ dest_populate (Dest_Data * dd, const gchar * path)
     if (!path || (dp = opendir (path)) == NULL)
     {
 	/*
-	 * dir not found 
+	 * dir not found
 	 */
 	return;
     }
     while ((dir = readdir (dp)) != NULL)
     {
 	/*
-	 * skips removed files 
+	 * skips removed files
 	 */
 	if (dir->d_ino > 0 && (dd->show_hidden || !is_hidden (dir->d_name)))
 	{
@@ -284,7 +284,7 @@ dest_change_dir (Dest_Data * dd, const gchar * path, gint retain_name)
     dest_populate (dd, path);
 
     /*
-     * remember filename 
+     * remember filename
      */
     if (old_name)
     {
@@ -357,13 +357,13 @@ cb_dest_press (GtkWidget * widget, GdkEventButton * event, gpointer data)
     if (widget == dd->d_clist)
     {
 	/*
-	 * dir pressed 
+	 * dir pressed
 	 */
 
 	if (event->button == 3 && row > 1)
 	{
 	    /*
-	     * right click menu 
+	     * right click menu
 	     */
 
 	}
@@ -373,13 +373,13 @@ cb_dest_press (GtkWidget * widget, GdkEventButton * event, gpointer data)
     else
     {
 	/*
-	 * file pressed 
+	 * file pressed
 	 */
 
 	if (event->button == 3)
 	{
 	    /*
-	     * right click menu 
+	     * right click menu
 	     */
 
 	    return FALSE;

@@ -150,7 +150,7 @@ generic_dialog_add_images (GenericDialog * gd, const gchar * path1,
     }
 
     /*
-     * image 1 
+     * image 1
      */
 
     vbox = gtk_vbox_new (FALSE, 0);
@@ -176,7 +176,7 @@ generic_dialog_add_images (GenericDialog * gd, const gchar * path1,
     gtk_widget_show (label);
 
     /*
-     * image 2 
+     * image 2
      */
 
     if (hbox && path2)
@@ -246,7 +246,7 @@ static void
 cb_file_util_warning_dialog_ok (GenericDialog * gd, gpointer data)
 {
     /*
-     * no op 
+     * no op
      */
 }
 
@@ -339,7 +339,7 @@ cb_file_util_move_multiple_ok (GenericDialog * gd, gpointer data)
 	else
 	{
 	    /*
-	     * unique failed? well, return to the overwrite prompt :( 
+	     * unique failed? well, return to the overwrite prompt :(
 	     */
 	    fdm->confirmed = FALSE;
 	}
@@ -545,7 +545,7 @@ file_util_move_multiple (FileDataMult * fdm)
 	    generic_dialog_add_images (gd, fdm->dest, fdm->source);
 
 	    /*
-	     * rename option 
+	     * rename option
 	     */
 
 	    fdm->rename = FALSE;
@@ -764,7 +764,7 @@ cb_file_util_move_single_ok (GenericDialog * gd, gpointer data)
 	else
 	{
 	    /*
-	     * unique failed? well, return to the overwrite prompt :( 
+	     * unique failed? well, return to the overwrite prompt :(
 	     */
 	    fds->confirmed = FALSE;
 	}
@@ -862,7 +862,7 @@ file_util_move_single (FileDataSingle * fds)
 	generic_dialog_add_images (gd, fds->dest, fds->source);
 
 	/*
-	 * rename option 
+	 * rename option
 	 */
 
 	fds->rename = FALSE;
@@ -1529,7 +1529,7 @@ file_util_rename_multiple_auto (RenameDataMult * rd)
 					  (rd->auto_spin_pad));
 
     /*
-     * first check for name conflicts 
+     * first check for name conflicts
      */
     success = TRUE;
     n = start_n;
@@ -1563,7 +1563,7 @@ file_util_rename_multiple_auto (RenameDataMult * rd)
     }
 
     /*
-     * now do it for real 
+     * now do it for real
      */
     success = TRUE;
     n = start_n;
@@ -1842,7 +1842,7 @@ file_util_rename_multiple_do (GList * source_list)
     rd->auto_box = gtk_vbox_new (FALSE, 0);
     gtk_box_pack_start (GTK_BOX (vbox), rd->auto_box, FALSE, FALSE, 0);
     /*
-     * do not show it here 
+     * do not show it here
      */
 
     hbox = gtk_hbox_new (FALSE, 0);

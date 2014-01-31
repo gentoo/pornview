@@ -80,10 +80,10 @@ gtk_xine_get_type (void)
 	    (GtkClassInitFunc) gtk_xine_class_init,
 	    (GtkObjectInitFunc) gtk_xine_init,
 	    /*
-	     * reserved_1 
+	     * reserved_1
 	     */ NULL,
 	    /*
-	     * reserved_2 
+	     * reserved_2
 	     */ NULL,
 	    (GtkClassInitFunc) NULL,
 	};
@@ -243,7 +243,7 @@ load_video_out_driver (GtkXine * this)
     vis.user_data = this;
 
     /*
-     * try to init video with stored information 
+     * try to init video with stored information
      */
     video_driver_id = xine_config_register_string (this->xine,
 						   "video.driver", "auto",
@@ -275,7 +275,7 @@ load_audio_out_driver (GtkXine * this)
     const char *audio_driver_id;
 
     /*
-     * try to init audio with stored information 
+     * try to init audio with stored information
      */
     audio_driver_id = xine_config_register_string (this->xine,
 						   "audio.driver", "auto",
@@ -297,7 +297,7 @@ load_audio_out_driver (GtkXine * this)
     }
 
     /*
-     * autoprobe 
+     * autoprobe
      */
     return xine_open_audio_driver (this->xine, NULL, NULL);
 }
@@ -307,7 +307,7 @@ xine_thread (void *this_gen)
 {
     GtkXine *this = (GtkXine *) this_gen;
     /*
-     * GtkWidget  *widget = &this->widget; 
+     * GtkWidget  *widget = &this->widget;
      */
 
     while (1)
@@ -317,7 +317,7 @@ xine_thread (void *this_gen)
 	XNextEvent (this->display, &event);
 
 	/*
-	 * printf ("gtkxine: got an event (%d)\n", event.type);  
+	 * printf ("gtkxine: got an event (%d)\n", event.type);
 	 */
 	switch (event.type)
 	{
@@ -343,7 +343,7 @@ xine_thread (void *this_gen)
 	    xine_gui_send_vo_data (this->stream,
 				   XINE_GUI_SEND_COMPLETION_EVENT, &event);
 	    /*
-	     * printf ("gtkxine: completion event\n"); 
+	     * printf ("gtkxine: completion event\n");
 	     */
 	}
     }
@@ -390,10 +390,10 @@ static void
 gtk_xine_realize (GtkWidget * widget)
 {
     /*
-     * GdkWindowAttr attributes; 
+     * GdkWindowAttr attributes;
      */
     /*
-     * gint          attributes_mask; 
+     * gint          attributes_mask;
      */
     GtkXine *this;
     XGCValues values;
@@ -405,7 +405,7 @@ gtk_xine_realize (GtkWidget * widget)
     this = GTK_XINE (widget);
 
     /*
-     * set realized flag 
+     * set realized flag
      */
 
     GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
@@ -556,7 +556,7 @@ gtk_xine_unrealize (GtkWidget * widget)
     this = GTK_XINE (widget);
 
     /*
-     * stop the playback 
+     * stop the playback
      */
     xine_close (this->stream);
     xine_event_dispose_queue (this->event_queue);
@@ -564,12 +564,12 @@ gtk_xine_unrealize (GtkWidget * widget)
     this->stream = NULL;
 
     /*
-     * stop event thread 
+     * stop event thread
      */
     pthread_cancel (this->thread);
 
     /*
-     * kill the drivers 
+     * kill the drivers
      */
     if (this->vo_driver != NULL)
 	xine_close_video_driver (this->xine, this->vo_driver);
@@ -577,13 +577,13 @@ gtk_xine_unrealize (GtkWidget * widget)
 	xine_close_audio_driver (this->xine, this->ao_driver);
 
     /*
-     * save configuration 
+     * save configuration
      */
     printf ("gtkxine: saving configuration...\n");
     xine_config_save (this->xine, this->configfile);
 
     /*
-     * exit xine 
+     * exit xine
      */
     xine_exit (this->xine);
     this->xine = NULL;
@@ -593,7 +593,7 @@ gtk_xine_unrealize (GtkWidget * widget)
 					  G_CALLBACK (configure_cb), this);
 
     /*
-     * Hide all windows 
+     * Hide all windows
      */
 
     if (GTK_WIDGET_MAPPED (widget))
@@ -602,7 +602,7 @@ gtk_xine_unrealize (GtkWidget * widget)
     GTK_WIDGET_UNSET_FLAGS (widget, GTK_MAPPED);
 
     /*
-     * this destroys widget->window and unsets the realized flag 
+     * this destroys widget->window and unsets the realized flag
      */
     if (GTK_WIDGET_CLASS (parent_class)->unrealize)
 	(*GTK_WIDGET_CLASS (parent_class)->unrealize) (widget);
@@ -620,7 +620,7 @@ static  gint
 gtk_xine_expose (GtkWidget * widget, GdkEventExpose * event)
 {
     /*
-     * GtkXine *this = GTK_XINE (widget);  
+     * GtkXine *this = GTK_XINE (widget);
      */
 
     return TRUE;
@@ -892,14 +892,14 @@ gtk_xine_set_fullscreen (GtkXine * gtx, gint fullscreen)
 		      StructureNotifyMask | ExposureMask | FocusChangeMask);
 
 	/*
-	 * Map window. 
+	 * Map window.
 	 */
 	XMapRaised (gtx->display, gtx->fullscreen_window);
 
 	XFlush (gtx->display);
 
 	/*
-	 * Wait for map. 
+	 * Wait for map.
 	 */
 
 	do
@@ -1257,10 +1257,10 @@ gtk_xine_get_current_frame_rgb (GtkXine * gtx, gint * width_ret,
     }
 
     /*
-     * the dxr3 driver does not allocate yuv buffers 
+     * the dxr3 driver does not allocate yuv buffers
      */
     /*
-     * image->u and image->v are always 0 for YUY2 
+     * image->u and image->v are always 0 for YUY2
      */
     if (!image->img)
     {
@@ -1726,14 +1726,14 @@ scale_image (struct prvt_image_s *image)
     gint    step = 1;		/* unused variable for the scale functions */
 
     /*
-     * pointers for post-scaled line buffer 
+     * pointers for post-scaled line buffer
      */
     guchar *n_y;
     guchar *n_u;
     guchar *n_v;
 
     /*
-     * pointers into pre-scaled line buffers 
+     * pointers into pre-scaled line buffers
      */
     guchar *oy = image->y;
     guchar *ou = image->u;
@@ -1743,28 +1743,28 @@ scale_image (struct prvt_image_s *image)
     guchar *ov_p = image->v;
 
     /*
-     * pointers into post-scaled line buffers 
+     * pointers into post-scaled line buffers
      */
     guchar *ny_p;
     guchar *nu_p;
     guchar *nv_p;
 
     /*
-     * old line widths 
+     * old line widths
      */
     gint    oy_width = image->width;
     gint    ou_width = image->u_width;
     gint    ov_width = image->v_width;
 
     /*
-     * new line widths NB scale factor is factored by 32768 for rounding 
+     * new line widths NB scale factor is factored by 32768 for rounding
      */
     gint    ny_width = (oy_width * image->scale_factor) / 32768;
     gint    nu_width = (ou_width * image->scale_factor) / 32768;
     gint    nv_width = (ov_width * image->scale_factor) / 32768;
 
     /*
-     * allocate new buffer space space for post-scaled line buffers 
+     * allocate new buffer space space for post-scaled line buffers
      */
     n_y = g_malloc (ny_width * image->height);
     if (!n_y)
@@ -1777,14 +1777,14 @@ scale_image (struct prvt_image_s *image)
 	return 0;
 
     /*
-     * set post-scaled line buffer progress pointers 
+     * set post-scaled line buffer progress pointers
      */
     ny_p = n_y;
     nu_p = n_u;
     nv_p = n_v;
 
     /*
-     * Do the scaling 
+     * Do the scaling
      */
 
     for (i = 0; i < image->height; ++i)
@@ -1809,7 +1809,7 @@ scale_image (struct prvt_image_s *image)
     }
 
     /*
-     * switch to post-scaled data and widths 
+     * switch to post-scaled data and widths
      */
     image->y = n_y;
     image->u = n_u;
@@ -1835,7 +1835,7 @@ scale_image (struct prvt_image_s *image)
  *  Copyright (C) Thomas ��streich - June 2001
  *
  *  Thanks Thomas
- *      
+ *
  */
 static void
 yuy2toyv12 (struct prvt_image_s *image)
@@ -1843,7 +1843,7 @@ yuy2toyv12 (struct prvt_image_s *image)
     gint    i, j, w2;
 
     /*
-     * I420 
+     * I420
      */
     guchar *y = image->y;
     guchar *u = image->u;
@@ -1861,7 +1861,7 @@ yuy2toyv12 (struct prvt_image_s *image)
 	for (j = 0; j < w2; j++)
 	{
 	    /*
-	     * packed YUV 422 is: Y[i] U[i] Y[i+1] V[i] 
+	     * packed YUV 422 is: Y[i] U[i] Y[i+1] V[i]
 	     */
 	    *(y++) = *(input++);
 	    *(u++) = *(input++);
@@ -1870,13 +1870,13 @@ yuy2toyv12 (struct prvt_image_s *image)
 	}
 
 	/*
-	 * down sampling 
+	 * down sampling
 	 */
 
 	for (j = 0; j < w2; j++)
 	{
 	    /*
-	     * skip every second line for U and V 
+	     * skip every second line for U and V
 	     */
 	    *(y++) = *(input++);
 	    input++;
@@ -1919,10 +1919,10 @@ yuy2_fudge (struct prvt_image_s *image)
     yuy2toyv12 (image);
 
     /*
-     * image->yuy2 = NULL; 
+     * image->yuy2 = NULL;
  *//*
  * * * * * I will use this value as flag
- * * * * * to free yuv data in scale_image () 
+ * * * * * to free yuv data in scale_image ()
  */
 
     return 1;
@@ -1971,7 +1971,7 @@ yv12_2_rgb (struct prvt_image_s *image)
     for (i = 0; i < image->height; ++i)
     {
 	/*
-	 * calculate u & v rows 
+	 * calculate u & v rows
 	 */
 	sub_i_u = ((i * image->u_height) / image->height);
 	sub_i_v = ((i * image->v_height) / image->height);
@@ -1979,14 +1979,14 @@ yv12_2_rgb (struct prvt_image_s *image)
 	for (j = 0; j < image->width; ++j)
 	{
 	    /*
-	     * calculate u & v columns 
+	     * calculate u & v columns
 	     */
 	    sub_j_u = ((j * image->u_width) / image->width);
 	    sub_j_v = ((j * image->v_width) / image->width);
 
 	 /***************************************************
           *
-          *  Colour conversion from 
+          *  Colour conversion from
           *    http://www.inforamp.net/~poynton/notes/colour_and_gamma/ColorFAQ.html#RTFToC30
           *
           *  Thanks to Billy Biggs <vektor@dumbterm.net>
@@ -2061,7 +2061,7 @@ xine_frame_to_rgb (struct prvt_image_s *image)
 
       default:
 	  /*
-	   * the mpeg standard has a few that we don't know about 
+	   * the mpeg standard has a few that we don't know about
 	   */
 	  image->scale_line = scale_line_1_1;
 	  image->scale_factor = (32768 * 1) / 1;
@@ -2108,7 +2108,7 @@ xine_frame_to_rgb (struct prvt_image_s *image)
     rgb = yv12_2_rgb (image);
 
     /*
-     * FIXME 
+     * FIXME
      */
     g_free (image->y);
     g_free (image->u);

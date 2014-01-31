@@ -104,7 +104,7 @@ static ChildContext *gtk_mplayer_get_player_child (GtkMPlayer * player);
 /* MPlayer handling */
 static ChildContext *start_command (GtkMPlayer * player,
 				    /*
-				     * include command string 
+				     * include command string
 				     */
 				    GList * arg_list,
 				    ProcessLineFunc func,
@@ -163,10 +163,10 @@ gtk_mplayer_get_type (void)
 	    (GtkClassInitFunc) gtk_mplayer_class_init,
 	    (GtkObjectInitFunc) gtk_mplayer_init,
 	    /*
-	     * reserved_1 
+	     * reserved_1
 	     */ NULL,
 	    /*
-	     * reserved_2 
+	     * reserved_2
 	     */ NULL,
 	    (GtkClassInitFunc) NULL,
 	};
@@ -223,19 +223,19 @@ gtk_mplayer_class_init (GtkMPlayerClass * class)
 			g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
     /*
-     * object class methods 
+     * object class methods
      */
     object_class->destroy = gtk_mplayer_destroy;
 
     /*
-     * widget class methods 
+     * widget class methods
      */
     widget_class->realize = gtk_mplayer_realize;
     widget_class->unrealize = gtk_mplayer_unrealize;
     widget_class->size_allocate = gtk_mplayer_size_allocate;
 
     /*
-     * mplayer class methods 
+     * mplayer class methods
      */
     class->play = NULL;
     class->stop = NULL;
@@ -291,7 +291,7 @@ gtk_mplayer_destroy (GtkObject * object)
     player->ao = NULL;
 
     /*
-     * FIXME: free player->args 
+     * FIXME: free player->args
      */
 
     if (GTK_OBJECT_CLASS (parent_class)->destroy)
@@ -362,7 +362,7 @@ gtk_mplayer_size_allocate (GtkWidget * widget, GtkAllocation * allocation)
 
     widget->allocation = *allocation;
     /*
-     * FIXME, TODO-1.3: back out the MAX() statements 
+     * FIXME, TODO-1.3: back out the MAX() statements
      */
     widget->allocation.width = MAX (1, widget->allocation.width);
     widget->allocation.height = MAX (1, widget->allocation.height);
@@ -477,7 +477,7 @@ gtk_mplayer_start (GtkMPlayer * player, gfloat pos, gfloat speed)
 	return;
 
     /*
-     * create argument list 
+     * create argument list
      */
     arg_list = g_list_append (arg_list, g_strdup (player->command));
     arg_list = g_list_append (arg_list, g_strdup ("-slave"));
@@ -517,7 +517,7 @@ gtk_mplayer_start (GtkMPlayer * player, gfloat pos, gfloat speed)
     }
 
     /*
-     * pos 
+     * pos
      */
     if (pos > 0.01)
     {
@@ -527,7 +527,7 @@ gtk_mplayer_start (GtkMPlayer * player, gfloat pos, gfloat speed)
     }
 
     /*
-     * speed 
+     * speed
      */
     if (speed < 0.01 && speed > 100.01)
     {
@@ -542,19 +542,19 @@ gtk_mplayer_start (GtkMPlayer * player, gfloat pos, gfloat speed)
     arg_list = g_list_append (arg_list, g_strdup (buf));
 
     /*
-     * FIXME: add player->args 
+     * FIXME: add player->args
      */
 
     arg_list = g_list_append (arg_list, g_strdup (player->filename));
 
     /*
-     * real start 
+     * real start
      */
     context =
 	start_command (player, arg_list, process_line, player, playback_done);
 
     /*
-     * add to hash table 
+     * add to hash table
      */
     if (!player_context_table)
 	player_context_table =
@@ -883,7 +883,7 @@ gtk_mplayer_set_video_out_driver (GtkMPlayer * player,
     list = gtk_mplayer_get_video_out_drivers (player, FALSE);
 
     /*
-     * validate 
+     * validate
      */
     for (node = list; node; node = g_list_next (node))
     {
@@ -917,7 +917,7 @@ gtk_mplayer_set_audio_out_driver (GtkMPlayer * player,
     }
 
     /*
-     * validate 
+     * validate
      */
     for (node = list; node; node = g_list_next (node))
     {
@@ -959,7 +959,7 @@ start_command (GtkMPlayer * player, GList * arg_list,	/* include command */
 	goto ERROR3;
 
     /*
-     * child process 
+     * child process
      */
     if (pid == 0)
     {
@@ -968,7 +968,7 @@ start_command (GtkMPlayer * player, GList * arg_list,	/* include command */
 	gint    i = 0, n_args;
 
 	/*
-	 * set pipe 
+	 * set pipe
 	 */
 	close (out_fd[0]);
 	close (err_fd[0]);
@@ -978,7 +978,7 @@ start_command (GtkMPlayer * player, GList * arg_list,	/* include command */
 	dup2 (in_fd[0], STDIN_FILENO);
 
 	/*
-	 * set args 
+	 * set args
 	 */
 	n_args = g_list_length (arg_list);
 	argv = g_new0 (gchar *, n_args + 1);
@@ -987,7 +987,7 @@ start_command (GtkMPlayer * player, GList * arg_list,	/* include command */
 	argv[i] = NULL;
 
 	/*
-	 * exec 
+	 * exec
 	 */
 	putenv ("LC_ALL=C");
 	execvp (argv[0], argv);
@@ -996,7 +996,7 @@ start_command (GtkMPlayer * player, GList * arg_list,	/* include command */
 
 
     /*
-     * parent process 
+     * parent process
      */
 
     context = g_new0 (ChildContext, 1);
@@ -1023,7 +1023,7 @@ start_command (GtkMPlayer * player, GList * arg_list,	/* include command */
     close (in_fd[0]);
 
     /*
-     * observe output 
+     * observe output
      */
     context->checker_id = gtk_timeout_add (GTK_MPLAYER_REFRESH_RATE,
 					   timeout_check_child, context);
@@ -1148,7 +1148,7 @@ process_output (ChildContext * context)
     gfloat  pos;
 
     /*
-     * stderr 
+     * stderr
      */
     size = context->stderr_size;
 
@@ -1176,7 +1176,7 @@ process_output (ChildContext * context)
     }
 
     /*
-     * stdout 
+     * stdout
      */
     size = context->stdout_size;
 
@@ -1279,7 +1279,7 @@ process_line (ChildContext * context,
 	    const gchar *begin = line + 2, *end;
 
 	    /*
-	     * set status 
+	     * set status
 	     */
 	    if (player->status != GtkMPlayerStatusPlay)
 	    {
@@ -1289,7 +1289,7 @@ process_line (ChildContext * context,
 	    }
 
 	    /*
-	     * get movie position 
+	     * get movie position
 	     */
 	    while (isspace (*begin) && *begin)
 		begin++;
@@ -1365,7 +1365,7 @@ process_line_get_drivers (ChildContext * context,
     str = id_str = g_strdup (line);
 
     /*
-     * get id 
+     * get id
      */
     while (isspace (*id_str) && *id_str)
 	id_str++;
@@ -1382,17 +1382,17 @@ process_line_get_drivers (ChildContext * context,
     *end = '\0';
 
     /*
-     * get name 
+     * get name
      */
     if (exp_str)
     {
 	/*
-	 * exp_str = g_strstrip (exp_str); 
+	 * exp_str = g_strstrip (exp_str);
 	 */
     }
 
     /*
-     * append to list 
+     * append to list
      */
     dcontext->drivers_list = g_list_append (dcontext->drivers_list,
 					    g_strdup (id_str));
