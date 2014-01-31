@@ -45,12 +45,12 @@ static void cb_dirview_rename_dir (void);
 static void cb_dirview_delete_dir (void);
 
 static GtkItemFactoryEntry dirview_popup_items[] = {
-    {N_("/_Refresh"), NULL, cb_dirview_refresh_dir_tree, 0, NULL},
-    {"/---", NULL, NULL, 0, "<Separator>"},
-    {N_("/_Make Directory"), NULL, cb_dirview_mkdir, 0, NULL},
-    {N_("/Re_name Directory"), NULL, cb_dirview_rename_dir, 0, NULL},
-    {N_("/_Delete Directory"), NULL, cb_dirview_delete_dir, 0, NULL},
-    {NULL, NULL, NULL, 0, NULL}
+    {N_("/_Refresh"), NULL, cb_dirview_refresh_dir_tree, 0, NULL, NULL},
+    {"/---", NULL, NULL, 0, "<Separator>", NULL},
+    {N_("/_Make Directory"), NULL, cb_dirview_mkdir, 0, NULL, NULL},
+    {N_("/Re_name Directory"), NULL, cb_dirview_rename_dir, 0, NULL, NULL},
+    {N_("/_Delete Directory"), NULL, cb_dirview_delete_dir, 0, NULL, NULL},
+    {NULL, NULL, NULL, 0, NULL, NULL}
 };
 
 /*
@@ -86,7 +86,7 @@ cb_dirview_button_press_event (GtkWidget * widget, GdkEventButton * event,
 	GtkItemFactory *ifactory;
 	DirTreeNode *dirnode;
 	gint    n_menu_items;
-	gchar  *path, *parent, *node_text;
+	gchar  *path, *parent, *node_text = "";
 	gboolean expanded, is_leaf;
 
 	if (!node)
@@ -226,7 +226,7 @@ static void
 cb_dirview_refresh_dir_tree(GtkToolButton *button, DirView *dv)
 {
     GtkCTreeNode *parent;
-    gchar  *node_text;
+    gchar  *node_text = "";
     gboolean expanded, is_leaf;
 
     browser->last_path = g_string_assign (browser->last_path, "");
