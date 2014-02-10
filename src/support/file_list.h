@@ -16,7 +16,7 @@ typedef struct _FileListNode FileListNode;
 struct _FileListNode
 {
     gchar          *file_name;
-    gint            file_type;
+    gintptr       file_type;
 };
 
 struct _FileList
