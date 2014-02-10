@@ -17,7 +17,7 @@
 int
 main (int argc, char *argv[])
 {
-	gchar *init_path = NULL;
+	const gchar *start_path = NULL;
 	const gchar *helpmsg = "usage: pornview [dir]\0";
 
 	if (argc > 2 ) {
@@ -29,7 +29,7 @@ main (int argc, char *argv[])
 			printf("%s\n", helpmsg);
 			return 0;
 		}
-		init_path = argv[1];
+		start_path = argv[1];
 	}
 
 #ifdef ENABLE_NLS
@@ -47,7 +47,7 @@ main (int argc, char *argv[])
     prefs_load_config ();
     plugin_init ();
 
-    browser_create (init_path);
+    browser_create(start_path);
 
     dock_init ();
     gtk_main ();
