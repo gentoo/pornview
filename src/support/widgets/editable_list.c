@@ -149,32 +149,32 @@ editable_list_init (EditableList * editlist)
 static void
 editable_list_class_init (EditableListClass * klass)
 {
-    GtkObjectClass *object_class;
+    GObjectClass *object_class;
 
-    object_class = (GtkObjectClass *) klass;
-    parent_class = gtk_type_class (gtk_vbox_get_type ());
+    object_class = (GObjectClass *) klass;
+    parent_class = g_type_class_ref (gtk_vbox_get_type ());
 
-    editable_list_signals[LIST_UPDATED_SIGNAL]
+	editable_list_signals[LIST_UPDATED_SIGNAL]
 	= gtk_signal_new ("list-updated",
 			  GTK_RUN_FIRST,
 			  GTK_CLASS_TYPE (object_class),
 			  GTK_SIGNAL_OFFSET (EditableListClass, list_updated),
 			  gtk_signal_default_marshaller, GTK_TYPE_NONE, 0);
 
-    editable_list_signals[EDIT_AREA_SET_DATA_SIGNAL]
+	editable_list_signals[EDIT_AREA_SET_DATA_SIGNAL]
 	= gtk_signal_new ("edit-area-set-data",
 			  GTK_RUN_FIRST,
 			  GTK_CLASS_TYPE (object_class),
 			  GTK_SIGNAL_OFFSET (EditableListClass,
-					     edit_area_set_data),
+						 edit_area_set_data),
 			  gtk_signal_default_marshaller, GTK_TYPE_NONE, 0);
 
-    editable_list_signals[ACTION_CONFIRM_SIGNAL]
+	editable_list_signals[ACTION_CONFIRM_SIGNAL]
 	= gtk_signal_new ("action-confirm",
 			  GTK_RUN_LAST,
 			  GTK_CLASS_TYPE (object_class),
 			  GTK_SIGNAL_OFFSET (EditableListClass,
-					     action_confirm),
+						 action_confirm),
 			  gtk_marshal_NONE__INT_INT_POINTER, GTK_TYPE_NONE, 3,
 			  GTK_TYPE_INT, GTK_TYPE_INT, GTK_TYPE_POINTER);
 
@@ -203,7 +203,7 @@ static void
 free_rowdata (gpointer key, gpointer value, gpointer data)
 {
     EditableList *editlist = data;
-    GtkDestroyNotify destroy;
+    GDestroyNotify destroy;
 
     destroy = g_hash_table_lookup (editlist->rowdata_destroy_fn_table, value);
     if (destroy)
@@ -605,7 +605,7 @@ cb_editlist_add_button (GtkButton * button, gpointer data)
     gint    row;
     gchar **text;
     gpointer rowdata = NULL;
-    GtkDestroyNotify destroy_fn = NULL;
+    GDestroyNotify destroy_fn = NULL;
     gboolean set_rowdata = FALSE;
 
     g_return_if_fail (IS_EDITABLE_LIST (editlist));
@@ -644,7 +644,7 @@ cb_editlist_change_button (GtkButton * button, gpointer data)
     gchar **text;
     gint    i;
     gpointer rowdata = NULL;
-    GtkDestroyNotify destroy_fn = NULL;
+    GDestroyNotify destroy_fn = NULL;
     gboolean set_rowdata = FALSE;
 
     g_return_if_fail (IS_EDITABLE_LIST (editlist));
@@ -1404,7 +1404,7 @@ editable_list_set_row_data (EditableList * editlist, gint row, gpointer data)
 void
 editable_list_set_row_data_full (EditableList * editlist,
 				 gint row,
-				 gpointer data, GtkDestroyNotify destroy_fn)
+				 gpointer data, GDestroyNotify destroy_fn)
 {
     g_return_if_fail (IS_EDITABLE_LIST (editlist));
     g_return_if_fail (row >= 0 && row < editlist->rows);
@@ -1414,7 +1414,7 @@ editable_list_set_row_data_full (EditableList * editlist,
 	GtkTreeView *treeview = GTK_TREE_VIEW (editlist->clist);
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
 	GtkTreeIter iter;
-	GtkDestroyNotify destroy;
+	GDestroyNotify destroy;
 	gboolean success;
 	gpointer rowdata = editable_list_get_row_data (editlist, row);
 
@@ -1509,7 +1509,7 @@ editable_list_set_column_funcs (EditableList * editlist,
 				EditableListSetDataFn set_data_fn,
 				EditableListGetDataFn get_data_fn,
 				EditableListResetFn reset_fn,
-				gpointer coldata, GtkDestroyNotify destroy_fn)
+				gpointer coldata, GDestroyNotify destroy_fn)
 {
     EditableListColumnFuncTable *table;
 

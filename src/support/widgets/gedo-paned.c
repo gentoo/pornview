@@ -269,12 +269,12 @@ gedo_paned_map (GtkWidget * widget)
     paned = GEDO_PANED (widget);
 
     if (paned->child1
-	&& GTK_WIDGET_VISIBLE (paned->child1)
-	&& !GTK_WIDGET_MAPPED (paned->child1))
+	&& gtk_widget_get_visible (paned->child1)
+	&& !gtk_widget_get_mapped (paned->child1))
 	gtk_widget_map (paned->child1);
     if (paned->child2
-	&& GTK_WIDGET_VISIBLE (paned->child2)
-	&& !GTK_WIDGET_MAPPED (paned->child2))
+	&& gtk_widget_get_visible (paned->child2)
+	&& !gtk_widget_get_mapped (paned->child2))
 	gtk_widget_map (paned->child2);
 
     gdk_window_show (widget->window);
@@ -328,7 +328,7 @@ gedo_paned_expose (GtkWidget * widget, GdkEventExpose * event)
     g_return_val_if_fail (GEDO_IS_PANED (widget), FALSE);
     g_return_val_if_fail (event != NULL, FALSE);
 
-    if (GTK_WIDGET_DRAWABLE (widget))
+    if (gtk_widget_is_drawable (widget))
     {
 	paned = GEDO_PANED (widget);
 
@@ -394,12 +394,12 @@ gedo_paned_pack1 (GedoPaned * paned,
 
 	gtk_widget_set_parent (child, GTK_WIDGET (paned));
 
-	if (GTK_WIDGET_REALIZED (child->parent))
+	if (gtk_widget_get_realized(child->parent))
 	    gtk_widget_realize (child);
 
-	if (GTK_WIDGET_VISIBLE (child->parent) && GTK_WIDGET_VISIBLE (child))
+	if (gtk_widget_get_visible(child->parent) && gtk_widget_get_visible(child))
 	{
-	    if (GTK_WIDGET_MAPPED (child->parent))
+	    if (gtk_widget_get_mapped(child->parent))
 		gtk_widget_map (child);
 
 	    gtk_widget_queue_resize (child);
@@ -423,12 +423,12 @@ gedo_paned_pack2 (GedoPaned * paned,
 
 	gtk_widget_set_parent (child, GTK_WIDGET (paned));
 
-	if (GTK_WIDGET_REALIZED (child->parent))
+	if (gtk_widget_get_realized(child->parent))
 	    gtk_widget_realize (child);
 
-	if (GTK_WIDGET_VISIBLE (child->parent) && GTK_WIDGET_VISIBLE (child))
+	if (gtk_widget_get_visible(child->parent) && gtk_widget_get_visible(child))
 	{
-	    if (GTK_WIDGET_MAPPED (child->parent))
+	    if (gtk_widget_get_mapped(child->parent))
 		gtk_widget_map (child);
 
 	    gtk_widget_queue_resize (child);
@@ -464,7 +464,7 @@ gedo_paned_remove (GtkContainer * container, GtkWidget * widget)
     g_return_if_fail (widget != NULL);
 
     paned = GEDO_PANED (container);
-    was_visible = GTK_WIDGET_VISIBLE (widget);
+    was_visible = gtk_widget_get_visible (widget);
 
     if (paned->child1 == widget)
     {
@@ -472,7 +472,7 @@ gedo_paned_remove (GtkContainer * container, GtkWidget * widget)
 
 	paned->child1 = NULL;
 
-	if (was_visible && GTK_WIDGET_VISIBLE (container))
+	if (was_visible && gtk_widget_get_visible (GTK_WIDGET(container)))
 	    gtk_widget_queue_resize (GTK_WIDGET (container));
     }
     else if (paned->child2 == widget)
@@ -481,7 +481,7 @@ gedo_paned_remove (GtkContainer * container, GtkWidget * widget)
 
 	paned->child2 = NULL;
 
-	if (was_visible && GTK_WIDGET_VISIBLE (container))
+	if (was_visible && gtk_widget_get_visible (GTK_WIDGET(container)))
 	    gtk_widget_queue_resize (GTK_WIDGET (container));
     }
 }
@@ -548,7 +548,7 @@ gedo_paned_set_gutter_size (GedoPaned * paned, guint16 size)
 
     paned->gutter_size = size;
 
-    if (GTK_WIDGET_VISIBLE (GTK_WIDGET (paned)))
+    if (gtk_widget_get_visible (GTK_WIDGET (paned)))
 	gtk_widget_queue_resize (GTK_WIDGET (paned));
 }
 
@@ -801,16 +801,16 @@ gedo_paned_motion (GtkWidget * widget, GdkEventMotion * event)
 #else
 
 guint
-gedo_paned_which_hidden (GedoPaned * paned)
+gedo_paned_which_hidden(GedoPaned *paned)
 {
-    if (!GTK_WIDGET_VISIBLE (paned->child1)
-	&& GTK_WIDGET_VISIBLE (paned->child2))
+    if (!gtk_widget_get_visible (gtk_paned_get_child1(paned))
+	&& gtk_widget_get_visible (gtk_paned_get_child2(paned)))
     {
 	return 1;
 
     }
-    else if (GTK_WIDGET_VISIBLE (paned->child1)
-	     && !GTK_WIDGET_VISIBLE (paned->child2))
+    else if (gtk_widget_get_visible (gtk_paned_get_child1(paned))
+	     && !gtk_widget_get_visible (gtk_paned_get_child2(paned)))
     {
 	return 2;
 

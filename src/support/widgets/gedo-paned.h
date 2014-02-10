@@ -21,7 +21,7 @@
 #endif
 
 #include <gdk/gdk.h>
-#include <gtk/gtkcontainer.h>
+#include <gtk/gtk.h>
 
 #ifdef __cplusplus
 extern          "C"
