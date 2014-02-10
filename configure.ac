@@ -84,7 +84,6 @@ AC_SUBST([GTK_CFLAGS])
 AC_SUBST([GTK_LIBS])
 AC_DEFINE([USE_GTK2], [1], [use GTK2])
 AC_DEFINE([USE_NORMAL_PANED], [1], [use normal paned])
-AC_DEFINE([ENABLE_TREEVIEW], [1], [enable treeview])
 
 enable_normal_paned=no
 AC_ARG_WITH([normal-paned],

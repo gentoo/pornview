@@ -23,7 +23,6 @@
 
 CommentView *commentview = NULL;
 
-#ifdef ENABLE_TREEVIEW
 typedef enum
 {
     COLUMN_TERMINATOR = -1,
@@ -33,7 +32,6 @@ typedef enum
     N_COLUMN
 }
 ListStoreColumn;
-#endif /* ENABLE_TREEVIEW */
 
 static void comment_view_set_sensitive (CommentView * cv);
 static void comment_view_set_combo_list (CommentView * cv);
@@ -90,7 +88,6 @@ cb_del_value_button_pressed (GtkButton * button, CommentView * cv)
 
     g_return_if_fail (cv);
 
-#ifdef ENABLE_TREEVIEW
     {
 	GtkTreeView *treeview = GTK_TREE_VIEW (cv->comment_clist);
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (treeview);
@@ -106,15 +103,6 @@ cb_del_value_button_pressed (GtkButton * button, CommentView * cv)
 			    COLUMN_RAW_ENTRY, &entry, COLUMN_TERMINATOR);
 	gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
     }
-#else /* ENABLE_TREEVIEW */
-    if (cv->selected_row < 0)
-	return;
-    g_return_if_fail (cv->selected_row < GTK_CLIST (cv->comment_clist)->rows);
-
-    entry = gtk_clist_get_row_data (GTK_CLIST (cv->comment_clist),
-				    cv->selected_row);
-    gtk_clist_remove (GTK_CLIST (cv->comment_clist), cv->selected_row);
-#endif /* ENABLE_TREEVIEW */
 
     if (entry)
 	comment_data_entry_remove (cv->comment, entry);
@@ -203,7 +191,6 @@ cb_destroyed (GtkWidget * widget, CommentView * cv)
     g_free (cv);
 }
 
-#ifdef ENABLE_TREEVIEW
 static void
 cb_tree_view_cursor_changed (GtkTreeView * treeview, CommentView * cv)
 {
@@ -240,95 +227,6 @@ cb_tree_view_cursor_changed (GtkTreeView * treeview, CommentView * cv)
     comment_view_set_sensitive (cv);
 }
 
-#else /* ENABLE_TREEVIEW */
-
-static void
-cb_clist_select_row (GtkCList * clist, gint row, gint col,
-		     GdkEventButton * event, CommentView * cv)
-{
-    gchar  *text[2] = { NULL, NULL };
-    gboolean success1, success2;
-
-    g_return_if_fail (cv);
-
-    cv->selected_row = row;
-
-    success1 = gtk_clist_get_text (clist, row, 0, &text[0]);
-    success2 = gtk_clist_get_text (clist, row, 1, &text[1]);
-
-    if (success1 && text[0])
-    {
-	gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (cv->key_combo)->entry),
-			    text[0]);
-    }
-
-    if (success2)
-    {
-	gtk_entry_set_text (GTK_ENTRY (cv->value_entry), text[1]);
-    }
-    else
-    {
-	gtk_entry_set_text (GTK_ENTRY (cv->value_entry), "\0");
-    }
-
-    comment_view_set_sensitive (cv);
-}
-
-static void
-cb_clist_unselect_row (GtkCList * clist, gint row, gint col,
-		       GdkEventButton * event, CommentView * cv)
-{
-    g_return_if_fail (cv);
-
-    cv->selected_row = -1;
-
-    comment_view_set_sensitive (cv);
-}
-
-void
-cb_clist_row_move (GtkCList * clist, gint arg1, gint arg2, CommentView * cv)
-{
-    CommentDataEntry *entry1, *entry2, *tmpentry;
-    GList  *node1, *node2;
-    gint    pos1, pos2, tmppos;
-
-    g_return_if_fail (clist && GTK_IS_CLIST (clist));
-    g_return_if_fail (cv);
-    g_return_if_fail (cv->comment);
-
-    entry1 = gtk_clist_get_row_data (clist, arg1);
-    entry2 = gtk_clist_get_row_data (clist, arg2);
-
-    g_return_if_fail (entry1 && entry2);
-
-    node1 = g_list_find (cv->comment->data_list, entry1);
-    node2 = g_list_find (cv->comment->data_list, entry2);
-    g_return_if_fail (node1 && node2);
-
-    pos1 = g_list_position (cv->comment->data_list, node1);
-    pos2 = g_list_position (cv->comment->data_list, node2);
-
-    /*
-     * swap data position in the list
-     */
-    if (pos1 > pos2)
-    {
-	tmppos = pos1;
-	pos1 = pos2;
-	pos2 = tmppos;
-	tmpentry = entry1;
-	entry1 = entry2;
-	entry2 = tmpentry;
-    }
-    cv->comment->data_list = g_list_remove (cv->comment->data_list, entry1);
-    cv->comment->data_list = g_list_remove (cv->comment->data_list, entry2);
-    cv->comment->data_list =
-	g_list_insert (cv->comment->data_list, entry2, pos1);
-    cv->comment->data_list =
-	g_list_insert (cv->comment->data_list, entry1, pos2);
-}
-#endif /* ENABLE_TREEVIEW */
-
 static void
 cb_entry_changed (GtkEditable * entry, CommentView * cv)
 {
@@ -358,7 +256,6 @@ cb_combo_select (GtkWidget * label, CommentView * cv)
     cv->selected_item = label;
     clist = cv->comment_clist;
 
-#ifdef ENABLE_TREEVIEW
     {
 	GtkTreeView *treeview = GTK_TREE_VIEW (clist);
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
@@ -389,29 +286,6 @@ cb_combo_select (GtkWidget * label, CommentView * cv)
 	    }
 	}
     }
-#else /* ENABLE_TREEVIEW */
-    {
-	gint    row;
-
-	for (row = 0; row < GTK_CLIST (clist)->rows; row++)
-	{
-	    CommentDataEntry *entry;
-
-	    entry = gtk_clist_get_row_data (GTK_CLIST (clist), row);
-	    if (!entry)
-		continue;
-
-	    if (entry->key && !strcmp (key, entry->key))
-	    {
-		gtk_clist_select_row (GTK_CLIST (clist), row, 0);
-		/*
-		 * gtk_clist_moveto (GTK_CLIST (clist), row, 0, 0.0, 0.0);
-		 */
-		break;
-	    }
-	}
-    }
-#endif /* ENABLE_TREEVIEW */
 }
 
 static void
@@ -499,7 +373,6 @@ create_data_page (CommentView * cv)
 				    GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
     gtk_box_pack_start (GTK_BOX (vbox), scrolledwin, TRUE, TRUE, 0);
 
-#ifdef ENABLE_TREEVIEW
     {
 	GtkListStore *store;
 	GtkTreeViewColumn *col;
@@ -540,25 +413,6 @@ create_data_page (CommentView * cv)
 
 	gtk_container_add (GTK_CONTAINER (scrolledwin), clist);
     }
-#else /* ENABLE_TREEVIEW */
-    clist = cv->comment_clist = gtk_clist_new_with_titles (2, titles);
-    gtk_clist_set_selection_mode (GTK_CLIST (clist), GTK_SELECTION_SINGLE);
-    /*
-     * gtk_clist_set_column_width (GTK_CLIST(clist), 0, 80);
-     */
-    gtk_clist_set_column_auto_resize (GTK_CLIST (clist), 0, TRUE);
-    gtk_clist_set_column_auto_resize (GTK_CLIST (clist), 1, TRUE);
-    gtk_clist_set_reorderable (GTK_CLIST (clist), TRUE);
-    gtk_clist_set_use_drag_icons (GTK_CLIST (clist), FALSE);
-    gtk_container_add (GTK_CONTAINER (scrolledwin), clist);
-
-    gtk_signal_connect (GTK_OBJECT (clist), "select_row",
-			GTK_SIGNAL_FUNC (cb_clist_select_row), cv);
-    gtk_signal_connect (GTK_OBJECT (clist), "unselect_row",
-			GTK_SIGNAL_FUNC (cb_clist_unselect_row), cv);
-    gtk_signal_connect (GTK_OBJECT (clist), "row-move",
-			GTK_SIGNAL_FUNC (cb_clist_row_move), cv);
-#endif /* ENABLE_TREEVIEW */
 
     /*
      * entry area
@@ -711,7 +565,6 @@ comment_view_set_sensitive (CommentView * cv)
 	comment_view_set_sensitive_all (cv, TRUE);
     }
 
-#ifdef ENABLE_TREEVIEW
     {
 	GtkTreeView *treeview = GTK_TREE_VIEW (cv->comment_clist);
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (treeview);
@@ -720,10 +573,6 @@ comment_view_set_sensitive (CommentView * cv)
 
 	selected = gtk_tree_selection_get_selected (selection, &model, &iter);
     }
-#else /* ENABLE_TREEVIEW */
-    if (cv->selected_row >= 0)
-	selected = TRUE;
-#endif /* ENABLE_TREEVIEW */
 
     if (selected)
     {
@@ -826,7 +675,6 @@ comment_view_data_enter (CommentView * cv)
 
     g_return_if_fail (entry);
 
-#ifdef ENABLE_TREEVIEW
     {
 	GtkTreeView *treeview = GTK_TREE_VIEW (cv->comment_clist);
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
@@ -856,27 +704,6 @@ comment_view_data_enter (CommentView * cv)
 			    COLUMN_VALUE, text[1],
 			    COLUMN_RAW_ENTRY, entry, COLUMN_TERMINATOR);
     }
-#else /* ENABLE_TREEVIEW */
-    {
-	GtkCList *clist = GTK_CLIST (cv->comment_clist);
-	gint    row = gtk_clist_find_row_from_data (clist, entry);
-
-	text[0] = entry->display_name;
-	text[1] = entry->value;
-	if (!entry->userdef)
-	    text[0] = _(text[0]);
-
-	if (row < 0)
-	{
-	    row = gtk_clist_append (clist, text);
-	    gtk_clist_set_row_data (clist, row, entry);
-	}
-	else
-	{
-	    gtk_clist_set_text (clist, row, 1, text[1]);
-	}
-    }
-#endif /* ENABLE_TREEVIEW */
 
     comment_view_set_sensitive (cv);
 }
@@ -907,7 +734,6 @@ comment_view_reset_data (CommentView * cv)
 	    text[0] = _(entry->display_name);
 	    text[1] = entry->value;
 
-#ifdef ENABLE_TREEVIEW
 	    {
 		GtkTreeModel *model;
 		GtkTreeIter iter;
@@ -921,14 +747,6 @@ comment_view_reset_data (CommentView * cv)
 				    COLUMN_RAW_ENTRY, entry,
 				    COLUMN_TERMINATOR);
 	    }
-#else /* ENABLE_TREEVIEW */
-	    {
-		gint    row;
-		row = gtk_clist_append (GTK_CLIST (cv->comment_clist), text);
-		gtk_clist_set_row_data (GTK_CLIST (cv->comment_clist),
-					row, entry);
-	    }
-#endif /* ENABLE_TREEVIEW */
 	}
 
 	if (cv->comment->note && *cv->comment->note)
@@ -954,21 +772,11 @@ comment_view_clear_data (CommentView * cv)
 {
     g_return_if_fail (cv);
 
-#ifdef ENABLE_TREEVIEW
     {
 	GtkTreeModel *model
 	    = gtk_tree_view_get_model (GTK_TREE_VIEW (cv->comment_clist));
 	gtk_list_store_clear (GTK_LIST_STORE (model));
     }
-#else /* ENABLE_TREEVIEW */
-    {
-	gint    i;
-	for (i = GTK_CLIST (cv->comment_clist)->rows - 1; i >= 0; i--)
-	{
-	    gtk_clist_remove (GTK_CLIST (cv->comment_clist), i);
-	}
-    }
-#endif /* ENABLE_TREEVIEW */
 
     gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (cv->key_combo)->entry), "\0");
     gtk_entry_set_text (GTK_ENTRY (cv->value_entry), "\0");

@@ -532,7 +532,6 @@ cb_editlist_change_button (GtkButton * button, gpointer data)
 					     EDITABLE_LIST_ACTION_CHANGE);
     g_return_if_fail (text);
 
-#ifdef ENABLE_TREEVIEW
     {
 	GtkTreeView *treeview = GTK_TREE_VIEW (editlist->clist);
 	GtkTreeModel *model;
@@ -554,16 +553,6 @@ cb_editlist_change_button (GtkButton * button, gpointer data)
 				-1);
 	}
     }
-#else /* ENABLE_TREEVIEW */
-    {
-	GtkCList *clist = GTK_CLIST (editlist->clist);
-
-	for (i = 0; i < editlist->columns; i++)
-	{
-	    gtk_clist_set_text (clist, editlist->selected, i, text[i]);
-	}
-    }
-#endif /* ENABLE_TREEVIEW */
 
     g_strfreev (text);
 
