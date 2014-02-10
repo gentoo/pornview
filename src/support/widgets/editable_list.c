@@ -33,8 +33,6 @@ enum
 };
 
 
-#if (GTK_MAJOR_VERSION >= 2)
-
 #include <gobject/gvaluecollector.h>
 
 #define list_widget_get_row_num(widget) \
@@ -43,12 +41,6 @@ enum
 #define ROWDATA(columns)     columns
 #define ROWDESTROY(columns)  columns + 1
 #define ALL_COLUMNS(columns) columns + 2
-
-#else /* (GTK_MAJOR_VERSION >= 2) */
-
-#define list_widget_get_row_num(widget) GTK_CLIST (widget)->rows;
-
-#endif /* (GTK_MAJOR_VERSION >= 2) */
 
 
 static void editable_list_init (EditableList * editlist);
@@ -73,7 +65,6 @@ editable_list_get_type (void)
 {
     static guint editable_list_type = 0;
 
-#if (GTK_MAJOR_VERSION >= 2)
     if (!editable_list_type)
     {
 	static const GTypeInfo editable_list_info = {
@@ -92,24 +83,6 @@ editable_list_get_type (void)
 						     "EditableList",
 						     &editable_list_info, 0);
     }
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    if (!editable_list_type)
-    {
-	static const GtkTypeInfo editable_list_info = {
-	    "EditableList",
-	    sizeof (EditableList),
-	    sizeof (EditableListClass),
-	    (GtkClassInitFunc) editable_list_class_init,
-	    (GtkObjectInitFunc) editable_list_init,
-	    NULL,
-	    NULL,
-	    (GtkClassInitFunc) NULL,
-	};
-
-	editable_list_type = gtk_type_unique (gtk_vbox_get_type (),
-					      &editable_list_info);
-    }
-#endif /* (GTK_MAJOR_VERSION >= 2) */
 
     return editable_list_type;
 }
@@ -138,12 +111,10 @@ editable_list_init (EditableList * editlist)
     editlist->column_func_tables = NULL;
     editlist->get_rowdata_fn = NULL;
 
-#if (GTK_MAJOR_VERSION >= 2)
     editlist->rowdata_table
 	= g_hash_table_new (g_direct_hash, g_direct_equal);
     editlist->rowdata_destroy_fn_table
 	= g_hash_table_new (g_direct_hash, g_direct_equal);
-#endif /* (GTK_MAJOR_VERSION >= 2) */
 }
 
 static void
@@ -198,7 +169,6 @@ editable_list_updated (EditableList * editlist)
  *  Object class functions.
  *
  *******************************************************************************/
-#if (GTK_MAJOR_VERSION >= 2)
 static void
 free_rowdata (gpointer key, gpointer value, gpointer data)
 {
@@ -209,7 +179,6 @@ free_rowdata (gpointer key, gpointer value, gpointer data)
     if (destroy)
 	destroy (value);
 }
-#endif /* (GTK_MAJOR_VERSION >= 2) */
 
 static void
 editable_list_finalize (GObject * object)
@@ -232,11 +201,9 @@ editable_list_finalize (GObject * object)
     g_free (editlist->column_func_tables);
     editlist->column_func_tables = NULL;
 
-#if (GTK_MAJOR_VERSION >= 2)
     g_hash_table_foreach (editlist->rowdata_table, free_rowdata, editlist);
     g_hash_table_destroy (editlist->rowdata_table);
     g_hash_table_destroy (editlist->rowdata_destroy_fn_table);
-#endif /* (GTK_MAJOR_VERSION >= 2) */
 
     OBJECT_CLASS_FINALIZE_SUPER (parent_class, object);
 }
@@ -246,7 +213,6 @@ editable_list_finalize (GObject * object)
  *  Callback functions for child widget.
  *
  *******************************************************************************/
-#if (GTK_MAJOR_VERSION >= 2)
 
 static void
 cb_editlist_cursor_changed (GtkTreeView * treeview, gpointer data)
@@ -316,85 +282,6 @@ cb_editlist_row_deleted (GtkTreeModel * model,
     editable_list_set_sensitive (editlist);
 }
 
-#else /* (GTK_MAJOR_VERSION >=2) */
-
-static void
-cb_editlist_select_row (GtkCList * clist, gint row, gint col,
-			GdkEventButton * event, gpointer data)
-{
-    EditableList *editlist = data;
-
-    editlist->selected = row;
-
-    editable_list_edit_area_set_data (editlist, row);
-
-    editable_list_set_sensitive (editlist);
-}
-
-static void
-cb_editlist_unselect_row (GtkCList * clist, gint row, gint col,
-			  GdkEventButton * event, gpointer data)
-{
-    EditableList *editlist = data;
-
-    editlist->selected = -1;
-
-    editable_list_edit_area_set_data (editlist, -1);
-
-    editable_list_set_sensitive (editlist);
-}
-
-gint
-idle_editlist_row_move (gpointer data)
-{
-    EditableList *editlist = data;
-
-    editable_list_updated (editlist);
-    editable_list_set_sensitive (editlist);
-
-    return FALSE;
-}
-
-static void
-cb_editlist_row_move (GtkCList * clist, gint arg1, gint arg2, gpointer data)
-{
-    EditableList *editlist = data;
-    gint    src, dest = editlist->dest_row;
-    gint    selected = editlist->selected;
-
-    if (editlist->dest_row >= 0)
-    {
-	dest = editlist->dest_row;
-	src = arg1 == dest ? arg2 : arg1;
-    }
-    else
-    {
-	src = arg1;
-	dest = arg2;
-    }
-
-    if (selected >= 0)
-    {
-	if (selected == src)
-	{
-	    editlist->selected = dest;
-	}
-	else if (selected >= MIN (src, dest) && selected <= MAX (src, dest))
-	{
-	    if (src < dest)
-		editlist->selected--;
-	    else
-		editlist->selected++;
-	}
-    }
-
-    editlist->dest_row = -1;
-
-    gtk_idle_add (idle_editlist_row_move, editlist);
-}
-
-#endif /* (GTK_MAJOR_VERSION >=2) */
-
 static void
 cb_editlist_up_button (GtkButton * button, gpointer data)
 {
@@ -410,7 +297,6 @@ cb_editlist_up_button (GtkButton * button, gpointer data)
 
     editlist->dest_row = editlist->selected - 1;
 
-#if (GTK_MAJOR_VERSION >= 2)
     {
 	GtkTreeView *treeview = GTK_TREE_VIEW (editlist->clist);
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
@@ -482,13 +368,6 @@ cb_editlist_up_button (GtkButton * button, gpointer data)
 	 */
 	gtk_tree_path_free (treepath);
     }
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    {
-	gtk_clist_swap_rows (GTK_CLIST (editlist->clist), selected,
-			     selected - 1);
-	gtk_clist_moveto (GTK_CLIST (editlist->clist), selected - 1, 0, 0, 0);
-    }
-#endif /* (GTK_MAJOR_VERSION >= 2) */
 }
 
 static void
@@ -505,7 +384,6 @@ cb_editlist_down_button (GtkButton * button, gpointer data)
 
     editlist->dest_row = editlist->selected + 1;
 
-#if (GTK_MAJOR_VERSION >= 2)
     {
 	GtkTreeView *treeview = GTK_TREE_VIEW (editlist->clist);
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
@@ -572,13 +450,6 @@ cb_editlist_down_button (GtkButton * button, gpointer data)
 	 */
 	gtk_tree_path_free (treepath);
     }
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    {
-	gtk_clist_swap_rows (GTK_CLIST (editlist->clist), selected,
-			     selected + 1);
-	gtk_clist_moveto (GTK_CLIST (editlist->clist), selected + 1, 0, 0, 0);
-    }
-#endif /* (GTK_MAJOR_VERSION >= 2) */
 }
 
 static void
@@ -781,7 +652,6 @@ static GtkWidget *
 editable_list_create_list_widget (EditableList * editlist, gint colnum)
 {
     GtkWidget *clist;
-#if (GTK_MAJOR_VERSION >= 2)
     GtkListStore *store;
     GtkTreeViewColumn *col;
     GtkCellRenderer *render;
@@ -821,18 +691,7 @@ editable_list_create_list_widget (EditableList * editlist, gint colnum)
 	gtk_tree_view_column_add_attribute (col, render, "text", i);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (clist), col);
     }
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    clist = editlist->clist = gtk_clist_new (colnum);
-    gtk_clist_set_selection_mode (GTK_CLIST (clist), GTK_SELECTION_SINGLE);
-    gtk_clist_set_reorderable (GTK_CLIST (clist), TRUE);
-    gtk_clist_set_use_drag_icons (GTK_CLIST (clist), FALSE);
-    gtk_signal_connect (GTK_OBJECT (clist), "row_move",
-			GTK_SIGNAL_FUNC (cb_editlist_row_move), editlist);
-    gtk_signal_connect (GTK_OBJECT (editlist->clist), "select_row",
-			GTK_SIGNAL_FUNC (cb_editlist_select_row), editlist);
-    gtk_signal_connect (GTK_OBJECT (editlist->clist), "unselect_row",
-			GTK_SIGNAL_FUNC (cb_editlist_unselect_row), editlist);
-#endif /* (GTK_MAJOR_VERSION >= 2) */
+
     editlist->columns = colnum;
     return clist;
 }
@@ -871,7 +730,6 @@ editable_list_edit_area_set_data (EditableList * editlist, gint row)
 	    continue;
 	if (row >= 0)
 	{
-#if (GTK_MAJOR_VERSION >= 2)
 	    GtkTreeView *treeview = GTK_TREE_VIEW (editlist->clist);
 	    GtkTreeModel *model = gtk_tree_view_get_model (treeview);
 	    GtkTreeIter iter;
@@ -881,11 +739,6 @@ editable_list_edit_area_set_data (EditableList * editlist, gint row)
 	    {
 		gtk_tree_model_get (model, &iter, i, &text, -1);
 	    }
-#else /* (GTK_MAJOR_VERSION >= 2) */
-	    gtk_clist_get_text (GTK_CLIST (editlist->clist), row, i, &text);
-	    if (text)
-		text = g_strdup (text);
-#endif /* (GTK_MAJOR_VERSION >= 2) */
 	}
 
 	table->set_data_fn (editlist, table->widget, row, i,
@@ -975,11 +828,7 @@ editable_list_new (gint colnum)
 
     g_return_val_if_fail (colnum > 0, NULL);
 
-#if (GTK_MAJOR_VERSION >= 2)
     editlist = g_object_new (editable_list_get_type (), NULL);
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    editlist = gtk_type_new (editable_list_get_type ());
-#endif /* (GTK_MAJOR_VERSION >= 2) */
     main_vbox = GTK_WIDGET (editlist);
     /*
      * clist
@@ -1061,7 +910,6 @@ editable_list_new (gint colnum)
     button = editlist->del_button = gtk_button_new_with_label (_("Delete"));
     gtk_box_pack_start (GTK_BOX (hbox1), button, FALSE, TRUE, 2);
     gtk_widget_show (button);
-#if (GTK_MAJOR_VERSION >= 2)
 #ifdef USE_ARROW
     gtk_widget_set_size_request (editlist->up_button, 20, 20);
     gtk_widget_set_size_request (editlist->down_button, 20, 20);
@@ -1079,27 +927,7 @@ editable_list_new (gint colnum)
 		      G_CALLBACK (cb_editlist_change_button), editlist);
     g_signal_connect (G_OBJECT (editlist->del_button), "clicked",
 		      G_CALLBACK (cb_editlist_delete_button), editlist);
-#else /* (GTK_MAJOR_VERSION >= 2) */
-#ifdef USE_ARROW
-    gtk_widget_set_usize (editlist->up_button, 20, 20);
-    gtk_widget_set_usize (editlist->down_button, 20, 20);
-#endif /* USE_ARROW */
-    gtk_widget_set_usize (editlist->new_button, 70, -1);
-    gtk_signal_connect (GTK_OBJECT (editlist->up_button), "clicked",
-			GTK_SIGNAL_FUNC (cb_editlist_up_button), editlist);
-    gtk_signal_connect (GTK_OBJECT (editlist->down_button), "clicked",
-			GTK_SIGNAL_FUNC (cb_editlist_down_button), editlist);
-    gtk_signal_connect (GTK_OBJECT (editlist->new_button), "clicked",
-			GTK_SIGNAL_FUNC (cb_editlist_new_button), editlist);
-    gtk_signal_connect (GTK_OBJECT (editlist->add_button), "clicked",
-			GTK_SIGNAL_FUNC (cb_editlist_add_button), editlist);
-    gtk_signal_connect (GTK_OBJECT (editlist->change_button), "clicked",
-			GTK_SIGNAL_FUNC (cb_editlist_change_button),
-			editlist);
-    gtk_signal_connect (GTK_OBJECT (editlist->del_button), "clicked",
-			GTK_SIGNAL_FUNC (cb_editlist_delete_button),
-			editlist);
-#endif /* (GTK_MAJOR_VERSION >= 2) */
+
     /*
      * initialize column func tables
      */
@@ -1123,7 +951,6 @@ editable_list_new_with_titles (gint colnum, gchar * titles[])
 
     editlist = EDITABLE_LIST (editable_list_new (colnum));
 
-#if (GTK_MAJOR_VERSION >= 2)
     {
 	GList  *list, *node;
 	list = gtk_tree_view_get_columns (GTK_TREE_VIEW (editlist->clist));
@@ -1134,17 +961,6 @@ editable_list_new_with_titles (gint colnum, gchar * titles[])
 	}
     }
     gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (editlist->clist), TRUE);
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    for (i = 0; i < colnum; i++)
-    {
-	gtk_clist_set_column_title (GTK_CLIST (editlist->clist),
-				    i, titles[i]);
-	gtk_clist_set_column_auto_resize (GTK_CLIST (editlist->clist),
-					  i, TRUE);
-    }
-
-    gtk_clist_column_titles_show (GTK_CLIST (editlist->clist));
-#endif /* (GTK_MAJOR_VERSION >= 2) */
 
     return GTK_WIDGET (editlist);
 }
@@ -1155,15 +971,8 @@ editable_list_set_column_title_visible (EditableList * editlist,
 {
     g_return_if_fail (IS_EDITABLE_LIST (editlist));
 
-#if (GTK_MAJOR_VERSION >= 2)
     gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (editlist->clist),
 				       visible);
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    if (visible)
-	gtk_clist_column_titles_show (GTK_CLIST (editlist->clist));
-    else
-	gtk_clist_column_titles_hide (GTK_CLIST (editlist->clist));
-#endif /* (GTK_MAJOR_VERSION >= 2) */
 }
 
 void
@@ -1171,12 +980,8 @@ editable_list_set_reorderable (EditableList * editlist, gboolean reorderble)
 {
     g_return_if_fail (IS_EDITABLE_LIST (editlist));
 
-#if (GTK_MAJOR_VERSION >= 2)
     gtk_tree_view_set_reorderable (GTK_TREE_VIEW (editlist->clist),
 				   reorderble);
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    gtk_clist_set_reorderable (GTK_CLIST (editlist->clist), reorderble);
-#endif /* (GTK_MAJOR_VERSION >= 2) */
     if (reorderble)
 	gtk_widget_show (editlist->move_button_area);
     else
@@ -1189,7 +994,6 @@ editable_list_set_auto_sort (EditableList * editlist, gint column)
     g_return_if_fail (IS_EDITABLE_LIST (editlist));
     g_return_if_fail (column < editlist->columns);
 
-#if (GTK_MAJOR_VERSION >= 2)
     {
 	GList  *list, *node;
 	list = gtk_tree_view_get_columns (GTK_TREE_VIEW (editlist->clist));
@@ -1212,24 +1016,13 @@ editable_list_set_auto_sort (EditableList * editlist, gint column)
 
 	g_list_free (list);
     }
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    if (column < 0)
-	gtk_clist_set_auto_sort (GTK_CLIST (editlist->clist), FALSE);
-    else
-	gtk_clist_set_auto_sort (GTK_CLIST (editlist->clist), TRUE);
-    gtk_clist_set_sort_column (GTK_CLIST (editlist->clist), column);
-#endif /* (GTK_MAJOR_VERSION >= 2) */
 }
 
 gboolean
 editable_list_get_reorderable (EditableList * editlist)
 {
     g_return_val_if_fail (IS_EDITABLE_LIST (editlist), FALSE);
-#if (GTK_MAJOR_VERSION >= 2)
     return gtk_tree_view_get_reorderable (GTK_TREE_VIEW (editlist->clist));
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    return GTK_CLIST_REORDERABLE (GTK_CLIST (editlist->clist));
-#endif /* (GTK_MAJOR_VERSION >= 2) */
 }
 
 gint
@@ -1241,7 +1034,6 @@ editable_list_append_row (EditableList * editlist, gchar * data[])
     g_return_val_if_fail (editlist->max_row < 0
 			  || editlist->rows <= editlist->max_row, -1);
 
-#if (GTK_MAJOR_VERSION >= 2)
     {
 	GtkTreeView *treeview = GTK_TREE_VIEW (editlist->clist);
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
@@ -1256,10 +1048,6 @@ editable_list_append_row (EditableList * editlist, gchar * data[])
     }
     editlist->rows = list_widget_get_row_num (editlist->clist);
     retval = editlist->rows - 1;
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    retval = gtk_clist_append (GTK_CLIST (editlist->clist), data);
-    editlist->rows = list_widget_get_row_num (editlist->clist);
-#endif /* (GTK_MAJOR_VERSION >= 2) */
     editable_list_set_sensitive (editlist);
     return retval;
 }
@@ -1272,7 +1060,6 @@ editable_list_remove_row (EditableList * editlist, gint row)
 
     editable_list_set_row_data (editlist, row, NULL);
 
-#if (GTK_MAJOR_VERSION >= 2)
     {
 	GtkTreeView *treeview = GTK_TREE_VIEW (editlist->clist);
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
@@ -1286,9 +1073,6 @@ editable_list_remove_row (EditableList * editlist, gint row)
 	    editlist->selected = -1;
 	}
     }
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    gtk_clist_remove (GTK_CLIST (editlist->clist), row);
-#endif /* (GTK_MAJOR_VERSION >= 2) */
     editlist->rows = list_widget_get_row_num (editlist->clist);
     editable_list_updated (editlist);
     editable_list_set_sensitive (editlist);
@@ -1322,7 +1106,6 @@ editable_list_get_row_text (EditableList * editlist, gint row)
 
     text = g_new0 (gchar *, editlist->columns + 1);
 
-#if (GTK_MAJOR_VERSION >= 2)
     {
 	GtkTreeView *treeview = GTK_TREE_VIEW (editlist->clist);
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
@@ -1339,19 +1122,6 @@ editable_list_get_row_text (EditableList * editlist, gint row)
 	}
     }
 
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    for (i = 0; i < editlist->columns; i++)
-    {
-	text[i] = NULL;
-	gtk_clist_get_text (GTK_CLIST (editlist->clist), row, i, &text[i]);
-	if (text[i])
-	    text[i] = g_strdup (text[i]);
-	else
-	    text[i] = g_strdup ("");
-    }
-
-#endif /* (GTK_MAJOR_VERSION >= 2) */
-
     text[editlist->columns] = NULL;
     return text;
 }
@@ -1366,7 +1136,6 @@ editable_list_get_cell_text (EditableList * editlist, gint row, gint col)
     g_return_val_if_fail (editlist->columns > 0, NULL);
     g_return_val_if_fail (col < editlist->columns, NULL);
 
-#if (GTK_MAJOR_VERSION >= 2)
     {
 	GtkTreeView *treeview = GTK_TREE_VIEW (editlist->clist);
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
@@ -1376,18 +1145,6 @@ editable_list_get_cell_text (EditableList * editlist, gint row, gint col)
 	g_return_val_if_fail (success, NULL);
 	gtk_tree_model_get (model, &iter, col, &text, -1);
     }
-
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    {
-	gboolean success;
-	success = gtk_clist_get_text (GTK_CLIST (editlist->clist),
-				      row, col, &text);
-	if (!success)
-	    return NULL;
-	text = g_strdup (text);
-    }
-
-#endif /* (GTK_MAJOR_VERSION >= 2) */
 
     return text;
 }
@@ -1409,7 +1166,6 @@ editable_list_set_row_data_full (EditableList * editlist,
     g_return_if_fail (IS_EDITABLE_LIST (editlist));
     g_return_if_fail (row >= 0 && row < editlist->rows);
 
-#if (GTK_MAJOR_VERSION >= 2)
     {
 	GtkTreeView *treeview = GTK_TREE_VIEW (editlist->clist);
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
@@ -1444,10 +1200,6 @@ editable_list_set_row_data_full (EditableList * editlist,
 				 data, destroy_fn);
 	}
     }
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    gtk_clist_set_row_data_full (GTK_CLIST (editlist->clist), row,
-				 data, destroy_fn);
-#endif /* (GTK_MAJOR_VERSION >= 2) */
     editable_list_updated (editlist);
 }
 
@@ -1457,7 +1209,6 @@ editable_list_get_row_data (EditableList * editlist, gint row)
     g_return_val_if_fail (IS_EDITABLE_LIST (editlist), NULL);
     g_return_val_if_fail (row >= 0 && row < editlist->rows, NULL);
 
-#if (GTK_MAJOR_VERSION >= 2)
     {
 	GtkTreeView *treeview = GTK_TREE_VIEW (editlist->clist);
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
@@ -1471,9 +1222,6 @@ editable_list_get_row_data (EditableList * editlist, gint row)
 			    ROWDATA (editlist->columns), &data, -1);
 	return data;
     }
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    return gtk_clist_get_row_data (GTK_CLIST (editlist->clist), row);
-#endif /* (GTK_MAJOR_VERSION >= 2) */
 }
 
 void
@@ -1481,16 +1229,13 @@ editable_list_unselect_all (EditableList * editlist)
 {
     g_return_if_fail (IS_EDITABLE_LIST (editlist));
 
-#if (GTK_MAJOR_VERSION >= 2)
     {
 	GtkTreeView *treeview = GTK_TREE_VIEW (editlist->clist);
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (treeview);
 	gtk_tree_selection_unselect_all (selection);
 	editlist->selected = -1;
     }
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    gtk_clist_unselect_all (GTK_CLIST (editlist->clist));
-#endif /* (GTK_MAJOR_VERSION >= 2) */
+
     editable_list_set_sensitive (editlist);
 }
 
@@ -1727,19 +1472,11 @@ editable_list_create_entry (EditableList * editlist, gint column,
 				    cb_editlist_entry_get_data,
 				    cb_editlist_entry_reset,
 				    entry_data, editlist_entry_destroy);
-#if (GTK_MAJOR_VERSION >= 2)
     g_signal_connect (G_OBJECT (editlist), "action_confirm",
 		      G_CALLBACK (cb_editlist_entry_confirm), entry_data);
     g_signal_connect (G_OBJECT (entry), "changed",
 		      G_CALLBACK (cb_editlist_entry_changed), entry_data);
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    gtk_signal_connect (GTK_OBJECT (editlist), "action_confirm",
-			GTK_SIGNAL_FUNC (cb_editlist_entry_confirm),
-			entry_data);
-    gtk_signal_connect (GTK_OBJECT (entry), "changed",
-			GTK_SIGNAL_FUNC (cb_editlist_entry_changed),
-			entry_data);
-#endif /* (GTK_MAJOR_VERSION >= 2) */
+
     editable_list_set_sensitive (editlist);
     return entry;
 }
@@ -1867,16 +1604,11 @@ editable_list_create_check_button (EditableList * editlist,
 				    cb_editlist_check_button_reset,
 				    button_data,
 				    editlist_check_button_destroy);
-#if (GTK_MAJOR_VERSION >= 2)
     g_signal_connect (G_OBJECT (check_button), "toggled",
 		      G_CALLBACK (cb_editlist_check_button_toggled),
 		      button_data);
-#else /* (GTK_MAJOR_VERSION >= 2) */
-    gtk_signal_connect (GTK_OBJECT (check_button), "toggled",
-			GTK_SIGNAL_FUNC
-			(cb_editlist_check_button_toggled), button_data);
-#endif /* (GTK_MAJOR_VERSION >= 2) */
-    editable_list_set_sensitive (editlist);
+
+	editable_list_set_sensitive (editlist);
 
     return check_button;
 }
