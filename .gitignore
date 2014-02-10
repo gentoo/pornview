@@ -27,6 +27,7 @@ libtool
 pornview.cbp
 pornview.layout
 ar-lib
+gettextize
 ABOUT-NLS
 po/ChangeLog
 po/Makefile.in.in
@@ -37,8 +38,8 @@ po/stamp-po
 stamp-h1
 
 src/pornview
-src/tags
-src/tags.gtk
+tags
+tags.gtk
 
 *~
 
@@ -47,3 +48,5 @@ src/tags.gtk
 *.la
 *.so
 *.a
+
+.ycm_extra_conf.*
