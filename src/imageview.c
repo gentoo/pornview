@@ -74,7 +74,7 @@ allocate_draw_buffer (ImageView * iv)
 
 	if (fwidth != cwidth || fheight != cheight)
 	{
-	    gdk_pixmap_unref (buffer);
+	    g_object_unref (buffer);
 	    buffer = NULL;
 	    buffer =
 		gdk_pixmap_new (iv->draw_area->window, fwidth, fheight, -1);
@@ -127,8 +127,8 @@ reset_scrollbar (ImageView * iv)
 
     move_scrollbar_by_user = FALSE;
 
-    gtk_signal_emit_by_name (GTK_OBJECT (iv->hadj), "changed");
-    gtk_signal_emit_by_name (GTK_OBJECT (iv->vadj), "changed");
+    g_signal_emit_by_name (G_OBJECT (iv->hadj), "changed");
+    g_signal_emit_by_name (G_OBJECT (iv->vadj), "changed");
 
     move_scrollbar_by_user = TRUE;
 }
@@ -328,10 +328,10 @@ imageview_open_navwin (ImageView * iv, gfloat x_root, gfloat y_root)
     /*
      * free
      */
-    gdk_pixmap_unref (pixmap);
+    g_object_unref (pixmap);
 
   ERROR:
-    gdk_pixbuf_unref (image);
+    g_object_unref (image);
 }
 
 static void
@@ -431,10 +431,10 @@ imageview_calc_image (ImageView * iv, gboolean rotate)
     iv->height = gdk_pixbuf_get_height (imageview->image);
 
     if (imageview->pixmap)
-	gdk_pixmap_unref (imageview->pixmap);
+	g_object_unref (imageview->pixmap);
 
     if (imageview->mask)
-	gdk_bitmap_unref (imageview->mask);
+	g_object_unref (imageview->mask);
 
     imageview->pixmap = NULL;
     imageview->mask = NULL;
@@ -452,7 +452,7 @@ imageview_calc_image (ImageView * iv, gboolean rotate)
 	pixbuf_render_pixmap_and_mask (scale, &(iv->pixmap), &(iv->mask),
 				       conf.image_dithering);
 
-	gdk_pixbuf_unref (scale);
+	g_object_unref (scale);
     }
     else
 	pixbuf_render_pixmap_and_mask (imageview->image, &(iv->pixmap),
@@ -481,14 +481,14 @@ imageview_clear_image (void)
     imageview->image_name = NULL;
 
     if (imageview->image)
-	gdk_pixbuf_unref (imageview->image);
+	g_object_unref (imageview->image);
     imageview->image = NULL;
 
     if (imageview->pixmap)
-	gdk_pixmap_unref (imageview->pixmap);
+	g_object_unref (imageview->pixmap);
 
     if (imageview->mask)
-	gdk_bitmap_unref (imageview->mask);
+	g_object_unref (imageview->mask);
 
     imageview->pixmap = NULL;
     imageview->mask = NULL;
@@ -585,7 +585,7 @@ imageview_set_bg_color (ImageView * iv, gint red, gint green, gint brue)
 	style = gtk_style_copy (gtk_widget_get_style (iv->draw_area));
 	style->bg[GTK_STATE_NORMAL] = *bg_color;
 	gtk_widget_set_style (iv->draw_area, style);
-	gtk_style_unref (style);
+	g_object_unref (style);
     }
 }
 
@@ -605,7 +605,7 @@ destroy_image (CacheImage * im)
 	return;
 
     if (im->image)
-	gdk_pixbuf_unref (im->image);
+	g_object_unref (im->image);
 
     g_free (im);
 }
@@ -651,10 +651,10 @@ render (ImageView * iv)
     iv->image_name = NULL;
 
     if (iv->image)
-	gdk_pixbuf_unref (iv->image);
+	g_object_unref (iv->image);
     iv->image = NULL;
 
-    iv->image = gdk_pixbuf_ref (current_image->image);
+    iv->image = g_object_ref (current_image->image);
     cell = ZLIST_CELL_FROM_INDEX (ZLIST (thumbview->album), iv->f_current);
 
     iv->image_name = g_strdup (cell->name);
@@ -877,9 +877,9 @@ imageview_fullscreen_new (ImageView * iv)
     gtk_widget_set_uposition (iv->fullscreen, 0, 0);
     gtk_widget_set_usize (iv->fullscreen, width, height);
 
-    gtk_signal_connect (GTK_OBJECT (iv->fullscreen),
+    g_signal_connect (G_OBJECT (iv->fullscreen),
 			"motion_notify_event",
-			(GtkSignalFunc) cb_fullscreen_motion_notify, iv);
+			G_CALLBACK(cb_fullscreen_motion_notify), iv);
 
     /*
      * set draw widget
@@ -905,18 +905,18 @@ imageview_fullscreen_new (ImageView * iv)
     previous_image = NULL;
     next_image = NULL;
     current_image = g_malloc (sizeof (CacheImage));
-    current_image->image = gdk_pixbuf_ref (iv->image);
+    current_image->image = g_object_ref (iv->image);
     current_image->width = gdk_pixbuf_get_width (iv->image);
     current_image->height = gdk_pixbuf_get_height (iv->image);
     current_image->number = iv->f_current;
 
-    iv->f_load_timer_id = gtk_timeout_add (100, load_rest, iv);
+    iv->f_load_timer_id = g_timeout_add (100, load_rest, iv);
 
     /*
      * enable auto hide cursor stuff
      */
     iv->hide_cursor_timer_id
-	= gtk_timeout_add (IMGWIN_FULLSCREEN_HIDE_CURSOR_DELAY,
+	= g_timeout_add (IMGWIN_FULLSCREEN_HIDE_CURSOR_DELAY,
 			   timeout_hide_cursor, iv);
 }
 
@@ -968,7 +968,7 @@ imageview_fullscreen_delete (ImageView * iv)
      * disable auto hide cursor stuff
      */
     if (iv->hide_cursor_timer_id != 0)
-	gtk_timeout_remove (iv->hide_cursor_timer_id);
+	g_source_remove (iv->hide_cursor_timer_id);
     show_cursor (iv);
 
     if (view_type != VIEWTYPE_IMAGEVIEW)
@@ -988,8 +988,8 @@ imageview_slideshow_new (ImageView * iv)
     if (iv->is_fullscreen == FALSE)
 	imageview_fullscreen_new (iv);
 
-    iv->slideshow_timer_id = gtk_timeout_add (conf.slideshow_interval,
-					      (GtkFunction) cb_slideshow, iv);
+    iv->slideshow_timer_id = g_timeout_add (conf.slideshow_interval,
+					      cb_slideshow, iv);
     iv->is_slideshow = TRUE;
 }
 
@@ -998,7 +998,7 @@ imageview_slideshow_delete (ImageView * iv)
 {
     if (iv->slideshow_timer_id)
     {
-	gtk_timeout_remove (iv->slideshow_timer_id);
+	g_source_remove (iv->slideshow_timer_id);
 	iv->slideshow_timer_id = 0;
     }
 
@@ -1044,7 +1044,7 @@ imageview_rotate (ImageView * iv, ImgRotateType angle)
     data->angle = rotate_angle;
 
     iv->rotate_timer_id =
-	gtk_timeout_add (100, (GtkFunction) cb_rotate, data);
+	g_timeout_add (100, cb_rotate, data);
 }
 
 static GdkPixbuf *
@@ -1053,7 +1053,7 @@ imageview_rotate_image_90 (GdkPixbuf * source)
     GdkPixbuf *destination;
 
     destination = pixbuf_copy_rotate_90 (source, TRUE);
-    gdk_pixbuf_unref (source);
+    g_object_unref (source);
 
     return destination;
 }
@@ -1064,7 +1064,7 @@ imageview_rotate_image_180 (GdkPixbuf * source)
     GdkPixbuf *destination;
 
     destination = pixbuf_copy_mirror (source, TRUE, TRUE);
-    gdk_pixbuf_unref (source);
+    g_object_unref (source);
 
     return destination;
 }
@@ -1075,7 +1075,7 @@ imageview_rotate_image_270 (GdkPixbuf * source)
     GdkPixbuf *destination;
 
     destination = pixbuf_copy_rotate_90 (source, FALSE);
-    gdk_pixbuf_unref (source);
+    g_object_unref (source);
 
     return destination;
 }
@@ -1095,7 +1095,7 @@ imageview_zoom (ImageView * iv, ImgZoomType zoom)
 {
     iv->zoom = zoom;
 
-    iv->zoom_timer_id = gtk_timeout_add (100, (GtkFunction) cb_zoom, iv);
+    iv->zoom_timer_id = g_timeout_add (100, cb_zoom, iv);
 }
 
 static void
@@ -1123,6 +1123,7 @@ imageview_print_status (ImageView * iv)
     gchar  *buf = NULL;
     gchar  *rotate = NULL;
     gchar  *zoom = NULL;
+	gchar *basename;
 
     switch (iv->zoom)
     {
@@ -1159,9 +1160,11 @@ imageview_print_status (ImageView * iv)
 	  break;
     }
 
+	basename = g_path_get_basename(iv->image_name);
     buf =
-	g_strdup_printf (_("  %s (%dx%d)"), g_basename (iv->image_name),
+	g_strdup_printf (_("  %s (%dx%d)"), basename,
 			 iv->image_width, iv->image_height);
+	g_free(basename);
 
     gtk_statusbar_pop (GTK_STATUSBAR (BROWSER_STATUS_NAME), 1);
     gtk_statusbar_push (GTK_STATUSBAR (BROWSER_STATUS_NAME), 1, buf);
@@ -1217,7 +1220,7 @@ cb_imageview_load_done (ImageLoader * il, gpointer data)
     ImageInfo *ii;
 
     imageview->image = image_loader_get_pixbuf (il);
-    gdk_pixbuf_ref (iv->image);
+    g_object_ref (iv->image);
 
     if (iv->image)
 	imageview_calc_image (iv, TRUE);
@@ -1591,9 +1594,9 @@ cb_fullscreen_motion_notify (GtkWidget * widget,
     show_cursor (iv);
 
     if (iv->hide_cursor_timer_id != 0)
-	gtk_timeout_remove (iv->hide_cursor_timer_id);
+	g_source_remove (iv->hide_cursor_timer_id);
     iv->hide_cursor_timer_id
-	= gtk_timeout_add (IMGWIN_FULLSCREEN_HIDE_CURSOR_DELAY,
+	= g_timeout_add (IMGWIN_FULLSCREEN_HIDE_CURSOR_DELAY,
 			   timeout_hide_cursor, iv);
 
     return FALSE;
@@ -1685,7 +1688,7 @@ imageview_create (void)
 
     imageview->nav_button = gtk_pixmap_new (pixmap, mask);
 
-    gdk_pixbuf_unref (pixbuf);
+    g_object_unref (pixbuf);
 
     gtk_container_add (GTK_CONTAINER (imageview->event_box),
 		       imageview->nav_button);
@@ -1701,33 +1704,33 @@ imageview_create (void)
     gtk_table_attach (GTK_TABLE (imageview->table), imageview->event_box, 1,
 		      2, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
 
-    gtk_signal_connect_after (GTK_OBJECT (imageview->draw_area), "map",
-			      GTK_SIGNAL_FUNC (cb_draw_area_map), imageview);
-    gtk_signal_connect_after (GTK_OBJECT (imageview->draw_area),
+    g_signal_connect_after (G_OBJECT (imageview->draw_area), "map",
+			      G_CALLBACK(cb_draw_area_map), imageview);
+    g_signal_connect_after (G_OBJECT (imageview->draw_area),
 			      "key-press-event",
-			      GTK_SIGNAL_FUNC (cb_image_key_press),
+			      G_CALLBACK(cb_image_key_press),
 			      imageview);
 
-    gtk_signal_connect (GTK_OBJECT (imageview->draw_area), "configure_event",
-			GTK_SIGNAL_FUNC (cb_image_configure), imageview);
-    gtk_signal_connect (GTK_OBJECT (imageview->draw_area), "expose_event",
-			GTK_SIGNAL_FUNC (cb_image_expose), imageview);
-    gtk_signal_connect (GTK_OBJECT (imageview->draw_area),
+    g_signal_connect (G_OBJECT (imageview->draw_area), "configure_event",
+			G_CALLBACK (cb_image_configure), imageview);
+    g_signal_connect (G_OBJECT (imageview->draw_area), "expose_event",
+			G_CALLBACK (cb_image_expose), imageview);
+    g_signal_connect (G_OBJECT (imageview->draw_area),
 			"motion_notify_event",
-			GTK_SIGNAL_FUNC (cb_image_motion_notify), imageview);
+			G_CALLBACK (cb_image_motion_notify), imageview);
 
-    gtk_signal_connect (GTK_OBJECT (imageview->draw_area),
+    g_signal_connect (G_OBJECT (imageview->draw_area),
 			"button_press_event",
-			GTK_SIGNAL_FUNC (cb_image_button_press), imageview);
+			G_CALLBACK (cb_image_button_press), imageview);
 
-    gtk_signal_connect (GTK_OBJECT (imageview->draw_area),
+    g_signal_connect (G_OBJECT (imageview->draw_area),
 			"button_release_event",
-			GTK_SIGNAL_FUNC (cb_image_button_release), imageview);
+			G_CALLBACK (cb_image_button_release), imageview);
 
     /*
      * set flags
      */
-    GTK_WIDGET_SET_FLAGS (GTK_WIDGET (imageview->draw_area), GTK_CAN_FOCUS);
+    gtk_widget_set_can_focus(GTK_WIDGET(imageview->draw_area), TRUE);
 
     gtk_widget_add_events (GTK_WIDGET (imageview->draw_area),
 			   GDK_FOCUS_CHANGE
@@ -1740,16 +1743,16 @@ imageview_create (void)
     /*
      * set signals
      */
-    gtk_signal_connect (GTK_OBJECT (imageview->hadj), "value_changed",
-			GTK_SIGNAL_FUNC (cb_scrollbar_value_changed),
+    g_signal_connect (G_OBJECT (imageview->hadj), "value_changed",
+			G_CALLBACK (cb_scrollbar_value_changed),
 			imageview);
 
-    gtk_signal_connect (GTK_OBJECT (imageview->vadj), "value_changed",
-			GTK_SIGNAL_FUNC (cb_scrollbar_value_changed),
+    g_signal_connect (G_OBJECT (imageview->vadj), "value_changed",
+			G_CALLBACK (cb_scrollbar_value_changed),
 			imageview);
 
-    gtk_signal_connect (GTK_OBJECT (imageview->event_box),
-			"button_press_event", GTK_SIGNAL_FUNC (cb_nav_button),
+    g_signal_connect (G_OBJECT (imageview->event_box),
+			"button_press_event", G_CALLBACK (cb_nav_button),
 			imageview);
 }
 
@@ -1757,7 +1760,7 @@ void
 imageview_destroy (void)
 {
     if (buffer)
-	gdk_pixmap_unref (buffer);
+	g_object_unref (buffer);
 
     if (imageview->loader)
 	image_loader_free (imageview->loader);
@@ -1767,13 +1770,13 @@ imageview_destroy (void)
     imageview->image_name = NULL;
 
     if (imageview->image)
-	gdk_pixbuf_unref (imageview->image);
+	g_object_unref (imageview->image);
 
     if (imageview->pixmap)
-	gdk_pixmap_unref (imageview->pixmap);
+	g_object_unref (imageview->pixmap);
 
     if (imageview->mask)
-	gdk_bitmap_unref (imageview->mask);
+	g_object_unref (imageview->mask);
 
     g_free (imageview);
     imageview = NULL;
@@ -1806,7 +1809,7 @@ imageview_set_image (gchar * path)
     imageview->image_name = NULL;
 
     if (imageview->image)
-	gdk_pixbuf_unref (imageview->image);
+	g_object_unref (imageview->image);
     imageview->image = NULL;
 
     if (path == NULL)
@@ -1833,7 +1836,7 @@ imageview_set_image (gchar * path)
 	imageview->image_name = NULL;
 
 	if (imageview->image)
-	    gdk_pixbuf_unref (imageview->image);
+	    g_object_unref (imageview->image);
 
 	imageview->image = NULL;
 	imageview_clear_image ();
