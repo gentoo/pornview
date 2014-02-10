@@ -21,9 +21,6 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
-
-#if (GTK_MAJOR_VERSION >= 2)
-
 #include <gtk/gtkcellrenderer.h>
 
 #ifdef __cplusplus
@@ -75,5 +72,3 @@ extern          "C"
 #endif				/* __cplusplus */
 
 #endif				/* __GTK_CELL_RENDERER_PIXMAP_H__ */
-
-#endif				/* (GTK_MAJOR_VERSION >= 2) */
