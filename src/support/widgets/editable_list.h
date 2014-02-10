@@ -74,7 +74,7 @@ typedef         gboolean (*EditableListGetRowDataFn) (EditableList * editlist,
 						      EditableListActionType
 						      type,
 						      gpointer * rowdata,
-						      GtkDestroyNotify *
+						      GDestroyNotify *
 						      destroy_fn);
 
 struct EditableList_Tag
@@ -132,7 +132,7 @@ struct EditableListColumnFuncTable_Tag
 {
     GtkWidget      *widget;
     gpointer        coldata;
-    GtkDestroyNotify destroy_fn;
+    GDestroyNotify destroy_fn;
 
     /*
      * will be called when an item is selected (or unselected)
@@ -177,7 +177,7 @@ void            editable_list_set_row_data (EditableList * editlist,
 void            editable_list_set_row_data_full (EditableList * editlist,
 						 gint row,
 						 gpointer data,
-						 GtkDestroyNotify destroy_fn);
+						 GDestroyNotify destroy_fn);
 gpointer        editable_list_get_row_data (EditableList * editlist,
 					    gint row);
 void            editable_list_unselect_all (EditableList * editlist);
@@ -192,7 +192,7 @@ void            editable_list_set_column_funcs (EditableList * editlist,
 						get_data_fn,
 						EditableListResetFn reset_fn,
 						gpointer coldata,
-						GtkDestroyNotify destroy_fn);
+						GDestroyNotify destroy_fn);
 void            editable_list_set_get_row_data_func (EditableList * editlist,
 						     EditableListGetRowDataFn
 						     get_rowdata_func);
