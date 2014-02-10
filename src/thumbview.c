@@ -75,50 +75,67 @@ static void cb_thumbview_move (void);
 static void cb_thumbview_rename (void);
 static void cb_thumbview_delete (void);
 
-static GtkItemFactoryEntry thumbview_popupmenu_items[] = {
-    {N_("/_Fullscreen"), NULL, cb_thumbview_fullscreen, 0, NULL},
-    {"/---", NULL, NULL, 0, "<Separator>"},
-    {N_("/Open in E_xternal Program"), NULL, NULL, 0, "<Branch>"},
-    {N_("/_Scripts"), NULL, NULL, 0, "<Branch>"},
-    {"/---", NULL, NULL, 0, "<Separator>"},
-    {N_("/_Zoom"), NULL, NULL, 0, "<Branch>"},
-    {N_("/Zoom/Zoom In"), NULL, imageview_zoom_in, 0, NULL},
-    {N_("/Zoom/Zoom Out"), NULL, imageview_zoom_out, 0, NULL},
-    {N_("/Zoom/Fit to Window"), NULL, imageview_zoom_fit, 0, NULL},
-    {N_("/Zoom/Auto Zoom"), NULL, imageview_zoom_auto, 0, NULL},
-    {N_("/Zoom/Original Size"), NULL, imageview_no_zoom, 0, NULL},
-    {N_("/_Rotate"), NULL, NULL, 0, "<Branch>"},
-    {N_("/Rotate/Rotate 90deg"), NULL, imageview_rotate_90, 0, NULL},
-    {N_("/Rotate/Rotate -90deg"), NULL, imageview_rotate_270, 0, NULL},
-    {N_("/Rotate/Rotate 180deg"), NULL, imageview_rotate_180, 0, NULL},
+static GtkUIManager *toolbar_ui;
 
-#ifdef ENABLE_MOVIE
-    {N_("/_Movie"), NULL, NULL, 0, "<Branch>"},
-    {N_("/Movie/Play"), NULL, videoplay_play, 0, NULL},
-    {N_("/Movie/Pause"), NULL, videoplay_pause, 0, NULL},
-    {N_("/Movie/Stop"), NULL, videoplay_stop, 0, NULL},
-#if (defined ENABLE_XINE) || (defined ENABLE_XINE_OLD)
-    {N_("/Movie/Fast Forward"), NULL, videoplay_ff, 0, NULL},
-    {N_("/Movie/Slow Forward"), NULL, videoplay_fs, 0, NULL},
-    {N_("/Movie/---"), NULL, NULL, 0, "<Separator>"},
-    {N_("/Movie/Create Thumbnail"), NULL, cb_thumbview_create_thumb, 0, NULL},
-#endif
-#endif
-    {"/---", NULL, NULL, 0, "<Separator>"},
-    {N_("/_Properties"), NULL, imageinfo_dialog, 0, NULL},
+static const gchar *thumbview_ui_xml =
+"<ui>"
+	"<toolbar name=\"ThumbviewToolbar\" action=\"ThumbviewToolBarAction\">"
+		"<placeholder name=\"ToolItems\">"
+			"<separator/>"
+			"<toolitem name=\"Refresh\" action=\"RefreshAction\"/>"
+			"<toolitem name=\"Info\" action=\"InfoAction\"/>"
+			"<toolitem name=\"Thumbs\" action=\"ThumbsAction\"/>"
+			"<toolitem name=\"List\" action=\"ListAction\"/>"
+			"<toolitem name=\"FullScreen\" action=\"FullScreenAction\"/>"
+			"<toolitem name=\"Slideshow\" action=\"SlideshowAction\"/>"
+			"<toolitem name=\"NoZoom\" action=\"NoZoomAction\"/>"
+			"<toolitem name=\"AutoZoom\" action=\"AutoZoomAction\"/>"
+			"<toolitem name=\"ZoomIn\" action=\"ZoomInAction\"/>"
+			"<toolitem name=\"ZoomOut\" action=\"ZoomOutAction\"/>"
+			"<separator/>"
+		"</placeholder>"
+	"</toolbar>"
+"</ui>";
 
-#ifdef ENABLE_EXIF
-    {N_("/_Scan EXIF Data"), NULL, cb_thumbview_exif_view, 0, NULL},
-#endif
-
-    {"/---", NULL, NULL, 0, "<Separator>"},
-    {N_("/Select _All"), NULL, cb_thumbview_select_all, 0, NULL},
-    {N_("/Copy..."), NULL, cb_thumbview_copy, 0, NULL},
-    {N_("/Move..."), NULL, cb_thumbview_move, 0, NULL},
-    {N_("/Rename..."), NULL, cb_thumbview_rename, 0, NULL},
-    {N_("/Delete..."), NULL, cb_thumbview_delete, 0, NULL},
-    {NULL, NULL, NULL, 0, NULL}
+/* TODO: all icons */
+static GtkActionEntry thumbview_ui_entries[] = {
+	{ "ThumbviewToolBarAction", NULL, NULL,		/* name, stock id, label */
+		NULL, NULL,								/* accelerator, tooltip */
+		NULL },									/* callback */
+	{ "RefreshAction", "view-refresh", N_("_Refresh"),
+		NULL, "Refresh",
+		G_CALLBACK(cb_thumbview_refresh) },
+	{ "InfoAction", GTK_STOCK_INFO, N_("_Properties"),
+		NULL, "Properties",
+		G_CALLBACK(cb_thumbview_info) },
+	{ "ThumbsAction", GTK_STOCK_DND_MULTIPLE, N_("_View Thumbs"),
+		NULL, "View Thumbs",
+		G_CALLBACK(cb_thumbview_toggle_mode) },
+	{ "ListAction", "gtk-justify-fill", N_("_View List"),
+		NULL, "View List",
+		G_CALLBACK(cb_thumbview_toggle_mode) },
+	{ "FullScreenAction", GTK_STOCK_FULLSCREEN, N_("_Fullscreen"),
+		NULL, "Fullscreen",
+		G_CALLBACK(cb_thumbview_fullscreen_view) },
+	{ "SlideshowAction", GTK_STOCK_DND_MULTIPLE, N_("_Slideshow"),
+		NULL, "Slideshow",
+		G_CALLBACK(cb_thumbview_slideshow_view) },
+	{ "NoZoomAction", GTK_STOCK_NO, N_("_No Zoom"),
+		NULL, "No Zoom",
+		G_CALLBACK(cb_thumbview_no_zoom) },
+	{ "AutoZoomAction", GTK_STOCK_YES, N_("_Auto Zoom"),
+		NULL, "Auto Zoom",
+		G_CALLBACK(cb_thumbview_zoom_auto) },
+	{ "ZoomInAction", GTK_STOCK_ZOOM_IN, N_("_Zoom In"),
+		NULL, "Zoom In",
+		G_CALLBACK(cb_thumbview_zoom_in) },
+	{ "ZoomOutAction", GTK_STOCK_ZOOM_OUT, N_("_Zoom Out"),
+		NULL, "Zoom Out",
+		G_CALLBACK(cb_thumbview_zoom_out) },
 };
+
+static guint n_thumbview_ui_entries = G_N_ELEMENTS(thumbview_ui_entries);
+
 
 /*
  *-------------------------------------------------------------------
@@ -135,59 +152,7 @@ static  gint
 cb_thumbview_button_press (GtkWidget * widget, GdkEventButton * event,
 			   ThumbView * tv)
 {
-    if (ZALBUM (tv->album)->len == 0 || ZLIST (tv->album)->focus < 0)
-	return FALSE;
 
-    gtk_widget_grab_focus (GTK_WIDGET (tv->album));
-
-    if (event->type == GDK_BUTTON_PRESS && event->button == 3)
-    {
-	gint    type;
-	guint   n_menu_items;
-	GtkWidget *popup_menu, *progs_submenu, *scripts_submenu;
-	GtkWidget *menuitem;
-	GtkItemFactory *ifactory;
-
-	/*
-	 * create popup menu
-	 */
-	n_menu_items = sizeof (thumbview_popupmenu_items)
-	    / sizeof (thumbview_popupmenu_items[0]) - 1;
-
-	popup_menu =
-	    menu_create_items (BROWSER_WINDOW, thumbview_popupmenu_items,
-			       n_menu_items, "<ThumbnailButtonPop>", tv);
-
-	ifactory = gtk_item_factory_from_widget (popup_menu);
-
-	type = (gint) zalbum_get_cell_data (ZALBUM (tv->album), tv->current);
-
-	thumbview_update_popupmenu (type, ifactory);
-
-	menuitem =
-	    gtk_item_factory_get_item (ifactory, "/Open in External Program");
-
-	progs_submenu = create_progs_submenu (tv);
-	menu_set_submenu (popup_menu, "/Open in External Program",
-			  progs_submenu);
-
-	menuitem = gtk_item_factory_get_item (ifactory, "/Scripts");
-	scripts_submenu = create_scripts_submenu (tv);
-	menu_set_submenu (popup_menu, "/Scripts", scripts_submenu);
-
-	gtk_menu_popup (GTK_MENU (popup_menu),
-			NULL, NULL, NULL, NULL, event->button, event->time);
-
-	g_object_ref (GTK_OBJECT (popup_menu));
-	g_object_ref_sink (GTK_OBJECT (popup_menu));
-	g_object_unref (popup_menu);
-
-	return TRUE;
-    }
-
-    tv->current = ZLIST (tv->album)->focus;
-
-    return FALSE;
 }
 
 static  gint
@@ -269,10 +234,10 @@ cb_thumbview_cell_select (GtkWidget * widget, ZAlbumCell * cell,
 	    tv->current = ZLIST (tv->album)->focus;
 
 	    if (cb_load_image_timeout)
-		gtk_timeout_remove (cb_load_image_timeout);
+		g_source_remove(cb_load_image_timeout);
 
 	    cb_load_image_timeout =
-		gtk_timeout_add (250, cb_load_image, cell->name);
+		g_timeout_add(250, cb_load_image, cell->name);
 
 	    return FALSE;
 	}
@@ -299,10 +264,10 @@ cb_thumbview_cell_select (GtkWidget * widget, ZAlbumCell * cell,
 	tv->current = ZLIST (tv->album)->focus;
 
 	if (cb_load_movie_timeout)
-	    gtk_timeout_remove (cb_load_movie_timeout);
+	    g_source_remove(cb_load_movie_timeout);
 
 	cb_load_movie_timeout =
-	    gtk_timeout_add (250, cb_load_movie, cell->name);
+	    g_timeout_add(250, cb_load_movie, cell->name);
 
 	return FALSE;
 #endif
@@ -391,8 +356,10 @@ cb_thumbview_toggle_mode (GtkWidget * widget, ThumbView * tv)
 	zalbum_set_mode (ZALBUM (tv->album), ZALBUM_MODE_PREVIEW);
 	zalbum_thawn (thumbview->album);
 
-	gtk_widget_set_sensitive (tv->toolbar_list_btn, TRUE);
-	gtk_widget_set_sensitive (tv->toolbar_thumbs_btn, FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/List"), TRUE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/Thumbs"), FALSE);
 
 	if (ZALBUM (tv->album)->len != 0)
 	{
@@ -410,8 +377,10 @@ cb_thumbview_toggle_mode (GtkWidget * widget, ThumbView * tv)
 	zalbum_set_mode (ZALBUM (thumbview->album), ZALBUM_MODE_LIST);
 	thumbview_add (browser->filelist);
 
-	gtk_widget_set_sensitive (tv->toolbar_list_btn, FALSE);
-	gtk_widget_set_sensitive (tv->toolbar_thumbs_btn, TRUE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/List"), FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/Thumbs"), TRUE);
     }
 }
 
@@ -587,163 +556,39 @@ thumbview_create_toolbar (ThumbView * tv)
 {
     GtkWidget *toolbar;
     GtkWidget *iconw;
+	GtkActionGroup *action_group;
+	guint ui_id;
 
     g_return_val_if_fail (tv, NULL);
 
-    toolbar = gtk_toolbar_new ();
+    toolbar_ui = gtk_ui_manager_new();
+	action_group = gtk_action_group_new("ThumbviewAction");
 
-    /*
-     * refresh
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (refresh_xpm);
-    tv->toolbar_refresh_btn =
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-				 _("Refresh"), NULL, iconw,
-				 GTK_SIGNAL_FUNC (cb_thumbview_refresh), tv);
-    /*
-     * previous
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (left_xpm);
-    tv->toolbar_previous_btn =
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-				 _("Previous Image/Movie"), NULL, iconw,
-				 GTK_SIGNAL_FUNC (cb_thumbview_previous), tv);
-    /*
-     * next
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (right_xpm);
-    tv->toolbar_next_btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-						    NULL,
-						    _("Next Image/Movie"),
-						    NULL,
-						    iconw,
-						    GTK_SIGNAL_FUNC
-						    (cb_thumbview_next), tv);
+	gtk_action_group_add_actions(action_group, thumbview_ui_entries,
+			n_thumbview_ui_entries, tv);
+	gtk_ui_manager_insert_action_group(toolbar_ui, action_group, 0);
 
-    /*
-     * first
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (first_xpm);
-    tv->toolbar_first_btn =
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-				 _("First Image/Movie"), NULL, iconw,
-				 GTK_SIGNAL_FUNC (cb_thumbview_first), tv);
+	GError *error;
+	error = NULL;
+	ui_id = gtk_ui_manager_add_ui_from_string(toolbar_ui,
+			thumbview_ui_xml,
+			-1,
+			&error);
+	if (error) {
+		g_message("building menus failed: %s", error->message);
+		g_error_free(error);
+	}
 
-    /*
-     * last
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (last_xpm);
-    tv->toolbar_last_btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-						    NULL,
-						    _("Last Image/Movie"),
-						    NULL,
-						    iconw,
-						    GTK_SIGNAL_FUNC
-						    (cb_thumbview_last), tv);
+    toolbar = gtk_ui_manager_get_widget(toolbar_ui, "/ThumbviewToolbar");
+
+	/* TODO: register accels */
+	/* gtk_box_pack_start(GTK_BOX(dirview->container), toolbar, FALSE, FALSE, 0); */
+
+	/* gtk_window_add_accel_group(GTK_WINDOW(tv->scroll_win), */
+			/* gtk_ui_manager_get_accel_group(toolbar_ui)); */
 
 
-    gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-    /*
-     * info
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (info_xpm);
-    tv->toolbar_info_btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-						    NULL,
-						    _("Properties"),
-						    NULL,
-						    iconw,
-						    GTK_SIGNAL_FUNC
-						    (cb_thumbview_info), tv);
-    gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-
-    /*
-     * view thumbs
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (view_thumbs_xpm);
-    tv->toolbar_thumbs_btn =
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-				 _("View Thumbs"), NULL, iconw,
-				 GTK_SIGNAL_FUNC
-				 (cb_thumbview_toggle_mode), tv);
-
-    /*
-     * view list
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (view_list_xpm);
-    tv->toolbar_list_btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-						    NULL, _("View List"),
-						    NULL, iconw,
-						    GTK_SIGNAL_FUNC
-						    (cb_thumbview_toggle_mode),
-						    tv);
-
-    gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-    /*
-     * view fullscreen
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (fullscreen_xpm);
-    tv->toolbar_view_btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-						    NULL,
-						    _("Fullscreen"),
-						    NULL, iconw,
-						    GTK_SIGNAL_FUNC
-						    (cb_thumbview_fullscreen_view),
-						    tv);
-
-    /*
-     * slideshow
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (slideshow_xpm);
-    tv->toolbar_slideshow_btn =
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-				 _("Slideshow"), NULL, iconw,
-				 GTK_SIGNAL_FUNC
-				 (cb_thumbview_slideshow_view), tv);
-
-    gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-    /*
-     * no zoom
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (no_zoom_xpm);
-    tv->toolbar_no_zoom_btn =
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-				 _("No Zoom"), NULL, iconw,
-				 GTK_SIGNAL_FUNC (cb_thumbview_no_zoom), tv);
-
-    /*
-     * auto zoom
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (zoom_fit_xpm);
-    tv->toolbar_zoom_auto_btn =
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-				 _("Auto Zoom"), NULL, iconw,
-				 GTK_SIGNAL_FUNC (cb_thumbview_zoom_auto),
-				 tv);
-
-    /*
-     * zoom in
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (zoom_in_xpm);
-    tv->toolbar_zoom_in_btn =
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-				 _("Zoom In"), NULL, iconw,
-				 GTK_SIGNAL_FUNC (cb_thumbview_zoom_in), tv);
-
-    /*
-     * zoom out
-     */
-    iconw = pixbuf_create_pixmap_from_xpm_data (zoom_out_xpm);
-    tv->toolbar_zoom_out_btn =
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-				 _("Zoom Out"), NULL, iconw,
-				 GTK_SIGNAL_FUNC (cb_thumbview_zoom_out), tv);
-
-    gtk_widget_show_all (toolbar);
-    gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+    /* gtk_widget_show_all (toolbar); */
 
     return toolbar;
 }
@@ -751,42 +596,50 @@ thumbview_create_toolbar (ThumbView * tv)
 static void
 thumbview_toolbar_update (ThumbView * tv)
 {
-    gtk_widget_set_sensitive (tv->toolbar_refresh_btn, TRUE);
+    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/Refresh"), TRUE);
 
     if (ZALBUM (tv->album)->mode == ZALBUM_MODE_LIST)
     {
-	gtk_widget_set_sensitive (tv->toolbar_list_btn, FALSE);
-	gtk_widget_set_sensitive (tv->toolbar_thumbs_btn, TRUE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/List"), FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/Thumbs"), TRUE);
     }
     else
     {
-	gtk_widget_set_sensitive (tv->toolbar_list_btn, TRUE);
-	gtk_widget_set_sensitive (tv->toolbar_thumbs_btn, FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/List"), TRUE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/Thumbs"), FALSE);
     }
 
     if (ZALBUM (tv->album)->len == 0 || ZLIST (tv->album)->focus < 0)
     {
-	gtk_widget_set_sensitive (tv->toolbar_previous_btn, FALSE);
-	gtk_widget_set_sensitive (tv->toolbar_first_btn, FALSE);
-	gtk_widget_set_sensitive (tv->toolbar_next_btn, FALSE);
-	gtk_widget_set_sensitive (tv->toolbar_last_btn, FALSE);
-	gtk_widget_set_sensitive (tv->toolbar_info_btn, FALSE);
-
-	gtk_widget_set_sensitive (tv->toolbar_view_btn, FALSE);
-	gtk_widget_set_sensitive (tv->toolbar_slideshow_btn, FALSE);
-	gtk_widget_set_sensitive (tv->toolbar_no_zoom_btn, FALSE);
-	gtk_widget_set_sensitive (tv->toolbar_zoom_auto_btn, FALSE);
-	gtk_widget_set_sensitive (tv->toolbar_zoom_in_btn, FALSE);
-	gtk_widget_set_sensitive (tv->toolbar_zoom_out_btn, FALSE);
-
-	return;
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/Info"), FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/FullScreen"), FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/Slideshow"), FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/NoZoom"), FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/AutoZoom"), FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/ZoomIn"), FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/ZoomOut"), FALSE);
+		return;
     }
     else
     {
 	gint    type;
 
-	gtk_widget_set_sensitive (tv->toolbar_info_btn, TRUE);
-	gtk_widget_set_sensitive (tv->toolbar_view_btn, TRUE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/Info"), TRUE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/FullScreen"), TRUE);
 
 	type =
 	    (gint) zalbum_get_cell_data (ZALBUM (tv->album),
@@ -794,46 +647,38 @@ thumbview_toolbar_update (ThumbView * tv)
 
 	if (type == FILETYPE_IMAGE)
 	{
-	    gtk_widget_set_sensitive (tv->toolbar_slideshow_btn, TRUE);
-	    gtk_widget_set_sensitive (tv->toolbar_no_zoom_btn,
-				      (IMAGEVIEW_ZOOM_TYPE ==
-				       IMAGEVIEW_ZOOM_100) ? FALSE : TRUE);
-	    gtk_widget_set_sensitive (tv->toolbar_zoom_auto_btn,
-				      (IMAGEVIEW_ZOOM_TYPE ==
-				       IMAGEVIEW_ZOOM_AUTO) ? FALSE : TRUE);
-	    gtk_widget_set_sensitive (tv->toolbar_zoom_in_btn, TRUE);
-	    gtk_widget_set_sensitive (tv->toolbar_zoom_out_btn, TRUE);
+
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/Slideshow"), TRUE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/NoZoom"),
+				(IMAGEVIEW_ZOOM_TYPE == IMAGEVIEW_ZOOM_100) ? FALSE : TRUE);
+
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/AutoZoom"),
+				(IMAGEVIEW_ZOOM_TYPE == IMAGEVIEW_ZOOM_AUTO) ? FALSE : TRUE);
+
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/ZoomIn"), TRUE);
+
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/ZoomOut"), TRUE);
 	}
 	else
 	{
-	    gtk_widget_set_sensitive (tv->toolbar_slideshow_btn, FALSE);
-	    gtk_widget_set_sensitive (tv->toolbar_no_zoom_btn, FALSE);
-	    gtk_widget_set_sensitive (tv->toolbar_zoom_auto_btn, FALSE);
-	    gtk_widget_set_sensitive (tv->toolbar_zoom_in_btn, FALSE);
-	    gtk_widget_set_sensitive (tv->toolbar_zoom_out_btn, FALSE);
+
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/Slideshow"), FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/Slideshow"), FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/AutoZoom"), FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/ZoomIn"), FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/ZoomOut"), FALSE);
+
 	}
-    }
-
-    if (ZLIST (tv->album)->focus == 0)
-    {
-	gtk_widget_set_sensitive (tv->toolbar_previous_btn, FALSE);
-	gtk_widget_set_sensitive (tv->toolbar_first_btn, FALSE);
-    }
-    else
-    {
-	gtk_widget_set_sensitive (tv->toolbar_previous_btn, TRUE);
-	gtk_widget_set_sensitive (tv->toolbar_first_btn, TRUE);
-    }
-
-    if (ZLIST (tv->album)->focus == (ZALBUM (tv->album)->len - 1))
-    {
-	gtk_widget_set_sensitive (tv->toolbar_next_btn, FALSE);
-	gtk_widget_set_sensitive (tv->toolbar_last_btn, FALSE);
-    }
-    else
-    {
-	gtk_widget_set_sensitive (tv->toolbar_next_btn, TRUE);
-	gtk_widget_set_sensitive (tv->toolbar_last_btn, TRUE);
     }
 }
 
@@ -1098,10 +943,10 @@ thumbview_thumbs_do (ThumbLoader * tl)
     zalbum_set_pixmap (ZALBUM (thumbview->album),
 		       thumbview->thumbs_count, pixmap, mask);
     if (pixmap)
-	gdk_pixmap_unref (pixmap);
+	g_object_unref(pixmap);
 
     if (mask)
-	gdk_bitmap_unref (mask);
+	g_object_unref(mask);
 
     status =
 	(gfloat) thumbview->thumbs_count / ZALBUM (thumbview->album)->len;
@@ -1141,7 +986,7 @@ thumbview_thumbs_cleanup (void)
     thumb_loader_free (thumbview->thumbs_loader);
     thumbview->thumbs_loader = NULL;
 
-    DIRTREE (dirview->dirtree)->check_events = TRUE;
+	DIRTREE(dirview->dirtree)->check_events = TRUE;
 }
 
 static void
@@ -1187,9 +1032,11 @@ thumbview_thumbs_next (void)
 	    if (cache_ensure_dir_exists (cache_dir, mode))
 	    {
 		gchar  *cache_path;
+		gchar *basename = g_path_get_basename(cell->name);
 		cache_path =
-		    g_strconcat (cache_dir, "/", g_basename (cell->name),
+		    g_strconcat (cache_dir, "/", basename,
 				 PORNVIEW_CACHE_THUMB_EXT, NULL);
+		g_free(basename);
 
 		pixbuf = gdk_pixbuf_new_from_file (cache_path, NULL);
 
@@ -1200,10 +1047,10 @@ thumbview_thumbs_next (void)
 		    zalbum_set_pixmap (ZALBUM (thumbview->album),
 				       thumbview->thumbs_count, pixmap, mask);
 		    if (pixmap)
-			gdk_pixmap_unref (pixmap);
+			g_object_unref(pixmap);
 		    if (mask)
-			gdk_bitmap_unref (mask);
-		    gdk_pixbuf_unref (pixbuf);
+			g_object_unref(mask);
+		    g_object_unref(pixbuf);
 		}
 		else
 		{
@@ -1214,10 +1061,10 @@ thumbview_thumbs_next (void)
 		    zalbum_set_pixmap (ZALBUM (thumbview->album),
 				       thumbview->thumbs_count, pixmap, mask);
 		    if (pixmap)
-			gdk_pixmap_unref (pixmap);
+			g_object_unref(pixmap);
 		    if (mask)
-			gdk_bitmap_unref (mask);
-		    gdk_pixbuf_unref (pixbuf);
+			g_object_unref(mask);
+		    g_object_unref(pixbuf);
 		}
 
 		g_free (cache_path);
@@ -1287,7 +1134,7 @@ cb_open_image_by_external (GtkWidget * menuitem, ThumbView * tv)
 	return;
 
     action =
-	GPOINTER_TO_INT (gtk_object_get_data (GTK_OBJECT (menuitem), "num"));
+	GPOINTER_TO_INT (g_object_get_data(G_OBJECT(menuitem), "num"));
 
     /*
      * find command
@@ -1382,7 +1229,7 @@ cb_open_image_by_script (GtkWidget * menuitem, ThumbView * tv)
     if (!node)
 	return;
 
-    script = gtk_object_get_data (GTK_OBJECT (menuitem), "script");
+    script = g_object_get_data(G_OBJECT(menuitem), "script");
     if (!script || !script || !isexecutable (script))
 	goto ERROR;
 
@@ -1490,12 +1337,11 @@ create_progs_submenu (ThumbView * tv)
 		label = g_strdup (pair[0]);
 
 	    menu_item = gtk_menu_item_new_with_label (label);
-	    gtk_object_set_data (GTK_OBJECT (menu_item), "num",
-				 GINT_TO_POINTER (i));
-	    gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-				GTK_SIGNAL_FUNC
-				(cb_open_image_by_external), tv);
-	    gtk_menu_append (GTK_MENU (menu), menu_item);
+	    g_object_set_data(G_OBJECT(menu_item), "num",
+				GINT_TO_POINTER(i));
+	    g_signal_connect(G_OBJECT (menu_item), "activate",
+				G_CALLBACK(cb_open_image_by_external), tv);
+	    gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 	    gtk_widget_show (menu_item);
 
 	    g_free (label);
@@ -1514,6 +1360,7 @@ create_scripts_submenu (ThumbView * tv)
     GtkWidget *menu_item;
     GList  *tmplist = NULL, *filelist = NULL, *list;
     gchar **dirs;
+	gchar *basename;
     gint    i, flags;
 
     menu = gtk_menu_new ();
@@ -1540,20 +1387,22 @@ create_scripts_submenu (ThumbView * tv)
 	if (!filename || !*filename || !isexecutable (filename))
 	    continue;
 
+	basename = g_path_get_basename (filename);
 	if (conf.scripts_show_dialog)
-	    label = g_strconcat (g_basename (filename), "...", NULL);
+	    label = g_strconcat (basename, "...", NULL);
 	else
-	    label = g_strdup (g_basename (filename));
+	    label = g_strdup (basename);
+	g_free(basename);
 
 	menu_item = gtk_menu_item_new_with_label (label);
-	gtk_object_set_data_full (GTK_OBJECT (menu_item),
+	g_object_set_data_full(G_OBJECT (menu_item),
 				  "script",
 				  g_strdup (filename),
-				  (GtkDestroyNotify) g_free);
-	gtk_signal_connect (GTK_OBJECT (menu_item),
+				  (GDestroyNotify) g_free);
+	g_signal_connect (G_OBJECT (menu_item),
 			    "activate",
-			    GTK_SIGNAL_FUNC (cb_open_image_by_script), tv);
-	gtk_menu_append (GTK_MENU (menu), menu_item);
+			    G_CALLBACK (cb_open_image_by_script), tv);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 	gtk_widget_show (menu_item);
 
 	g_free (label);
@@ -1618,6 +1467,11 @@ thumbview_create (GtkWidget * parent_win)
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW
 				    (thumbview->scroll_win),
 				    GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
+
+	/* TODO: use macro/global or different func? */
+	gtk_widget_set_size_request(GTK_WIDGET (thumbview->scroll_win),
+			  50, 200);
+
     gtk_container_add (GTK_CONTAINER (thumbview->frame),
 		       thumbview->scroll_win);
 
@@ -1627,27 +1481,27 @@ thumbview_create (GtkWidget * parent_win)
      * create zalbum widget
      */
     thumbview->album = zalbum_new (ZALBUM_MODE_PREVIEW);
-    gtk_container_add (GTK_CONTAINER (thumbview->scroll_win),
+    gtk_container_add (GTK_CONTAINER(thumbview->scroll_win),
 		       thumbview->album);
 
-    gtk_signal_connect_after (GTK_OBJECT (thumbview->album),
+    g_signal_connect_after(GTK_OBJECT (thumbview->album),
 			      "button_press_event",
-			      GTK_SIGNAL_FUNC (cb_thumbview_button_press),
+			      G_CALLBACK (cb_thumbview_button_press),
 			      thumbview);
 
-    gtk_signal_connect_after (GTK_OBJECT (thumbview->album),
+    g_signal_connect_after(GTK_OBJECT (thumbview->album),
 			      "button_release_event",
-			      GTK_SIGNAL_FUNC
+			     G_CALLBACK
 			      (cb_thumbview_button_release), thumbview);
-    gtk_signal_connect (GTK_OBJECT (thumbview->album), "key_press_event",
-			GTK_SIGNAL_FUNC (cb_thumbview_key_press), thumbview);
+    g_signal_connect(GTK_OBJECT(thumbview->album), "key_press_event",
+			G_CALLBACK(cb_thumbview_key_press), thumbview);
 
-    gtk_signal_connect (GTK_OBJECT (thumbview->album), "cell_select",
-			GTK_SIGNAL_FUNC (cb_thumbview_cell_select),
+    g_signal_connect(GTK_OBJECT(thumbview->album), "cell_select",
+			G_CALLBACK(cb_thumbview_cell_select),
 			thumbview);
 
-    gtk_signal_connect (GTK_OBJECT (thumbview->album), "cell_unselect",
-			GTK_SIGNAL_FUNC (cb_thumbview_cell_unselect),
+    g_signal_connect(GTK_OBJECT(thumbview->album), "cell_unselect",
+			G_CALLBACK(cb_thumbview_cell_unselect),
 			thumbview);
 
     gtk_widget_show (thumbview->album);
@@ -1670,30 +1524,28 @@ thumbview_destroy (void)
 void
 thumbview_add (FileList * fl)
 {
-    GList  *node;
+    GList *node;
     FileListNode *data;
 
     thumbview_thumbs_interrupt ();
 
     zalbum_freeze (thumbview->album);
 
-    for (node = fl->list->next; node; node = node->next)
-    {
-	data = node->data;
-	zalbum_add (ZALBUM (thumbview->album), (gchar *) data->file_name,
-		    (gpointer) data->file_type, NULL);
+    for (node = fl->list->next; node; node = node->next) {
+		data = node->data;
+		zalbum_add(ZALBUM (thumbview->album), (gchar *) data->file_name,
+				(gpointer) (data->file_type), NULL);
     }
 
-    zalbum_thawn (thumbview->album);
+    zalbum_thawn(thumbview->album);
 
-    thumbview_toolbar_update (thumbview);
+    thumbview_toolbar_update(thumbview);
 
-    DIRTREE (dirview->dirtree)->check_events = FALSE;
+	DIRTREE(dirview->dirtree)->check_events = FALSE;
 
-    if (ZALBUM (thumbview->album)->mode == ZALBUM_MODE_PREVIEW)
-    {
-	thumbview->thumbs_running = TRUE;
-	while (thumbview_thumbs_next ());
+    if (ZALBUM(thumbview->album)->mode == ZALBUM_MODE_PREVIEW) {
+		thumbview->thumbs_running = TRUE;
+		while (thumbview_thumbs_next ());
     }
 }
 
@@ -1726,8 +1578,10 @@ thumbview_set_mode (gint mode)
 	zalbum_set_mode (ZALBUM (thumbview->album), ZALBUM_MODE_PREVIEW);
 	zalbum_thawn (thumbview->album);
 
-	gtk_widget_set_sensitive (thumbview->toolbar_list_btn, TRUE);
-	gtk_widget_set_sensitive (thumbview->toolbar_thumbs_btn, FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/List"), TRUE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/Thumbs"), FALSE);
 
 	if (ZALBUM (thumbview->album)->len != 0)
 	{
@@ -1745,8 +1599,10 @@ thumbview_set_mode (gint mode)
 	zalbum_set_mode (ZALBUM (thumbview->album), ZALBUM_MODE_LIST);
 	thumbview_add (browser->filelist);
 
-	gtk_widget_set_sensitive (thumbview->toolbar_list_btn, FALSE);
-	gtk_widget_set_sensitive (thumbview->toolbar_thumbs_btn, TRUE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/List"), FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/Thumbs"), TRUE);
     }
 }
 
@@ -1822,11 +1678,15 @@ thumbview_vupdate (void)
 	if (VIDEOPLAY_STATUS != VIDEOPLAY_STATUS_NULL
 	    && VIDEOPLAY_STATUS != VIDEOPLAY_STATUS_STOP
 	    && VIDEOPLAY_STATUS != VIDEOPLAY_STATUS_PAUSE)
-	    gtk_widget_set_sensitive (thumbview->toolbar_view_btn, TRUE);
+
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/FullScreen"), TRUE);
 	else
-	    gtk_widget_set_sensitive (thumbview->toolbar_view_btn, FALSE);
+	    gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+				"/ThumbviewToolbar/ToolItems/FullScreen"), FALSE);
 #else
-	gtk_widget_set_sensitive (thumbview->toolbar_view_btn, FALSE);
+	gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+			"/ThumbviewToolbar/ToolItems/FullScreen"), FALSE);
 #endif
     }
 }
@@ -1835,10 +1695,11 @@ thumbview_vupdate (void)
 void
 thumbview_iupdate (void)
 {
-    gtk_widget_set_sensitive (thumbview->toolbar_no_zoom_btn,
-			      (IMAGEVIEW_ZOOM_TYPE ==
-			       IMAGEVIEW_ZOOM_100) ? FALSE : TRUE);
-    gtk_widget_set_sensitive (thumbview->toolbar_zoom_auto_btn,
-			      (IMAGEVIEW_ZOOM_TYPE ==
-			       IMAGEVIEW_ZOOM_AUTO) ? FALSE : TRUE);
+	gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+			"/ThumbviewToolbar/ToolItems/NoZoom"),
+			(IMAGEVIEW_ZOOM_TYPE == IMAGEVIEW_ZOOM_100) ? FALSE : TRUE);
+
+	gtk_widget_set_sensitive (gtk_ui_manager_get_widget(toolbar_ui,
+			"/ThumbviewToolbar/ToolItems/AutoZoom"),
+			(IMAGEVIEW_ZOOM_TYPE == IMAGEVIEW_ZOOM_AUTO) ? FALSE : TRUE);
 }
