@@ -13,12 +13,8 @@ libsupport_widgets_la_SOURCES =	\
 	dirtree.h		\
 	editable_list.c		\
 	editable_list.h		\
-	gedo-hpaned.c		\
-	gedo-hpaned.h		\
 	gedo-paned.c		\
 	gedo-paned.h		\
-	gedo-vpaned.c		\
-	gedo-vpaned.h		\
 	gtk2-compat.h		\
 	gtkcellrendererpixmap.c	\
 	gtkcellrendererpixmap.h	\

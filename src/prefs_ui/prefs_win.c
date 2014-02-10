@@ -14,7 +14,7 @@
 
 #include "pornview.h"
 
-#include "gedo-hpaned.h"
+#include "gedo-paned.h"
 #include "gtk2-compat.h"
 #include "gtkcellrendererpixmap.h"
 

@@ -83,15 +83,6 @@ PKG_CHECK_MODULES([GTK], [
 AC_SUBST([GTK_CFLAGS])
 AC_SUBST([GTK_LIBS])
 AC_DEFINE([USE_GTK2], [1], [use GTK2])
-AC_DEFINE([USE_NORMAL_PANED], [1], [use normal paned])
-
-enable_normal_paned=no
-AC_ARG_WITH([normal-paned],
-   [  --with-normal-paned]     Use standard gtk+ paned,
-   [enable_normal_paned=yes], [enable_normal_paned=no])
-if test "$enable_normal_paned" = yes; then
-   AC_DEFINE([USE_NORMAL_PANED], [1], [use normal paned])
-fi
 
 dnl ********************
 dnl Test for libpng

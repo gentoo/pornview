@@ -10,8 +10,6 @@
 #include "pornview.h"
 
 #include "dirview.h"
-#include "gedo-hpaned.h"
-#include "gedo-vpaned.h"
 #include "gedo-paned.h"
 #include "zalbum.h"
 
