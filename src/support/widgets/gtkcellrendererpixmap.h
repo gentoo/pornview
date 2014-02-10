@@ -20,6 +20,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <gdk/gdk.h>
 
 #if (GTK_MAJOR_VERSION >= 2)
 

@@ -19,7 +19,7 @@
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
 
-#include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
 
 #ifdef __cplusplus
 extern          "C"
