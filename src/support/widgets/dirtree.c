@@ -15,35 +15,28 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string.h>
-#include <unistd.h>
 #include <dirent.h>
 #include <time.h>
 #include <pwd.h>
 #include <grp.h>
+#include <stdlib.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
+#include <glib.h>
 
 #include "gtk2-compat.h"
 #include "dirtree.h"
 #include "file_utils.h"
 
-#define CTREE_SPACING 5
-#define NODE_TEXT(tree, node) (GTK_CELL_PIXTEXT(GTK_CTREE_ROW(node)->row.cell[(tree)->tree_column])->text)
 
-static void dirtree_class_init (DirTreeClass * kclass);
-static void dirtree_init (DirTree * dt);
-static void dirtree_destroy_tree (gpointer data);
-static void dirtree_select_row (GtkCTree * tree, GtkCTreeNode * node,
-				gint column);
-static void dirtree_expand (GtkCTree * tree, GtkCTreeNode * node);
-static void dirtree_collapse (GtkCTree * tree, GtkCTreeNode * node);
-
-static void tree_expand_node (DirTree * dt, GtkCTreeNode * node,
-			      gboolean expand);
-static void tree_collapse (GtkCTree * tree, GtkCTreeNode * node);
-
-static gboolean tree_is_subdirs (gchar * name, gboolean show_dotfile);
-static gboolean tree_is_dotfile (gchar * name, gboolean show_dotfile);
-static void dirtree_set_cursor (GtkWidget * widget,
-				GdkCursorType cursor_type);
+/* TODO: remove globals as much as possible */
+/* add a dummy subfolder, so we always have an expand icon
+ * and our algorithm in cb_dirview_row_activated works */
+#define ADD_DUMMY_SUBFOLDER(string) \
+{ \
+		gtk_tree_store_append(GTK_TREE_STORE(model), child, iter); \
+		gtk_tree_store_set(GTK_TREE_STORE(model), child,\
+				COL_TEXT, string, -1); \
+}
 
 enum
 {
@@ -51,561 +44,18 @@ enum
     LAST_SIGNAL
 };
 
-static GtkCTreeClass *parent_class = NULL;
-static guint dirtree_signals[LAST_SIGNAL] = { 0 };
-
-#include "pixmaps/folder.xpm"
-#include "pixmaps/folder_open.xpm"
-#include "pixmaps/folder_link.xpm"
-#include "pixmaps/folder_link_open.xpm"
-#include "pixmaps/folder_lock.xpm"
-#include "pixmaps/folder_go.xpm"
-#include "pixmaps/folder_up.xpm"
-
-static GdkPixmap *folder_pixmap, *ofolder_pixmap,
-    *lfolder_pixmap, *lofolder_pixmap, *lckfolder_pixmap,
-    *gofolder_pixmap, *upfolder_pixmap;
-static GdkBitmap *folder_mask, *ofolder_mask,
-    *lfolder_mask, *lofolder_mask, *lckfolder_mask,
-    *gofolder_mask, *upfolder_mask;
-
-static gboolean lock = FALSE;
-
-GtkType
-dirtree_get_type (void)
-{
-    static GtkType type = 0;
-
-    if (!type)
-    {
-	GtkTypeInfo dirtree_info = {
-	    "DirTree",
-	    sizeof (DirTree),
-	    sizeof (DirTreeClass),
-	    (GtkClassInitFunc) dirtree_class_init,
-	    (GtkObjectInitFunc) dirtree_init,
-	    NULL,
-	    NULL,
-	    (GtkClassInitFunc) NULL,
-	};
-
-	type = gtk_type_unique (GTK_TYPE_CTREE, &dirtree_info);
-    }
-
-    return type;
-}
-
-static void
-dirtree_class_init (DirTreeClass * klass)
-{
-    GtkObjectClass *object_class;
-    GtkCTreeClass *ctree_class;
-
-    object_class = (GtkObjectClass *) klass;
-    ctree_class = (GtkCTreeClass *) klass;
-
-    parent_class = gtk_type_class (gtk_ctree_get_type ());
-
-    dirtree_signals[SELECT_FILE] =
-	gtk_signal_new ("select_file",
-			GTK_RUN_FIRST,
-			GTK_CLASS_TYPE (object_class),
-			GTK_SIGNAL_OFFSET (DirTreeClass, select_file),
-			gtk_marshal_NONE__POINTER,
-			GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
-
-    gtk_object_class_add_signals (object_class, dirtree_signals, LAST_SIGNAL);
-
-    ctree_class->tree_expand = dirtree_expand;
-    ctree_class->tree_collapse = dirtree_collapse;
-    ctree_class->tree_select_row = dirtree_select_row;
-
-    klass->select_file = NULL;
-}
-
-static void
-dirtree_init (DirTree * dt)
-{
-}
-
-static void
-dirtree_destroy_tree (gpointer data)
-{
-    DirTreeNode *node;
-
-    node = data;
-    g_free (node->path);
-    g_free (node);
-}
-
-GtkWidget *
-dirtree_new (GtkWidget * win, const gchar * start_path, gboolean check_dir,
-	     gboolean check_hlinks, gboolean show_dotfile, gint line_style,
-	     gint expander_style)
-{
-    GtkWidget *widget;
-    DirTree *dt;
-    DirTreeNode *dt_node;
-    GtkCTreeNode *node = NULL;
-    char   *root = "/", *rp, *tmp;
-
-    widget = gtk_type_new (dirtree_get_type ());
-
-    dt = DIRTREE (widget);
-    dt->collapse = FALSE;
-    dt->check_dir = check_dir;
-    dt->check_hlinks = check_hlinks;
-    dt->show_dotfile = show_dotfile;
-    dt->expander_style = expander_style;
-    dt->line_style = line_style;
-    dt->check_events = TRUE;
-
-    lock = FALSE;
-
-    gtk_clist_set_column_auto_resize (GTK_CLIST (dt), 0, TRUE);
-    gtk_clist_set_selection_mode (GTK_CLIST (dt), GTK_SELECTION_BROWSE);
-    gtk_clist_set_row_height (GTK_CLIST (dt), 18);
-    gtk_ctree_set_expander_style (GTK_CTREE (dt), expander_style);
-    gtk_ctree_set_line_style (GTK_CTREE (dt), line_style);
-
-    folder_pixmap =
-	gdk_pixmap_create_from_xpm_d (win->window, &folder_mask, NULL,
-				      folder_xpm);
-    ofolder_pixmap =
-	gdk_pixmap_create_from_xpm_d (win->window, &ofolder_mask, NULL,
-				      folder_open_xpm);
-    lfolder_pixmap =
-	gdk_pixmap_create_from_xpm_d (win->window, &lfolder_mask, NULL,
-				      folder_link_xpm);
-    lofolder_pixmap =
-	gdk_pixmap_create_from_xpm_d (win->window, &lofolder_mask, NULL,
-				      folder_link_open_xpm);
-    lckfolder_pixmap =
-	gdk_pixmap_create_from_xpm_d (win->window, &lckfolder_mask, NULL,
-				      folder_lock_xpm);
-    gofolder_pixmap =
-	gdk_pixmap_create_from_xpm_d (win->window, &gofolder_mask, NULL,
-				      folder_go_xpm);
-    upfolder_pixmap =
-	gdk_pixmap_create_from_xpm_d (win->window, &upfolder_mask, NULL,
-				      folder_up_xpm);
-
-    node = gtk_ctree_insert_node (GTK_CTREE (dt),
-				  NULL, NULL,
-				  &root, CTREE_SPACING,
-				  folder_pixmap, folder_mask, ofolder_pixmap,
-				  ofolder_mask, FALSE, TRUE);
-
-    dt_node = g_malloc0 (sizeof (DirTreeNode));
-    dt_node->path = g_strdup ("/");
-    dt_node->scanned = TRUE;
-    gtk_ctree_node_set_row_data_full (GTK_CTREE (dt), node, dt_node,
-				      dirtree_destroy_tree);
-
-    tree_expand_node (dt, node, FALSE);
-
-    rp = g_strdup (start_path);
-    tmp = strtok (rp, "/");
-
-    while (tmp)
-    {
-	node = dirtree_find_file (dt, node, tmp);
-
-	if (!node)
-	    break;
-
-	gtk_ctree_expand (GTK_CTREE (dt), node);
-	gtk_ctree_select (GTK_CTREE (dt), node);
-	GTK_CLIST (dt)->focus_row =
-	    GTK_CLIST (dt)->rows - g_list_length ((GList *) node);
-
-	tmp = strtok (NULL, "/");
-    }
-
-    g_free (rp);
-
-    return widget;
-}
-
-void
-dirtree_set_mode (DirTree * dt, gboolean check_dir, gboolean check_hlinks,
-		  gboolean show_dotfile, gint line_style, gint expander_style)
-{
-    dt->check_dir = check_dir;
-    dt->check_hlinks = check_hlinks;
-    dt->show_dotfile = show_dotfile;
-
-    if (dt->expander_style != expander_style)
-    {
-	gtk_ctree_set_expander_style (GTK_CTREE (dt), expander_style);
-	dt->expander_style = expander_style;
-    }
-
-    if (dt->line_style != line_style)
-    {
-	gtk_ctree_set_line_style (GTK_CTREE (dt), line_style);
-	dt->line_style = line_style;
-    }
-}
-
-void
-dirtree_refresh_tree (DirTree * dt, GtkCTreeNode * parent, gboolean selected)
-{
-    lock = TRUE;
-
-    if (selected)
-    {
-	gtk_ctree_select (GTK_CTREE (dt), parent);
-	GTK_CLIST (dt)->focus_row =
-	    GTK_CLIST (dt)->rows - g_list_length ((GList *) parent);
-    }
-
-    tree_expand_node (dt, parent, TRUE);
-
-    lock = FALSE;
-
-    if (selected)
-    {
-	gtk_ctree_select (GTK_CTREE (dt), parent);
-	GTK_CLIST (dt)->focus_row =
-	    GTK_CLIST (dt)->rows - g_list_length ((GList *) parent);
-    }
-}
-
-void
-dirtree_refresh_node (DirTree * dt, GtkCTreeNode * node)
-{
-    DirTreeNode *dirnode = NULL;
-    gint    has_subdirs;
-    gboolean expanded;
-
-    dirnode = gtk_ctree_node_get_row_data (GTK_CTREE (dt), node);
-
-    has_subdirs = tree_is_subdirs (dirnode->path, dt->show_dotfile);
-
-    if (has_subdirs && GTK_CTREE_ROW (node)->expanded == 1)
-	expanded = TRUE;
-    else
-	expanded = FALSE;
-
-    if (has_subdirs)
-	gtk_ctree_set_node_info (GTK_CTREE (dt), node,
-				 g_basename (dirnode->path), CTREE_SPACING,
-				 folder_pixmap, folder_mask, ofolder_pixmap,
-				 ofolder_mask, FALSE, expanded);
-    else
-	gtk_ctree_set_node_info (GTK_CTREE (dt), node,
-				 g_basename (dirnode->path), CTREE_SPACING,
-				 folder_pixmap, folder_mask, ofolder_pixmap,
-				 ofolder_mask, TRUE, expanded);
-}
-
-GtkCTreeNode *
-dirtree_find_file (DirTree * dt, GtkCTreeNode * parent, char *file_name)
-{
-    GtkCTreeNode *child;
-
-    child = GTK_CTREE_ROW (parent)->children;
-
-    while (child)
-    {
-	if (!strcmp (NODE_TEXT (GTK_CTREE (dt), child), file_name))
-	    return child;
-
-	child = GTK_CTREE_ROW (child)->sibling;
-    }
-
-    return NULL;
-}
-
-static void
-dirtree_select_row (GtkCTree * tree, GtkCTreeNode * node, gint column)
-{
-    DirTree *dt;
-    DirTreeNode *dt_node = NULL;
-
-    if (parent_class->tree_select_row)
-	(*parent_class->tree_select_row) (tree, node, column);
-
-    if (lock)
-	return;
-
-    dt = DIRTREE (tree);
-
-    dt_node = gtk_ctree_node_get_row_data (tree, node);
-
-    if (dt_node != NULL)
-	chdir (dt_node->path);
-
-    gtk_signal_emit_by_name (GTK_OBJECT (dt), "select_file",
-			     g_get_current_dir ());
-}
-
-static void
-dirtree_expand (GtkCTree * tree, GtkCTreeNode * node)
-{
-    GtkAdjustment *h_adjustment;
-    gfloat  row_align;
-
-    DirTreeNode *dt_node;
-
-    dt_node = gtk_ctree_node_get_row_data (tree, node);
-
-    if (dt_node->scanned == FALSE)
-    {
-	tree_expand_node (DIRTREE (tree), node, FALSE);
-	dt_node->scanned = TRUE;
-    }
-
-    if (parent_class->tree_expand)
-	(*parent_class->tree_expand) (tree, node);
-
-    h_adjustment = gtk_clist_get_hadjustment (GTK_CLIST (tree));
-
-    if (h_adjustment && h_adjustment->upper != 0.0)
-    {
-	row_align =
-	    (float) (tree->tree_indent * GTK_CTREE_ROW (node)->level) /
-	    h_adjustment->upper;
-	gtk_ctree_node_moveto (tree, node, tree->tree_column, 0, row_align);
-    }
-}
-
-static void
-dirtree_collapse (GtkCTree * tree, GtkCTreeNode * node)
-{
-    GtkCTreeNode *node_sel;
-
-    DirTreeNode *parent_node;
-    DirTreeNode *sel_node;
-    gchar  *ret = NULL;
-
-    if (DIRTREE (tree)->collapse == FALSE)
-    {
-	node_sel = GTK_CLIST (tree)->selection->data;
-
-	sel_node = gtk_ctree_node_get_row_data (tree, node_sel);
-	parent_node = gtk_ctree_node_get_row_data (tree, node);
-
-	ret = g_strdup (strstr (sel_node->path, parent_node->path));
-
-	if (ret != NULL)
-	{
-	    GTK_CLIST (tree)->focus_row =
-		GTK_CLIST (tree)->rows - g_list_length ((GList *) node);
-	    gtk_ctree_select (tree, node);
-	}
-    }
-
-    if (parent_class->tree_collapse)
-	(*parent_class->tree_collapse) (tree, node);
-}
-
-static void
-tree_collapse (GtkCTree * tree, GtkCTreeNode * node)
-{
-    GtkCTreeNode *child;
-
-    DIRTREE (tree)->collapse = TRUE;
-
-    gtk_clist_freeze (GTK_CLIST (tree));
-
-    child = GTK_CTREE_ROW (node)->children;
-
-    while (child)
-    {
-	gtk_ctree_remove_node (GTK_CTREE (tree), child);
-	child = GTK_CTREE_ROW (node)->children;
-    }
-
-    gtk_clist_thaw (GTK_CLIST (tree));
-
-    DIRTREE (tree)->collapse = FALSE;
-}
-
-static void
-tree_expand_node (DirTree * dt, GtkCTreeNode * node, gboolean expand)
-{
-    GtkCTreeNode *child;
-    DirTreeNode *parent_node;
-    DirTreeNode *child_node;
-    DIR    *dir;
-    struct stat stat_buff;
-    struct dirent *entry;
-    gboolean has_subdirs, has_link, has_access;
-    char   *old_path;
-    char   *subdir = "?";
-    char   *file_name;
-    GtkWidget *top = gtk_widget_get_toplevel (GTK_WIDGET (dt));
-    old_path = g_get_current_dir ();
-
-    if (!old_path)
-	return;
-
-    parent_node = gtk_ctree_node_get_row_data (GTK_CTREE (dt), node);
-
-    if (chdir (parent_node->path))
-    {
-	g_free (old_path);
-	return;
-    }
-
-    dir = opendir (".");
-
-    if (!dir)
-    {
-	chdir (old_path);
-	g_free (old_path);
-	return;
-    }
-
-    dirtree_set_cursor (top, GDK_WATCH);
-
-    gtk_clist_freeze (GTK_CLIST (dt));
-
-    tree_collapse (GTK_CTREE (dt), node);
-
-    child = NULL;
-
-    while ((entry = readdir (dir)))
-    {
-	if (!stat (entry->d_name, &stat_buff) && S_ISDIR (stat_buff.st_mode)
-	    && tree_is_dotfile (entry->d_name, dt->show_dotfile))
-	{
-	    child_node = g_malloc0 (sizeof (DirTreeNode));
-
-	    child_node->path =
-		g_strconcat (parent_node->path, "/", entry->d_name, NULL);
-
-	    has_link = islink (entry->d_name);
-	    has_access = access (entry->d_name, X_OK);
-
-	    file_name = entry->d_name;
-
-	    if (has_access)
-	    {
-		child = gtk_ctree_insert_node (GTK_CTREE (dt),
-					       node, child,
-					       &file_name,
-					       CTREE_SPACING,
-					       lckfolder_pixmap,
-					       lckfolder_mask, NULL,
-					       NULL, 1, 0);
-		has_subdirs = FALSE;
-	    }
-	    else if (!strcmp (entry->d_name, "."))
-	    {
-		child = gtk_ctree_insert_node (GTK_CTREE (dt),
-					       node, child,
-					       &file_name,
-					       CTREE_SPACING,
-					       gofolder_pixmap,
-					       gofolder_mask, NULL,
-					       NULL, 1, 0);
-
-		has_subdirs = FALSE;
-	    }
-	    else if (!strcmp (entry->d_name, ".."))
-	    {
-		child = gtk_ctree_insert_node (GTK_CTREE (dt),
-					       node, child,
-					       &file_name,
-					       CTREE_SPACING,
-					       upfolder_pixmap,
-					       upfolder_mask, NULL,
-					       NULL, 1, 0);
-
-		has_subdirs = FALSE;
-	    }
-	    else
-	    {
-		if (dt->check_dir)
-		{
-		    if (dt->check_hlinks)
-		    {
-			if (stat_buff.st_nlink == 2 && dt->show_dotfile)
-			    has_subdirs = TRUE;
-			else if (stat_buff.st_nlink > 2)
-			    has_subdirs = TRUE;
-			else if (stat_buff.st_nlink == 1)
-			    has_subdirs =
-				tree_is_subdirs (entry->d_name,
-						 dt->show_dotfile);
-			else
-			    has_subdirs = FALSE;
-		    }
-		    else
-			has_subdirs =
-			    tree_is_subdirs (entry->d_name, dt->show_dotfile);
-
-		}
-		else
-		    has_subdirs = TRUE;
-
-		if (access (entry->d_name, X_OK) != 0)
-		{
-		    has_subdirs = FALSE;
-		}
-
-		if (has_link)
-		    child = gtk_ctree_insert_node (GTK_CTREE (dt),
-						   node, child,
-						   &file_name,
-						   CTREE_SPACING,
-						   lfolder_pixmap,
-						   lfolder_mask,
-						   lofolder_pixmap,
-						   lofolder_mask,
-						   !has_subdirs, 0);
-		else
-		    child = gtk_ctree_insert_node (GTK_CTREE (dt),
-						   node, child,
-						   &file_name,
-						   CTREE_SPACING,
-						   folder_pixmap,
-						   folder_mask,
-						   ofolder_pixmap,
-						   ofolder_mask,
-						   !has_subdirs, 0);
-	    }
-
-	    if (child)
-	    {
-		gtk_ctree_node_set_row_data_full (GTK_CTREE (dt), child,
-						  child_node,
-						  dirtree_destroy_tree);
-
-		if (has_subdirs)
-		    gtk_ctree_insert_node (GTK_CTREE (dt),
-					   child, NULL,
-					   &subdir,
-					   CTREE_SPACING,
-					   NULL, NULL, NULL, NULL, 0, 0);
-	    }
-	}
-
-	if (dt->check_events)
-	    while (gtk_events_pending ())
-		gtk_main_iteration ();
-    }
-
-    closedir (dir);
-
-    chdir (old_path);
-    g_free (old_path);
-
-    gtk_ctree_sort_node (GTK_CTREE (dt), node);
-
-    if (expand == TRUE)
-	gtk_ctree_expand (GTK_CTREE (dt), node);
-
-    gtk_clist_thaw (GTK_CLIST (dt));
-
-    dirtree_set_cursor (top, -1);
-}
+gchar *not_readable = "(not readable)",
+	  *no_subfolders = "(no subfolders)";
+
+
+/*
+ *-------------------------------------------------------------------
+ * private functions
+ *-------------------------------------------------------------------
+ */
 
 static  gboolean
-tree_is_subdirs (gchar * name, gboolean show_dotfile)
+tree_is_subdirs(gchar *name, gboolean show_dotfile)
 {
     struct dirent *entry;
     DIR    *dir;
@@ -636,30 +86,462 @@ tree_is_subdirs (gchar * name, gboolean show_dotfile)
     return FALSE;
 }
 
-static  gboolean
-tree_is_dotfile (gchar * name, gboolean show_dotfile)
+static gboolean
+tree_is_dotfile(gchar *name, gboolean show_dotfile)
 {
-    if (name[0] == '.' && show_dotfile == FALSE)
-	return FALSE;
+	if (name[0] == '.' && show_dotfile == FALSE)
+		return FALSE;
+	else if ((strcmp(name, ".") == 0 ||
+				strcmp(name, "..") == 0) &&
+			show_dotfile)
+		return FALSE;
+	else
+		return TRUE;
+}
 
-    return TRUE;
+static gboolean
+dirtree_append_subdirs(GtkTreeModel *model,
+		GtkTreePath *treepath,
+		DirTree *dt)
+{
+	GtkTreeIter iter;
+
+	if (!gtk_tree_model_get_iter(model, &iter, treepath))
+		return FALSE;
+
+	return dirtree_append_subdirs_iter(model, &iter, dt);
+}
+
+/* TODO: macro type check? */
+static gboolean
+dirtree_append_subdirs_iter(GtkTreeModel *model,
+		GtkTreeIter *iter,
+		DirTree *dt)
+{
+	GtkTreeIter *child = g_malloc0(sizeof(*child));
+	gchar *row_str,
+		  *dirname,
+		  *full_dirname,
+		  *oldpath = g_get_current_dir();
+    DIR *dir;
+    struct dirent *entry;
+	gboolean hasdir = FALSE;
+
+	full_dirname = get_full_dirname_iter(model, iter);
+	/* change working dir so we can scan it */
+    if (chdir(full_dirname)) { /* chdir failed */
+		chdir(oldpath);
+		gtk_tree_model_get(model, iter, COL_TEXT, &row_str, -1);
+		/* don't add dummy folders multiple times */
+		if (strcmp(row_str, not_readable) != 0 &&
+				strcmp(row_str, no_subfolders) != 0) {
+			ADD_DUMMY_SUBFOLDER(not_readable);
+		}
+		g_free(full_dirname);
+		g_free(oldpath);
+		g_free(child);
+		return FALSE;
+    }
+	g_free(full_dirname);
+
+	/* get DIR object from working dir */
+    if (!(dir = opendir("."))) { /* opendir failed */
+		chdir(oldpath);
+		g_free(oldpath);
+		g_free(child);
+		return FALSE;
+    }
+
+	/* for all subdirectories of the working dir */
+    while ((entry = readdir(dir))) {
+	    struct stat stat_buff;
+		/* append 1st level subdirs to the treeview */
+		if (!stat(entry->d_name, &stat_buff) &&
+				S_ISDIR(stat_buff.st_mode) &&
+				tree_is_dotfile(entry->d_name, dt->show_dotfile)) {
+			hasdir = TRUE;
+			dirname = g_build_path(G_DIR_SEPARATOR_S, entry->d_name, NULL);
+			/* TODO: alphabetical order */
+			gtk_tree_store_append(GTK_TREE_STORE(model), child, iter);
+			gtk_tree_store_set(GTK_TREE_STORE(model), child,
+					COL_ICON, folder_pixmap,
+					COL_TEXT, dirname,
+					-1);
+			g_free(dirname);
+		}
+	}
+	closedir(dir);
+
+	if (!hasdir) {
+		ADD_DUMMY_SUBFOLDER(no_subfolders);
+	}
+
+	chdir(oldpath);
+	g_free(oldpath);
+	g_free(child);
+	return TRUE;
 }
 
 static void
-dirtree_set_cursor (GtkWidget * widget, GdkCursorType cursor_type)
+dirtree_remove_subdirs_recursive(GtkTreeModel *model,
+		GtkTreeIter *iter)
 {
-    GdkCursor *cursor = NULL;
+	GtkTreeIter *child_iter = g_malloc(sizeof(*child_iter));
+	if (gtk_tree_model_iter_children(model, child_iter, iter))
+		dirtree_remove_subdirs_recursive(model, child_iter);
 
-    if (!widget || !widget->window)
-	return;
+	g_free(child_iter);
 
-    if (cursor_type > -1)
-	cursor = gdk_cursor_new (cursor_type);
+	if (gtk_tree_store_remove(GTK_TREE_STORE(model), iter))
+		dirtree_remove_subdirs_recursive(model, iter);
+}
 
-    gdk_window_set_cursor (widget->window, cursor);
+static gint
+sort_iter_compare_func(GtkTreeModel *model,
+		GtkTreeIter *a,
+		GtkTreeIter *b,
+		gpointer userdata)
+{
+	gint sortcol = GPOINTER_TO_INT(userdata);
+	gint ret = 0;
 
-    if (cursor)
-	gdk_cursor_destroy (cursor);
+	/* TODO: sort dotfiles before all else */
+	switch (sortcol) {
+		case SORTID_NAME:
+			{
+				gchar *name1, *name2;
+				gtk_tree_model_get(model, a, COL_TEXT, &name1, -1);
+				gtk_tree_model_get(model, b, COL_TEXT, &name2, -1);
 
-    gdk_flush ();
+				if (name1 == NULL || name2 == NULL) {
+					if (name1 == NULL && name2 == NULL)
+						break; /* both equal */
+					ret = (name1 == NULL) ? -1 : 1;
+				} else {
+					ret = g_utf8_collate(name1, name2);
+				}
+				g_free(name1);
+				g_free(name2);
+			}
+			break;
+		default:
+			g_return_val_if_reached(0);
+	}
+	return ret;
+}
+
+
+/*
+ *-------------------------------------------------------------------
+ * public functions
+ *-------------------------------------------------------------------
+ */
+
+GtkWidget *
+dirtree_new(GtkWidget * win, const gchar * start_path, gboolean check_dir,
+	     gboolean check_hlinks, gboolean show_dotfile, gint line_style,
+	     gint expander_style)
+{
+    DirTree *dt;
+	GtkTreeStore *store;
+	GtkTreeIter iter;
+	GtkTreePath *path;
+	GtkCellRenderer *text_renderer, *xpm_renderer;
+	GtkTreeModel *model;
+	GtkWidget *tree;
+
+	/* globals */
+	folder_pixmap = gdk_pixbuf_new_from_xpm_data(folder_xpm);
+	ofolder_pixmap = gdk_pixbuf_new_from_xpm_data(folder_open_xpm);
+
+	/* TODO: free/unref everything */
+
+	tree = gtk_tree_view_new();
+
+	text_renderer = gtk_cell_renderer_text_new();
+	xpm_renderer = gtk_cell_renderer_pixbuf_new();
+
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree),
+			-1,
+			"Icon",
+			xpm_renderer,
+			"pixbuf",
+			COL_ICON,
+			NULL);
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree),
+			-1,
+			"Name",
+			text_renderer,
+			"text",
+			COL_TEXT,
+			NULL);
+
+	gtk_tree_view_column_set_sizing(
+			gtk_tree_view_get_column(GTK_TREE_VIEW(tree), COL_ICON),
+			GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+	gtk_tree_view_column_set_sizing(
+			gtk_tree_view_get_column(GTK_TREE_VIEW(tree), COL_TEXT),
+			GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+
+	gtk_tree_selection_set_mode(
+			gtk_tree_view_get_selection(GTK_TREE_VIEW(tree)),
+			GTK_SELECTION_BROWSE);
+
+	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tree), FALSE);
+
+	store = gtk_tree_store_new(2, GDK_TYPE_PIXBUF, G_TYPE_STRING);
+	model = GTK_TREE_MODEL(store);
+
+	path = gtk_tree_path_new_first();
+	gtk_tree_model_get_iter(model, &iter, path);
+	/* TODO: check if iter is non-NULL */
+	gtk_tree_store_append(store, &iter, NULL);
+	gtk_tree_store_set(store, &iter,
+			COL_ICON, folder_pixmap,
+			COL_TEXT, "/",
+			-1);
+
+	/* sortable = GTK_TREE_SORTABLE(model); */
+	gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(model), SORTID_NAME,
+			sort_iter_compare_func, GINT_TO_POINTER(SORTID_NAME), NULL);
+	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(model),
+			SORTID_NAME, GTK_SORT_ASCENDING);
+
+	gtk_tree_view_set_model(GTK_TREE_VIEW(tree), model);
+	g_object_unref(model);
+
+	dt = g_malloc(sizeof(*dt));
+
+	dt->treeview = GTK_WIDGET(tree);
+	dt->collapse = FALSE;
+	dt->check_dir = check_dir;
+	dt->check_hlinks = check_hlinks;
+	dt->show_dotfile = show_dotfile;
+	dt->expander_style = expander_style;
+	dt->line_style = line_style;
+	dt->check_events = TRUE;
+
+	dirtree_append_subdirs(model, path, dt);
+
+	gtk_tree_path_free(path);
+	return GTK_WIDGET(dt);
+}
+
+void
+dirtree_destroy_tree(gpointer *data)
+{
+    DirTreeNode *node;
+
+    node = *data;
+    g_free (node->path);
+    g_free (node);
+}
+
+gboolean
+dirtree_find_file_at_level(GtkTreeModel *model,
+		GtkTreeIter *iter,
+		gchar *str_search_file)
+{
+	gboolean found = FALSE;
+	gchar *str_cur_file;
+
+	do {
+		gtk_tree_model_get(model, iter,
+					COL_TEXT, &str_cur_file,
+					-1);
+
+		if (!strcmp(str_search_file, str_cur_file)) {
+			found = TRUE;
+			break;
+		}
+	} while(gtk_tree_model_iter_next(model, iter));
+
+	if (found)
+		return TRUE;
+	else
+		return FALSE;
+}
+
+GtkTreePath *
+get_treepath(GtkTreeModel *model,
+		gchar *full_dirname)
+{
+	GtkTreeIter *iter;
+	GtkTreePath *treepath = NULL;
+
+	iter = get_iter(model, full_dirname);
+	treepath = gtk_tree_model_get_path(model, iter);
+
+	gtk_tree_iter_free(iter);
+
+	return treepath;
+}
+
+GtkTreeIter *
+get_iter(GtkTreeModel *model,
+		gchar *full_dirname)
+{
+	GtkTreeIter iter, parent_iter;
+	gchar *token, *rp;
+	GtkTreePath *treepath = gtk_tree_path_new_first();
+
+	if (!gtk_tree_model_get_iter(model, &parent_iter, treepath)) {
+		gtk_tree_path_free(treepath);
+		return NULL;
+	}
+	iter = parent_iter; /* initialize, in case we already are at "/" */
+
+	rp = g_strdup(full_dirname);
+	token = strtok(rp, "/");
+	while (token) {
+		if (!gtk_tree_model_iter_has_child(model, &parent_iter))
+			/* not scanned yet, break and return the path we have until now */
+			break;
+
+		if (!gtk_tree_model_iter_children(model, &iter, &parent_iter)) {
+			/* assigning to iter failed */
+			g_free(rp);
+			gtk_tree_path_free(treepath);
+			return NULL;
+		} else if (!dirtree_find_file_at_level(model, &iter, token)) {
+			/* invalid path, give up */
+			g_free(rp);
+			gtk_tree_path_free(treepath);
+			return NULL;
+		} else {
+			parent_iter = iter;
+			token = strtok(NULL, "/");
+		}
+	}
+
+	g_free(rp);
+	gtk_tree_path_free(treepath);
+
+	return gtk_tree_iter_copy(&iter);
+}
+
+/* TODO: rename to treepath_get_full_dirname */
+gchar *
+get_full_dirname(GtkTreeModel *model,
+		GtkTreePath *treepath)
+{
+	GtkTreeIter iter;
+
+	gtk_tree_model_get_iter(model, &iter, treepath);
+
+	return get_full_dirname_iter(model, &iter);
+}
+
+gchar *
+get_full_dirname_iter(GtkTreeModel *model,
+		GtkTreeIter *myiter)
+{
+	GtkTreeIter iter = *myiter, parent_iter;
+	gchar *row_str,
+		  *tmp_str = g_malloc0(256),
+		  *full_dirname = g_malloc0(256);
+
+	/*
+	 * walk up to "/" and build the full path of the directory
+	 */
+	while (gtk_tree_model_iter_parent(model, &parent_iter, &iter)) {
+		gtk_tree_model_get(model, &iter, COL_TEXT, &row_str, -1);
+		if (!strcmp(row_str, not_readable) ||
+				!strcmp(row_str, no_subfolders))
+			return NULL;
+		iter = parent_iter;
+		sprintf(full_dirname, "%s%s%s",
+				row_str, G_DIR_SEPARATOR_S, tmp_str);
+		sprintf(tmp_str, "%s", full_dirname);
+		g_free(row_str);
+	}
+	/* add leading separator */
+	sprintf(full_dirname, "%s%s", G_DIR_SEPARATOR_S, tmp_str);
+
+	g_free(tmp_str);
+
+	return full_dirname;
+}
+
+void
+dirtree_append_sub_subdirs(GtkTreeModel *model,
+		GtkTreePath *treepath,
+		DirTree *dt)
+{
+	GtkTreeIter iter;
+
+	if (!gtk_tree_model_get_iter(model, &iter, treepath))
+		return;
+
+	dirtree_append_sub_subdirs_iter(model, &iter, dt);
+}
+
+void
+dirtree_append_sub_subdirs_iter(GtkTreeModel *model,
+		GtkTreeIter *iter,
+		DirTree *dt)
+{
+	GtkTreeIter *child_iter = g_malloc0(sizeof(*child_iter));
+
+	/* If we have children of depth 2, then
+	 * the children of depth 1 have already been
+	 * scanned. We can rely on this, because we
+	 * added dummy subfolders for empty folders.*/
+	if (gtk_tree_model_iter_children(model, child_iter, iter) &&
+		gtk_tree_model_iter_children(model, iter, child_iter)) {
+			g_free(child_iter);
+			return;
+	}
+
+	/* append all 2nd level subdirs */
+	do {
+		dirtree_append_subdirs_iter(model, child_iter, dt);
+	} while (gtk_tree_model_iter_next(model, child_iter));
+
+	g_free(child_iter);
+}
+
+void
+dirtree_remove_subdirs(GtkTreeModel *model,
+		GtkTreeIter *iter)
+{
+	GtkTreeIter *child_iter = g_malloc(sizeof(*child_iter));
+
+
+	if (gtk_tree_model_iter_children(model, child_iter, iter)) {
+		dirtree_remove_subdirs_recursive(model, child_iter);
+	}
+
+	g_free(child_iter);
+}
+
+
+void
+dirtree_refresh_node(GtkTreeModel *model,
+		GtkTreeIter *iter,
+		DirTree *dt)
+{
+	dirtree_remove_subdirs(model, iter);
+	dirtree_append_subdirs_iter(model, iter, dt);
+	dirtree_append_sub_subdirs_iter(model, iter, dt);
+}
+
+/* FIXME: not yet ported properly */
+void
+dirtree_set_mode(DirTree *dt, gboolean check_dir, gboolean check_hlinks,
+		gboolean show_dotfile, gint line_style, gint expander_style)
+{
+    dt->check_dir = check_dir;
+    dt->check_hlinks = check_hlinks;
+    dt->show_dotfile = show_dotfile;
+
+    if (dt->expander_style != expander_style) {
+		/* gtk_ctree_set_expander_style (GTK_CTREE (dt), expander_style); */
+		dt->expander_style = expander_style;
+    }
+
+    if (dt->line_style != line_style) {
+		/* gtk_ctree_set_line_style (GTK_CTREE (dt), line_style); */
+		dt->line_style = line_style;
+    }
 }
