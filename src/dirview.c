@@ -853,6 +853,7 @@ dirview_create_rightclick_menu(GtkWidget *rightclick_menu)
 	gtk_widget_show(delete_dir);
 }
 
+/* TODO: check (no subfolders) and (not readable) cases */
 static void
 dirview_mkdir(GtkMenuItem *menuitem,
 		gpointer data)
@@ -904,30 +905,32 @@ dirview_mkdir(GtkMenuItem *menuitem,
 	/* check for errors */
 	if (!ret_val) {
 		g_print("successfully created dir %s\n", new_path);
-	} else if (ret_val == 1) { /* parent dir not writable */
+	} else {
 		GtkWidget *error_dialog; /* GtkDialog */
+		gchar *error_msg = g_malloc0(100);
 
-		error_dialog = gtk_message_dialog_new(GTK_WINDOW(browser->window),
+		if (ret_val == 1) /* parent dir not writable */
+			sprintf(error_msg, "Error creating dir %s\nno permission",
+					new_path);
+		else if (ret_val == 2) /* mkdir failed */
+			sprintf(error_msg, "Error creating dir %s\nmkdir failed",
+					new_path);
+		else
+			sprintf(error_msg, "Unknown error while creating dir %s\n",
+					new_path);
+
+		/* show error dialog */
+		error_dialog = gtk_message_dialog_new(
+				GTK_WINDOW(browser->window),
 				GTK_DIALOG_DESTROY_WITH_PARENT,
 				GTK_MESSAGE_ERROR,
 				GTK_BUTTONS_CLOSE,
-				"Error creating dir %s\nno permission",
-				new_path);
+				"%s\n",
+				error_msg);
 
 		gtk_dialog_run(GTK_DIALOG(error_dialog));
 		gtk_widget_destroy(error_dialog);
-	} else if (ret_val == 2) { /* mkdir failed */
-		GtkWidget *error_dialog; /* GtkDialog */
-
-		error_dialog = gtk_message_dialog_new(GTK_WINDOW(browser->window),
-				GTK_DIALOG_DESTROY_WITH_PARENT,
-				GTK_MESSAGE_ERROR,
-				GTK_BUTTONS_CLOSE,
-				"Error creating dir %s\n",
-				new_path);
-
-		gtk_dialog_run(GTK_DIALOG(error_dialog));
-		gtk_widget_destroy(error_dialog);
+		g_free(error_msg);
 	}
 
 	treepath = get_treepath(model, path);
