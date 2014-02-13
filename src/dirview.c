@@ -840,6 +840,10 @@ dirview_create_rightclick_menu(GtkWidget *rightclick_menu)
 			  *rename_dir = gtk_menu_item_new_with_label("Rename dir"),
 			  *delete_dir = gtk_menu_item_new_with_label("Delete dir");
 
+	g_signal_connect(GTK_MENU_ITEM(create_dir),
+			"activate",
+			G_CALLBACK(dirview_mkdir),
+			NULL);
 	gtk_menu_shell_append(GTK_MENU_SHELL(rightclick_menu), create_dir);
 	gtk_menu_shell_append(GTK_MENU_SHELL(rightclick_menu), rename_dir);
 	gtk_menu_shell_append(GTK_MENU_SHELL(rightclick_menu), delete_dir);
@@ -847,6 +851,92 @@ dirview_create_rightclick_menu(GtkWidget *rightclick_menu)
 	gtk_widget_show(create_dir);
 	gtk_widget_show(rename_dir);
 	gtk_widget_show(delete_dir);
+}
+
+static void
+dirview_mkdir(GtkMenuItem *menuitem,
+		gpointer data)
+{
+	GtkTreeIter iter;
+	GtkTreePath *treepath;
+	GtkTreeModel *model = gtk_tree_view_get_model(TREEVIEW);
+	GtkWidget *path_dialog, /* GtkDialog */
+			  *entry_field = gtk_entry_new(); /* GtkEntry */
+
+	gint ret_val;
+	gchar *path = dirview_get_current_dir(model),
+		  *new_path;
+	gchar *new_dir;
+
+	/* open entry dialog for the dir name */
+	path_dialog = gtk_dialog_new_with_buttons("Create dir",
+			GTK_WINDOW(browser->window),
+			GTK_DIALOG_DESTROY_WITH_PARENT,
+			GTK_STOCK_OK,
+			GTK_RESPONSE_ACCEPT,
+			GTK_STOCK_CANCEL,
+			GTK_RESPONSE_REJECT,
+			NULL);
+	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(path_dialog)->vbox),
+			entry_field, TRUE, TRUE, 0);
+	gtk_widget_show(entry_field);
+	ret_val = gtk_dialog_run(GTK_DIALOG(path_dialog));
+
+	/* check response and get the dir name */
+	switch (ret_val) {
+		case GTK_RESPONSE_ACCEPT:
+			new_dir = g_malloc0(gtk_entry_get_text_length(
+						GTK_ENTRY(entry_field)) + 1);
+			strcpy(new_dir, gtk_entry_get_text(
+						GTK_ENTRY(entry_field)));
+			gtk_widget_destroy(path_dialog);
+			break;
+		default:
+			gtk_widget_destroy(path_dialog);
+			return;
+	}
+
+	new_path = g_build_path(G_DIR_SEPARATOR_S, path, new_dir, NULL);
+
+	/* do the actual mkdir in dirtree */
+	ret_val = dirtree_mkdir(DIRVIEW_DIRTREE, new_path);
+
+	/* check for errors */
+	if (!ret_val) {
+		g_print("successfully created dir %s\n", new_path);
+	} else if (ret_val == 1) { /* parent dir not writable */
+		GtkWidget *error_dialog; /* GtkDialog */
+
+		error_dialog = gtk_message_dialog_new(GTK_WINDOW(browser->window),
+				GTK_DIALOG_DESTROY_WITH_PARENT,
+				GTK_MESSAGE_ERROR,
+				GTK_BUTTONS_CLOSE,
+				"Error creating dir %s\nno permission",
+				new_path);
+
+		gtk_dialog_run(GTK_DIALOG(error_dialog));
+		gtk_widget_destroy(error_dialog);
+	} else if (ret_val == 2) { /* mkdir failed */
+		GtkWidget *error_dialog; /* GtkDialog */
+
+		error_dialog = gtk_message_dialog_new(GTK_WINDOW(browser->window),
+				GTK_DIALOG_DESTROY_WITH_PARENT,
+				GTK_MESSAGE_ERROR,
+				GTK_BUTTONS_CLOSE,
+				"Error creating dir %s\n",
+				new_path);
+
+		gtk_dialog_run(GTK_DIALOG(error_dialog));
+		gtk_widget_destroy(error_dialog);
+	}
+
+	treepath = get_treepath(model, path);
+	if (gtk_tree_model_get_iter(model, &iter, treepath)) {
+		dirtree_refresh_node(model, &iter, DIRVIEW_DIRTREE);
+		gtk_tree_view_expand_to_path(TREEVIEW, treepath);
+	} else {
+		/* TODO: debug message, should not happen :o */
+	}
 }
 
 /*

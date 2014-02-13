@@ -204,4 +204,6 @@ dirtree_set_mode(DirTree *dt, gboolean check_dir, gboolean check_hlinks,
 		gboolean show_dotfile, gint line_style, gint expander_style);
 
 
+gint
+dirtree_mkdir(DirTree *dt, gchar *path);
 #endif /* __DIRTREE_H__ */

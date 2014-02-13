@@ -115,6 +115,9 @@ cb_dirview_go_home();
 static void
 dirview_create_rightclick_menu(GtkWidget *rightclick_menu);
 
+static void
+dirview_mkdir(GtkMenuItem *menuitem,
+		gpointer data);
 void
 dirview_create (const gchar *start_path, GtkWidget *parent_win);
 

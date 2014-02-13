@@ -545,3 +545,20 @@ dirtree_set_mode(DirTree *dt, gboolean check_dir, gboolean check_hlinks,
 		dt->line_style = line_style;
     }
 }
+
+gint
+dirtree_mkdir(DirTree *dt, gchar *path)
+{
+	gchar *parent_dir = g_path_get_dirname(path);
+
+	if (!iswritable(parent_dir)) {
+		g_free(parent_dir);
+		return 1;
+	}
+	g_free(parent_dir);
+
+	if (makedir(path))
+		return 0;
+	else
+		return 2;
+}
