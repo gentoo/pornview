@@ -903,8 +903,14 @@ dirview_mkdir(GtkMenuItem *menuitem,
 	ret_val = dirtree_mkdir(DIRVIEW_DIRTREE, new_path);
 
 	/* check for errors */
-	if (!ret_val) {
-		g_print("successfully created dir %s\n", new_path);
+	if (!ret_val) { /* success, refresh the node */
+		treepath = get_treepath(model, path);
+		if (gtk_tree_model_get_iter(model, &iter, treepath)) {
+			dirtree_refresh_node(model, &iter, DIRVIEW_DIRTREE);
+			gtk_tree_view_expand_to_path(TREEVIEW, treepath);
+		} else {
+			/* TODO: debug message, should not happen :o */
+		}
 	} else {
 		GtkWidget *error_dialog; /* GtkDialog */
 		gchar *error_msg = g_malloc0(100);
@@ -914,6 +920,12 @@ dirview_mkdir(GtkMenuItem *menuitem,
 					new_path);
 		else if (ret_val == 2) /* mkdir failed */
 			sprintf(error_msg, "Error creating dir %s\nmkdir failed",
+					new_path);
+		else if (ret_val == 3) /* mkdir failed */
+			sprintf(error_msg, "Error creating dir %s\nnot a valid parent dir",
+					new_path);
+		else if (ret_val == 4) /* mkdir failed */
+			sprintf(error_msg, "Error creating already existing dir %s\n",
 					new_path);
 		else
 			sprintf(error_msg, "Unknown error while creating dir %s\n",

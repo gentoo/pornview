@@ -549,9 +549,16 @@ dirtree_set_mode(DirTree *dt, gboolean check_dir, gboolean check_hlinks,
 gint
 dirtree_mkdir(DirTree *dt, gchar *path)
 {
-	gchar *parent_dir = g_path_get_dirname(path);
+	gchar *parent_dir;
 
-	if (!iswritable(parent_dir)) {
+	if (!path || !strcmp(path, "")) /* could be (no subfolder) as well */
+		return 3;
+
+	if (isdir(path)) /* exists already */
+		return 4;
+
+	parent_dir = g_path_get_dirname(path);
+	if (!iswritable(parent_dir)) { /* not writable */
 		g_free(parent_dir);
 		return 1;
 	}
@@ -560,5 +567,7 @@ dirtree_mkdir(DirTree *dt, gchar *path)
 	if (makedir(path))
 		return 0;
 	else
-		return 2;
+		return 2; /* makedir failed */
+}
+
 }
