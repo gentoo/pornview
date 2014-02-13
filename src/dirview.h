@@ -98,7 +98,7 @@ cb_dirview_row_test_collapsed(GtkTreeView *treeview,
 		GtkTreePath *treepath,
 		gpointer userdata);
 
-static void
+static gboolean
 cb_dirview_button_press_event(GtkWidget *widget,
 		GdkEventButton *event,
 		gpointer data);
@@ -111,6 +111,9 @@ cb_dirview_show_dotfile();
 
 static void
 cb_dirview_go_home();
+
+static void
+dirview_create_rightclick_menu(GtkWidget *rightclick_menu);
 
 void
 dirview_create (const gchar *start_path, GtkWidget *parent_win);

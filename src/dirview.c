@@ -168,13 +168,31 @@ cb_dirview_row_test_collapsed(GtkTreeView *treeview,
 	}
 }
 
-static void
+static gboolean
 cb_dirview_button_press_event(GtkWidget *widget,
 		GdkEventButton *event,
 		gpointer data)
 {
-	/* if (event->type == GDK_BUTTON_PRESS && event->button == 1) */
-		/* printf("blah\n"); */
+	/* right click */
+	if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
+		gchar *path;
+		GtkTreePath *tree_path;
+		GtkWidget *rightclick_menu = gtk_menu_new();
+		GtkTreeModel *model = gtk_tree_view_get_model(TREEVIEW);
+
+		dirview_create_rightclick_menu(rightclick_menu);
+
+		gtk_menu_popup(GTK_MENU(rightclick_menu),
+				NULL,
+				NULL,
+				NULL,
+				data,
+				event->button,
+				event->time);
+	}
+
+	/* also call the default action */
+	return FALSE;
 }
 
 /* static  gint */
@@ -808,6 +826,29 @@ cb_dirview_go_home()
 	/* } */
 /* } */
 
+
+/**
+ * Creates the right click menu.
+ *
+ * @param rightclick_menu the GtkMenu [out]
+ */
+static void
+dirview_create_rightclick_menu(GtkWidget *rightclick_menu)
+{
+	/* GtkMenuItem */
+	GtkWidget *create_dir = gtk_menu_item_new_with_label("Create dir"),
+			  *rename_dir = gtk_menu_item_new_with_label("Rename dir"),
+			  *delete_dir = gtk_menu_item_new_with_label("Delete dir");
+
+	gtk_menu_shell_append(GTK_MENU_SHELL(rightclick_menu), create_dir);
+	gtk_menu_shell_append(GTK_MENU_SHELL(rightclick_menu), rename_dir);
+	gtk_menu_shell_append(GTK_MENU_SHELL(rightclick_menu), delete_dir);
+
+	gtk_widget_show(create_dir);
+	gtk_widget_show(rename_dir);
+	gtk_widget_show(delete_dir);
+}
+
 /*
  *-------------------------------------------------------------------
  * public functions
@@ -908,10 +949,10 @@ dirview_create (const gchar *start_path, GtkWidget *parent_win)
 			"test-collapse-row",
 			G_CALLBACK(cb_dirview_row_test_collapsed),
 			NULL);
-	/* g_signal_connect(dirview->dirtree, */
-			/* "button-press-event", */
-			/* G_CALLBACK(cb_dirview_button_press_event), */
-			/* NULL); */
+	g_signal_connect(TREEVIEW,
+			"button-press-event",
+			G_CALLBACK(cb_dirview_button_press_event),
+			NULL);
 
 	/* set initial directory */
 	if (start_path && isdir(start_path)) {
