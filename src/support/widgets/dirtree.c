@@ -438,8 +438,8 @@ get_full_dirname_iter(GtkTreeModel *model,
 {
 	GtkTreeIter iter = *myiter, parent_iter;
 	gchar *row_str,
-		  *tmp_str = g_malloc0(256),
-		  *full_dirname = g_malloc0(256);
+		  *tmp_str = g_malloc0(3),
+		  *full_dirname = g_malloc0(3);
 
 	/*
 	 * walk up to "/" and build the full path of the directory
@@ -447,17 +447,26 @@ get_full_dirname_iter(GtkTreeModel *model,
 	while (gtk_tree_model_iter_parent(model, &parent_iter, &iter)) {
 		gtk_tree_model_get(model, &iter, COL_TEXT, &row_str, -1);
 		if (!strcmp(row_str, not_readable) ||
-				!strcmp(row_str, no_subfolders))
+				!strcmp(row_str, no_subfolders)) {
+			g_free(row_str);
+			g_free(tmp_str);
+			g_free(full_dirname);
 			return NULL;
+		}
 		iter = parent_iter;
-		sprintf(full_dirname, "%s%s%s",
-				row_str, G_DIR_SEPARATOR_S, tmp_str);
+		g_free(full_dirname);
+		/* if we don't use g_build_path, we may get trailing "/"
+		 * and a lot of glitches */
+		full_dirname = g_build_path(G_DIR_SEPARATOR_S,
+				row_str, tmp_str, NULL);
+		tmp_str = g_realloc(tmp_str, strlen(full_dirname) + 1);
 		sprintf(tmp_str, "%s", full_dirname);
 		g_free(row_str);
 	}
-	/* add leading separator */
-	sprintf(full_dirname, "%s%s", G_DIR_SEPARATOR_S, tmp_str);
-
+	/* add leading "/" */
+	g_free(full_dirname);
+	full_dirname = g_build_path(G_DIR_SEPARATOR_S,
+			G_DIR_SEPARATOR_S, tmp_str, NULL);
 	g_free(tmp_str);
 
 	return full_dirname;
