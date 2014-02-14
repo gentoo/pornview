@@ -552,22 +552,22 @@ dirtree_mkdir(DirTree *dt, gchar *path)
 	gchar *parent_dir;
 
 	if (!path || !strcmp(path, "")) /* could be (no subfolder) as well */
-		return 3;
+		return 4;
 
 	if (isdir(path)) /* exists already */
-		return 4;
+		return 3;
 
 	parent_dir = g_path_get_dirname(path);
 	if (!iswritable(parent_dir)) { /* not writable */
 		g_free(parent_dir);
-		return 1;
+		return 2;
 	}
 	g_free(parent_dir);
 
 	if (makedir(path))
 		return 0;
 	else
-		return 2; /* makedir failed */
+		return 1; /* makedir failed */
 }
 
 }

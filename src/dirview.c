@@ -915,21 +915,27 @@ dirview_mkdir(GtkMenuItem *menuitem,
 		GtkWidget *error_dialog; /* GtkDialog */
 		gchar *error_msg = g_malloc0(100);
 
-		if (ret_val == 1) /* parent dir not writable */
-			sprintf(error_msg, "Error creating dir %s\nno permission",
-					new_path);
-		else if (ret_val == 2) /* mkdir failed */
-			sprintf(error_msg, "Error creating dir %s\nmkdir failed",
-					new_path);
-		else if (ret_val == 3) /* mkdir failed */
-			sprintf(error_msg, "Error creating dir %s\nnot a valid parent dir",
-					new_path);
-		else if (ret_val == 4) /* mkdir failed */
-			sprintf(error_msg, "Error creating already existing dir %s\n",
-					new_path);
-		else
-			sprintf(error_msg, "Unknown error while creating dir %s\n",
-					new_path);
+		switch (ret_val) {
+			case 1: /* makedir failed */
+				sprintf(error_msg, "Error creating dir %s\nmakedir failed",
+						new_path);
+				break;
+			case 2:
+				sprintf(error_msg, "Error creating dir %s\nno write permission",
+						new_path);
+				break;
+			case 3:
+				sprintf(error_msg, "Error creating already existing dir %s\n",
+						new_path);
+				break;
+			case 4:
+				sprintf(error_msg, "Error creating dir %s\nnot a valid parent dir",
+						new_path);
+				break;
+			default:
+				sprintf(error_msg, "Unknown error while creating dir %s\n",
+						new_path);
+		}
 
 		/* show error dialog */
 		error_dialog = gtk_message_dialog_new(
