@@ -912,6 +912,7 @@ dirview_mkdir(GtkMenuItem *menuitem,
 		} else {
 			/* TODO: debug message, should not happen :o */
 		}
+		gtk_tree_path_free(treepath);
 	} else {
 		GtkWidget *error_dialog; /* GtkDialog */
 		gchar *error_msg = g_malloc0(100);
