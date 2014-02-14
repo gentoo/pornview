@@ -237,7 +237,7 @@ sort_iter_compare_func(GtkTreeModel *model,
  *-------------------------------------------------------------------
  */
 
-GtkWidget *
+DirTree *
 dirtree_new(GtkWidget * win, const gchar * start_path, gboolean check_dir,
 	     gboolean check_hlinks, gboolean show_dotfile, gint line_style,
 	     gint expander_style)
@@ -324,7 +324,7 @@ dirtree_new(GtkWidget * win, const gchar * start_path, gboolean check_dir,
 	dirtree_append_subdirs(model, path, dt);
 
 	gtk_tree_path_free(path);
-	return GTK_WIDGET(dt);
+	return dt;
 }
 
 void

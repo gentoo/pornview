@@ -109,7 +109,7 @@ static void
 dirtree_remove_subdirs_recursive(GtkTreeModel *model,
 		GtkTreeIter *iter);
 
-GtkWidget *
+DirTree *
 dirtree_new(GtkWidget * win, const gchar * start_path, gboolean check_dir,
 	     gboolean check_hlinks, gboolean show_dotfile, gint line_style,
 	     gint expander_style);

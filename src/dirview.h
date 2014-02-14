@@ -11,6 +11,7 @@
 #define __DIRVIEW_H__
 
 #include <gtk/gtk.h>
+#include "dirtree.h"
 
 #define DIRVIEW           dirview
 #define DIRVIEW_DIRTREE   (DIRTREE(dirview->dirtree))
@@ -38,7 +39,7 @@ struct _DirView
     GtkToolButton *toolbar_back;
 
     GtkWidget *scroll_win;
-    GtkWidget *dirtree;
+    DirTree *dirtree;
 
     gboolean lock_select;
 };
