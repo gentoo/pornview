@@ -898,6 +898,7 @@ dirview_mkdir(GtkMenuItem *menuitem,
 	}
 
 	new_path = g_build_path(G_DIR_SEPARATOR_S, path, new_dir, NULL);
+	g_free(new_dir);
 
 	/* do the actual mkdir in dirtree */
 	ret_val = dirtree_mkdir(DIRVIEW_DIRTREE, new_path);
@@ -951,10 +952,9 @@ dirview_mkdir(GtkMenuItem *menuitem,
 		g_free(error_msg);
 	}
 
-	treepath = get_treepath(model, path);
-	if (gtk_tree_model_get_iter(model, &iter, treepath)) {
-		dirtree_refresh_node(model, &iter, DIRVIEW_DIRTREE);
-		gtk_tree_view_expand_to_path(TREEVIEW, treepath);
+	g_free(new_path);
+	g_free(path);
+}
 	} else {
 		/* TODO: debug message, should not happen :o */
 	}
