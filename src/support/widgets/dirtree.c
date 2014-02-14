@@ -599,4 +599,23 @@ dirtree_rename_dir(DirTree *dt, gchar *old_path, gchar *new_path)
 	else
 		return 1;
 }
+
+gint
+dirtree_remove_dir(DirTree *dt, gchar *path)
+{
+	g_print("delete dir %s\n", path);
+	if (!path || !strcmp(path, "")) /* could be (no subfolder) as well */
+		return 4;
+
+	if (!isdir(path))
+		return 3;
+
+	if (!g_path_is_absolute(path)) { /* not absolute, dangerous */
+		return 2;
+	}
+
+	if (!rmdir(path))
+		return 0;
+	else
+		return 1; /* rmdir failed, read errno */
 }

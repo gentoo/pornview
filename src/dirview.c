@@ -849,6 +849,12 @@ dirview_create_rightclick_menu(GtkWidget *rightclick_menu)
 			"activate",
 			G_CALLBACK(dirview_rename_dir),
 			NULL);
+
+	g_signal_connect(GTK_MENU_ITEM(delete_dir),
+			"activate",
+			G_CALLBACK(dirview_remove_dir),
+			NULL);
+
 	gtk_menu_shell_append(GTK_MENU_SHELL(rightclick_menu), create_dir);
 	gtk_menu_shell_append(GTK_MENU_SHELL(rightclick_menu), rename_dir);
 	gtk_menu_shell_append(GTK_MENU_SHELL(rightclick_menu), delete_dir);
@@ -1101,7 +1107,136 @@ dirview_rename_dir(GtkMenuItem *menuitem,
 	g_free(base_path);
 	g_free(path);
 }
+
+static void
+dirview_remove_dir(GtkMenuItem *menuitem,
+		gpointer data)
+{
+	GtkTreeIter iter;
+	GtkTreePath *treepath;
+	GtkTreeModel *model = gtk_tree_view_get_model(TREEVIEW);
+	GtkWidget *confirm_dialog, /* GtkDialog */
+			  *label, /* GtkLabel */
+			  *icon, /* GtkImage */
+			  *hbox;
+
+	gint ret_val;
+	gchar *path = dirview_get_current_dir(model),
+		  *base_path,
+		  *message = g_malloc0(256);
+
+	/* open confirmation dialog */
+	confirm_dialog = gtk_dialog_new_with_buttons("Create dir",
+			GTK_WINDOW(browser->window),
+			GTK_DIALOG_DESTROY_WITH_PARENT,
+			GTK_STOCK_OK,
+			GTK_RESPONSE_OK,
+			GTK_STOCK_CANCEL,
+			GTK_RESPONSE_CANCEL,
+			NULL);
+	gtk_dialog_set_default_response(GTK_DIALOG(confirm_dialog),
+			GTK_RESPONSE_CANCEL);
+
+	hbox = gtk_hbox_new(FALSE, 2);
+
+	/* add icon to hbox */
+	icon = gtk_image_new_from_stock(GTK_STOCK_DIALOG_QUESTION,
+			GTK_ICON_SIZE_DIALOG);
+	gtk_box_pack_start(hbox,
+			icon, TRUE, TRUE, 0);
+	gtk_widget_show(icon);
+
+	/* add label hbox */
+	sprintf(message, "Do you really want to delete\n\"%s\"?\n", path);
+	label = gtk_label_new(message);
+	gtk_box_pack_start(hbox,
+			label, TRUE, TRUE, 0);
+	gtk_widget_show(label);
+
+	/* add hbox to dialog */
+	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(confirm_dialog)->vbox),
+			hbox, TRUE, TRUE, 0);
+	gtk_widget_show(hbox);
+
+	ret_val = gtk_dialog_run(GTK_DIALOG(confirm_dialog));
+
+	/* check response and get the dir name */
+	switch (ret_val) {
+		case GTK_RESPONSE_OK:
+			gtk_widget_destroy(confirm_dialog);
+			g_free(message);
+			break;
+		default:
+			gtk_widget_destroy(confirm_dialog);
+			g_free(message);
+			g_free(path);
+			return;
+	}
+
+	base_path = g_path_get_dirname(path);
+
+	ret_val = dirtree_remove_dir(DIRVIEW_DIRTREE, path);
+
+	/* check for errors */
+	if (!ret_val) { /* success, refresh the node */
+		treepath = get_treepath(model, base_path);
+		if (gtk_tree_model_get_iter(model, &iter, treepath)) {
+			dirtree_refresh_node(model, &iter, DIRVIEW_DIRTREE);
+			dirview_goto_dir(TREEVIEW, base_path);
+		} else {
+			/* TODO: debug message, should not happen :o */
+		}
+		gtk_tree_path_free(treepath);
+	} else {
+		GtkWidget *error_dialog; /* GtkDialog */
+		gchar *error_msg = g_malloc0(100);
+
+		switch (ret_val) {
+			case 1: /* rmdir failed */
+				sprintf(error_msg, "Error removing dir \"%s\",\n"
+						"rmdir failed. Only removing empty dirs\n"
+						"is supported.",
+						path);
+				break;
+			case 2:
+				sprintf(error_msg, "Error removing dir \"%s\",\n"
+						"got a relative path.",
+						path);
+				break;
+			case 3:
+				sprintf(error_msg, "Error removing dir \"%s\",\n"
+						"not a directory",
+						path);
+				break;
+			case 4:
+				sprintf(error_msg, "Error removing dir \"%s\",\n"
+						"not a valid path.",
+						path);
+				break;
+			default:
+				sprintf(error_msg, "Unknown error while removing dir"
+						"\"%s\".",
+						path);
+		}
+
+		/* show error dialog */
+		error_dialog = gtk_message_dialog_new(
+				GTK_WINDOW(browser->window),
+				GTK_DIALOG_DESTROY_WITH_PARENT,
+				GTK_MESSAGE_ERROR,
+				GTK_BUTTONS_CLOSE,
+				"%s\n",
+				error_msg);
+
+		gtk_dialog_run(GTK_DIALOG(error_dialog));
+		gtk_widget_destroy(error_dialog);
+		g_free(error_msg);
+	}
+
+	g_free(path);
+	g_free(base_path);
 }
+
 
 /*
  *-------------------------------------------------------------------

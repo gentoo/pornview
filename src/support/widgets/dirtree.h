@@ -209,4 +209,8 @@ dirtree_mkdir(DirTree *dt, gchar *path);
 
 gint
 dirtree_rename_dir(DirTree *dt, gchar *old_path, gchar *new_path);
+
+gint
+dirtree_remove_dir(DirTree *dt, gchar *path);
+
 #endif /* __DIRTREE_H__ */
