@@ -945,26 +945,28 @@ dirview_mkdir(GtkMenuItem *menuitem,
 
 		switch (ret_val) {
 			case 1: /* makedir failed */
-				sprintf(error_msg, "Error creating dir %s\n"
-						"makedir failed",
+				sprintf(error_msg, "Error creating dir \"%s\",\n"
+						"makedir failed.",
 						new_path);
 				break;
 			case 2:
-				sprintf(error_msg, "Error creating dir %s\n"
-						"no write permission",
+				sprintf(error_msg, "Error creating dir \"%s\",\n"
+						"no write permission.",
 						new_path);
 				break;
 			case 3:
-				sprintf(error_msg, "Error creating already existing dir %s\n",
+				sprintf(error_msg, "Error creating already existing dir"
+						"\"%s\".",
 						new_path);
 				break;
 			case 4:
-				sprintf(error_msg, "Error creating dir %s\n"
-						"not a valid parent dir",
+				sprintf(error_msg, "Error creating dir \"%s\",\n"
+						"not a valid parent dir.",
 						new_path);
 				break;
 			default:
-				sprintf(error_msg, "Unknown error while creating dir %s\n",
+				sprintf(error_msg, "Unknown error while creating dir"
+						"\"%s\".",
 						new_path);
 		}
 
@@ -1062,31 +1064,33 @@ dirview_rename_dir(GtkMenuItem *menuitem,
 
 		switch (ret_val) {
 			case 1: /* makedir failed */
-				sprintf(error_msg, "Error moving dir %s to %s\n"
-						"mv failed",
+				sprintf(error_msg, "Error moving dir \"%s\" to \"%s\",\n"
+						"mv failed.",
 						path, new_path);
 				break;
 			case 2:
-				sprintf(error_msg, "Error moving dir %s to %s\n"
-						"no write permission",
+				sprintf(error_msg, "Error moving dir \"%s\" to \"%s\",\n"
+						"no write permission.",
 						path, new_path);
 				break;
 			case 3:
-				sprintf(error_msg, "Error moving dir %s\nnot a directory",
+				sprintf(error_msg, "Error moving dir \"%s\",\n"
+						"not a directory.",
 						path);
 				break;
 			case 4:
-				sprintf(error_msg, "Error moving dir %s to %s\n"
-						"not a valid destination",
+				sprintf(error_msg, "Error moving dir \"%s\" to \"%s\",\n"
+						"not a valid destination.",
 						path, new_path);
 				break;
 			case 5:
-				sprintf(error_msg, "Error moving dir %s to %s\n"
-						"not a valid source",
+				sprintf(error_msg, "Error moving dir \"%s\" to \"%s\",\n"
+						"not a valid source.",
 						path, new_path);
 				break;
 			default:
-				sprintf(error_msg, "Unknown error while moving dir %s to %s\n",
+				sprintf(error_msg, "Unknown error while moving dir"
+						"\"%s\" to \"%s\".",
 						path, new_path);
 		}
 
