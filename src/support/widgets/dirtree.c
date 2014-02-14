@@ -579,4 +579,24 @@ dirtree_mkdir(DirTree *dt, gchar *path)
 		return 1; /* makedir failed */
 }
 
+gint
+dirtree_rename_dir(DirTree *dt, gchar *old_path, gchar *new_path)
+{
+	if (!old_path || !strcmp(old_path, ""))
+		return 5;
+
+	if (!new_path || !strcmp(new_path, ""))
+		return 4;
+
+	if (!isdir(old_path))
+		return 3;
+
+	if (!iswritable(old_path))
+		return 2;
+
+	if (move_file(old_path, new_path))
+		return 0;
+	else
+		return 1;
+}
 }

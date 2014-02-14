@@ -844,6 +844,10 @@ dirview_create_rightclick_menu(GtkWidget *rightclick_menu)
 			"activate",
 			G_CALLBACK(dirview_mkdir),
 			NULL);
+	g_signal_connect(GTK_MENU_ITEM(rename_dir),
+			"activate",
+			G_CALLBACK(dirview_rename_dir),
+			NULL);
 	gtk_menu_shell_append(GTK_MENU_SHELL(rightclick_menu), create_dir);
 	gtk_menu_shell_append(GTK_MENU_SHELL(rightclick_menu), rename_dir);
 	gtk_menu_shell_append(GTK_MENU_SHELL(rightclick_menu), delete_dir);
@@ -956,9 +960,117 @@ dirview_mkdir(GtkMenuItem *menuitem,
 	g_free(new_path);
 	g_free(path);
 }
-	} else {
-		/* TODO: debug message, should not happen :o */
+
+static void
+dirview_rename_dir(GtkMenuItem *menuitem,
+		gpointer data)
+{
+	GtkTreeIter iter;
+	GtkTreePath *treepath;
+	GtkTreeModel *model = gtk_tree_view_get_model(TREEVIEW);
+	GtkWidget *path_dialog, /* GtkDialog */
+			  *entry_field = gtk_entry_new(); /* GtkEntry */
+
+	gint ret_val;
+	gchar *path = dirview_get_current_dir(model),
+		  *base_path,
+		  *new_path;
+	gchar *new_dir;
+
+	gint len;
+
+	/* open entry dialog for the dir name */
+	path_dialog = gtk_dialog_new_with_buttons("Create dir",
+			GTK_WINDOW(browser->window),
+			GTK_DIALOG_DESTROY_WITH_PARENT,
+			GTK_STOCK_OK,
+			GTK_RESPONSE_ACCEPT,
+			GTK_STOCK_CANCEL,
+			GTK_RESPONSE_REJECT,
+			NULL);
+	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(path_dialog)->vbox),
+			entry_field, TRUE, TRUE, 0);
+	gtk_widget_show(entry_field);
+	ret_val = gtk_dialog_run(GTK_DIALOG(path_dialog));
+
+	/* check response and get the dir name */
+	switch (ret_val) {
+		case GTK_RESPONSE_ACCEPT:
+			new_dir = g_malloc0(gtk_entry_get_text_length(
+						GTK_ENTRY(entry_field)) + 1);
+			strcpy(new_dir, gtk_entry_get_text(
+						GTK_ENTRY(entry_field)));
+			gtk_widget_destroy(path_dialog);
+			break;
+		default:
+			gtk_widget_destroy(path_dialog);
+			return;
 	}
+
+	base_path = g_path_get_dirname(path);
+	new_path = g_build_path(G_DIR_SEPARATOR_S, base_path, new_dir, NULL);
+	g_free(new_dir);
+
+	/* do the actual move */
+	ret_val = dirtree_rename_dir(DIRVIEW_DIRTREE, path, new_path);
+
+	/* check for errors */
+	if (!ret_val) { /* success, refresh the node */
+		treepath = get_treepath(model, base_path);
+		if (gtk_tree_model_get_iter(model, &iter, treepath)) {
+			dirtree_refresh_node(model, &iter, DIRVIEW_DIRTREE);
+			dirview_goto_dir(TREEVIEW, base_path);
+		} else {
+			/* TODO: debug message, should not happen :o */
+		}
+		gtk_tree_path_free(treepath);
+	} else {
+		GtkWidget *error_dialog; /* GtkDialog */
+		gchar *error_msg = g_malloc0(100);
+
+		switch (ret_val) {
+			case 1: /* makedir failed */
+				sprintf(error_msg, "Error moving dir %s to %s\nmv failed",
+						path, new_path);
+				break;
+			case 2:
+				sprintf(error_msg, "Error moving dir %s to %s\nno write permission",
+						path, new_path);
+				break;
+			case 3:
+				sprintf(error_msg, "Error moving dir %s\nnot a directory",
+						path);
+				break;
+			case 4:
+				sprintf(error_msg, "Error moving dir %s to %s\nnot a valid destination",
+						path, new_path);
+				break;
+			case 5:
+				sprintf(error_msg, "Error moving dir %s to %s\nnot a valid source",
+						path, new_path);
+				break;
+			default:
+				sprintf(error_msg, "Unknown error while moving dir %s to %s\n",
+						path, new_path);
+		}
+
+		/* show error dialog */
+		error_dialog = gtk_message_dialog_new(
+				GTK_WINDOW(browser->window),
+				GTK_DIALOG_DESTROY_WITH_PARENT,
+				GTK_MESSAGE_ERROR,
+				GTK_BUTTONS_CLOSE,
+				"%s\n",
+				error_msg);
+
+		gtk_dialog_run(GTK_DIALOG(error_dialog));
+		gtk_widget_destroy(error_dialog);
+		g_free(error_msg);
+	}
+	g_free(new_path);
+	g_free(base_path);
+	g_free(path);
+}
 }
 
 /*

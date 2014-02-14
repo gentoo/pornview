@@ -118,6 +118,10 @@ dirview_create_rightclick_menu(GtkWidget *rightclick_menu);
 static void
 dirview_mkdir(GtkMenuItem *menuitem,
 		gpointer data);
+
+static void
+dirview_rename_dir(GtkMenuItem *menuitem,
+		gpointer data);
 void
 dirview_create (const gchar *start_path, GtkWidget *parent_win);
 
