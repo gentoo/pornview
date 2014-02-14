@@ -49,7 +49,8 @@ static const gchar *dirview_toolbar_xml =
 			"<separator/>"
 			"<toolitem name=\"Home\" action=\"HomeAction\"/>"
 			"<toolitem name=\"Refresh\" action=\"RefreshAction\"/>"
-			"<toolitem name=\"ShowHideDotfile\" action=\"ShowHideDotfileAction\"/>"
+			"<toolitem name=\"ShowHideDotfile\""
+				"action=\"ShowHideDotfileAction\"/>"
 			"<separator/>"
 		"</placeholder>"
 	"</toolbar>"
@@ -923,11 +924,13 @@ dirview_mkdir(GtkMenuItem *menuitem,
 
 		switch (ret_val) {
 			case 1: /* makedir failed */
-				sprintf(error_msg, "Error creating dir %s\nmakedir failed",
+				sprintf(error_msg, "Error creating dir %s\n"
+						"makedir failed",
 						new_path);
 				break;
 			case 2:
-				sprintf(error_msg, "Error creating dir %s\nno write permission",
+				sprintf(error_msg, "Error creating dir %s\n"
+						"no write permission",
 						new_path);
 				break;
 			case 3:
@@ -935,7 +938,8 @@ dirview_mkdir(GtkMenuItem *menuitem,
 						new_path);
 				break;
 			case 4:
-				sprintf(error_msg, "Error creating dir %s\nnot a valid parent dir",
+				sprintf(error_msg, "Error creating dir %s\n"
+						"not a valid parent dir",
 						new_path);
 				break;
 			default:
@@ -1030,11 +1034,13 @@ dirview_rename_dir(GtkMenuItem *menuitem,
 
 		switch (ret_val) {
 			case 1: /* makedir failed */
-				sprintf(error_msg, "Error moving dir %s to %s\nmv failed",
+				sprintf(error_msg, "Error moving dir %s to %s\n"
+						"mv failed",
 						path, new_path);
 				break;
 			case 2:
-				sprintf(error_msg, "Error moving dir %s to %s\nno write permission",
+				sprintf(error_msg, "Error moving dir %s to %s\n"
+						"no write permission",
 						path, new_path);
 				break;
 			case 3:
@@ -1042,11 +1048,13 @@ dirview_rename_dir(GtkMenuItem *menuitem,
 						path);
 				break;
 			case 4:
-				sprintf(error_msg, "Error moving dir %s to %s\nnot a valid destination",
+				sprintf(error_msg, "Error moving dir %s to %s\n"
+						"not a valid destination",
 						path, new_path);
 				break;
 			case 5:
-				sprintf(error_msg, "Error moving dir %s to %s\nnot a valid source",
+				sprintf(error_msg, "Error moving dir %s to %s\n"
+						"not a valid source",
 						path, new_path);
 				break;
 			default:

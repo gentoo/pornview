@@ -206,8 +206,10 @@ browser_create(const gchar *start_path)
 	browser->menu_toolbar = gtk_ui_manager_new();
 
 	action_group = gtk_action_group_new("BrowserActions");
-	gtk_action_group_add_actions(action_group, browser_ui_entries, n_browser_ui_entries, NULL);
-	gtk_ui_manager_insert_action_group(browser->menu_toolbar, action_group, 0);
+	gtk_action_group_add_actions(action_group, browser_ui_entries,
+			n_browser_ui_entries, NULL);
+	gtk_ui_manager_insert_action_group(browser->menu_toolbar,
+			action_group, 0);
 
 	error = NULL;
 	ui_id = gtk_ui_manager_add_ui_from_string(browser->menu_toolbar,
