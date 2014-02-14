@@ -116,6 +116,10 @@ static void
 dirview_create_rightclick_menu(GtkWidget *rightclick_menu);
 
 static void
+cb_dirview_entry_enter (GtkEntry *entry,
+		gpointer path_dialog);
+
+static void
 dirview_mkdir(GtkMenuItem *menuitem,
 		gpointer data);
 

@@ -858,6 +858,14 @@ dirview_create_rightclick_menu(GtkWidget *rightclick_menu)
 	gtk_widget_show(delete_dir);
 }
 
+static void
+cb_dirview_entry_enter (GtkEntry *entry,
+		gpointer path_dialog)
+{
+	gtk_dialog_response(GTK_DIALOG(path_dialog),
+			GTK_RESPONSE_OK);
+}
+
 /* TODO: check (no subfolders) and (not readable) cases */
 static void
 dirview_mkdir(GtkMenuItem *menuitem,
@@ -879,18 +887,24 @@ dirview_mkdir(GtkMenuItem *menuitem,
 			GTK_WINDOW(browser->window),
 			GTK_DIALOG_DESTROY_WITH_PARENT,
 			GTK_STOCK_OK,
-			GTK_RESPONSE_ACCEPT,
+			GTK_RESPONSE_OK,
 			GTK_STOCK_CANCEL,
-			GTK_RESPONSE_REJECT,
+			GTK_RESPONSE_CANCEL,
 			NULL);
+	gtk_dialog_set_default_response(GTK_DIALOG(path_dialog),
+			GTK_RESPONSE_OK);
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(path_dialog)->vbox),
 			entry_field, TRUE, TRUE, 0);
+	g_signal_connect(GTK_ENTRY(entry_field),
+			"activate",
+			G_CALLBACK(cb_dirview_entry_enter),
+			path_dialog);
 	gtk_widget_show(entry_field);
 	ret_val = gtk_dialog_run(GTK_DIALOG(path_dialog));
 
 	/* check response and get the dir name */
 	switch (ret_val) {
-		case GTK_RESPONSE_ACCEPT:
+		case GTK_RESPONSE_OK:
 			new_dir = g_malloc0(gtk_entry_get_text_length(
 						GTK_ENTRY(entry_field)) + 1);
 			strcpy(new_dir, gtk_entry_get_text(
@@ -899,6 +913,7 @@ dirview_mkdir(GtkMenuItem *menuitem,
 			break;
 		default:
 			gtk_widget_destroy(path_dialog);
+			g_free(path);
 			return;
 	}
 
@@ -988,18 +1003,24 @@ dirview_rename_dir(GtkMenuItem *menuitem,
 			GTK_WINDOW(browser->window),
 			GTK_DIALOG_DESTROY_WITH_PARENT,
 			GTK_STOCK_OK,
-			GTK_RESPONSE_ACCEPT,
+			GTK_RESPONSE_OK,
 			GTK_STOCK_CANCEL,
-			GTK_RESPONSE_REJECT,
+			GTK_RESPONSE_CANCEL,
 			NULL);
+	gtk_dialog_set_default_response(GTK_DIALOG(path_dialog),
+			GTK_RESPONSE_OK);
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(path_dialog)->vbox),
 			entry_field, TRUE, TRUE, 0);
+	g_signal_connect(GTK_ENTRY(entry_field),
+			"activate",
+			G_CALLBACK(cb_dirview_entry_enter),
+			path_dialog);
 	gtk_widget_show(entry_field);
 	ret_val = gtk_dialog_run(GTK_DIALOG(path_dialog));
 
 	/* check response and get the dir name */
 	switch (ret_val) {
-		case GTK_RESPONSE_ACCEPT:
+		case GTK_RESPONSE_OK:
 			new_dir = g_malloc0(gtk_entry_get_text_length(
 						GTK_ENTRY(entry_field)) + 1);
 			strcpy(new_dir, gtk_entry_get_text(
@@ -1008,6 +1029,7 @@ dirview_rename_dir(GtkMenuItem *menuitem,
 			break;
 		default:
 			gtk_widget_destroy(path_dialog);
+			g_free(path);
 			return;
 	}
 
