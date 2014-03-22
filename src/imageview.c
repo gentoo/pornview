@@ -49,7 +49,6 @@ static CacheImage *next_image = NULL;
 static gint width_backup;
 static gint height_backup;
 
-static GdkPixmap *buffer = NULL;
 static gboolean move_scrollbar_by_user = TRUE;
 
 /*
@@ -57,35 +56,6 @@ static gboolean move_scrollbar_by_user = TRUE;
  * private functions
  *-------------------------------------------------------------------
  */
-
-static void
-allocate_draw_buffer (ImageView * iv)
-{
-    gint    fwidth, fheight;
-    gint    cwidth, cheight;
-
-    if (!iv)
-	return;
-
-    if (buffer)
-    {
-	gdk_window_get_size (buffer, &cwidth, &cheight);
-	imageview_get_image_frame_size (iv, &fwidth, &fheight);
-
-	if (fwidth != cwidth || fheight != cheight)
-	{
-	    g_object_unref (buffer);
-	    buffer = NULL;
-	    buffer =
-		gdk_pixmap_new (iv->draw_area->window, fwidth, fheight, -1);
-	}
-    }
-    else
-    {
-	imageview_get_image_frame_size (iv, &fwidth, &fheight);
-	buffer = gdk_pixmap_new (iv->draw_area->window, fwidth, fheight, -1);
-    }
-}
 
 static void
 reset_scrollbar (ImageView * iv)
@@ -134,49 +104,41 @@ reset_scrollbar (ImageView * iv)
 }
 
 static void
-imageview_draw_image (ImageView * iv)
+imageview_draw_image(ImageView * iv)
 {
-    GdkGC  *bg_gc;
+	GdkPixbuf *pixbuf_src = NULL,
+			  *pixbuf_dest = NULL;
+	cairo_t *cr;
 
-    allocate_draw_buffer (iv);
+	if (!iv || !iv->image_name)
+		return;
 
-    /*
-     * fill background by default bg color
-     */
-    bg_gc = iv->draw_area->style->black_gc;
-    gdk_draw_rectangle (buffer, bg_gc, TRUE, 0, 0, -1, -1);
+	cr = gdk_cairo_create(iv->draw_area->window);
+
+	/*
+	 * paint black background
+	 * FIXME: glitches when moving the image
+	 */
+	cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0);
+	cairo_paint(cr);
 
     /*
      * draw image to buffer
      */
+	pixbuf_src = gdk_pixbuf_new_from_file(iv->image_name, NULL);
+	/* redundant if there is no scaling, but anyway */
+	pixbuf_dest = gdk_pixbuf_scale_simple(pixbuf_src,
+			(gdk_pixbuf_get_width(pixbuf_src) * iv->x_scale / 100),
+			(gdk_pixbuf_get_height(pixbuf_src) * iv->y_scale / 100),
+			GDK_INTERP_HYPER);
+	gdk_cairo_set_source_pixbuf(cr, pixbuf_dest, iv->x_pos, iv->y_pos);
+	cairo_translate(cr, iv->x_pos, iv->y_pos);
+	cairo_paint(cr);
 
-    if (iv->pixmap)
-    {
-	if (iv->mask)
-	{
-	    gdk_gc_set_clip_mask (iv->draw_area->style->black_gc, iv->mask);
-	    gdk_gc_set_clip_origin (iv->draw_area->style->black_gc,
-				    iv->x_pos, iv->y_pos);
-	}
-
-	gdk_draw_pixmap (buffer,
-			 iv->draw_area->style->black_gc,
-			 iv->pixmap, 0, 0, iv->x_pos, iv->y_pos, -1, -1);
-
-	if (iv->mask)
-	{
-	    gdk_gc_set_clip_mask (iv->draw_area->style->black_gc, NULL);
-	    gdk_gc_set_clip_origin (iv->draw_area->style->black_gc, 0, 0);
-	}
-    }
-
-    /*
-     * draw from buffer to foreground
-     */
-    gdk_draw_pixmap (iv->draw_area->window,
-		     iv->draw_area->style->
-		     fg_gc[GTK_WIDGET_STATE (iv->draw_area)], buffer, 0, 0, 0,
-		     0, -1, -1);
+	/* cleanup */
+	g_object_unref(pixbuf_src);
+	g_object_unref(pixbuf_dest);
+	cairo_destroy(cr);
 }
 
 static gboolean imgview_scroll_nolimit = FALSE;
@@ -1759,9 +1721,6 @@ imageview_create (void)
 void
 imageview_destroy (void)
 {
-    if (buffer)
-	g_object_unref (buffer);
-
     if (imageview->loader)
 	image_loader_free (imageview->loader);
 
