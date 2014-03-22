@@ -299,82 +299,71 @@ imageview_open_navwin (ImageView * iv, gfloat x_root, gfloat y_root)
 static void
 imageview_calc_image_size (ImageView * iv)
 {
-    gint    width, height;
+    gint    frame_width, frame_height;
     gfloat  x_scale, y_scale;
     gboolean fit = FALSE;
 
     if (iv->image == NULL)
-	return;
+		return;
 
-    imageview_get_image_frame_size (iv, &width, &height);
+    imageview_get_image_frame_size (iv, &frame_width, &frame_height);
 
-    if (iv->auto_zoom)
-    {
-	if (gdk_pixbuf_get_width (iv->image) > width
-	    || gdk_pixbuf_get_height (iv->image) > height)
-	    fit = TRUE;
-	else
-	{
-	    iv->x_scale = iv->y_scale = 100;
+	/*
+	 * auto zoom
+	 */
+    if (iv->auto_zoom) {
+		if (gdk_pixbuf_get_width (iv->image) >frame_width
+			|| gdk_pixbuf_get_height (iv->image) > frame_height) {
+			fit = TRUE;
+		} else {
+			iv->x_scale = iv->y_scale = 100;
+		}
+    } else if (iv->fit_to_frame) {
+		fit = TRUE;
 	}
-    }
-    else if (iv->fit_to_frame)
-	fit = TRUE;
 
     /*
      * image scale
      */
-    if (iv->rotate == 0 || iv->rotate == 2)
-    {
-	x_scale = iv->x_scale;
-	y_scale = iv->y_scale;
+    if (iv->rotate == 0 || iv->rotate == 2) {
+		x_scale = iv->x_scale;
+		y_scale = iv->y_scale;
+    } else {
+		x_scale = iv->y_scale;
+		y_scale = iv->x_scale;
     }
-    else
-    {
-	x_scale = iv->y_scale;
-	y_scale = iv->x_scale;
-    }
-
 
     /*
      * calculate image size
      */
+    if (fit) {
+		iv->x_scale = frame_width / (gfloat) gdk_pixbuf_get_width (iv->image) * 100;
+		iv->y_scale =
+			frame_height / (gfloat) gdk_pixbuf_get_height (iv->image) * 100;
 
-    if (fit)
-    {
-	iv->x_scale = width / (gfloat) gdk_pixbuf_get_width (iv->image) * 100;
-	iv->y_scale =
-	    height / (gfloat) gdk_pixbuf_get_height (iv->image) * 100;
-
-	if (iv->keep_aspect)
-	{
-	    if (iv->x_scale > iv->y_scale)
-	    {
-		iv->x_scale = iv->y_scale;
-		width = gdk_pixbuf_get_width (iv->image) * iv->x_scale / 100;
-	    }
-	    else
-	    {
-		iv->y_scale = iv->x_scale;
-		height =
-		    gdk_pixbuf_get_height (iv->image) * iv->y_scale / 100;
-	    }
-	}
-    }
-    else
-    {
-	width = gdk_pixbuf_get_width (iv->image) * x_scale / 100;
-	height = gdk_pixbuf_get_height (iv->image) * y_scale / 100;
+		if (iv->keep_aspect) {
+			if (iv->x_scale > iv->y_scale) {
+				iv->x_scale = iv->y_scale;
+				frame_width = gdk_pixbuf_get_width (iv->image) * iv->x_scale / 100;
+			} else {
+				iv->y_scale = iv->x_scale;
+				frame_height =
+					gdk_pixbuf_get_height (iv->image) * iv->y_scale / 100;
+			}
+		}
+    } else {
+		frame_width = gdk_pixbuf_get_width (iv->image) * x_scale / 100;
+		frame_height = gdk_pixbuf_get_height (iv->image) * y_scale / 100;
     }
 
-    if (width > 8)
-	iv->width = width;
+    if (frame_width > 8)
+		iv->width = frame_width;
     else
-	iv->width = 8;
-    if (height > 8)
-	iv->height = height;
+		iv->width = 8;
+    if (frame_height > 8)
+		iv->height = frame_height;
     else
-	iv->height = 8;
+		iv->height = 8;
 }
 
 static void imageview_rotate_render (ImageView * iv, ImgRotateType angle);
